@@ -200,5 +200,6 @@ function render_json_formatter(container, toolMeta) {
   }
 }
 
-// Global + module registration
-window.render_json_formatter = render_json_formatter;
+// Registro global para carga clasica (fallback)
+// El toolId es 'json-formatter' (con guion), se accede via bracket notation
+window['render_json-formatter'] = render_json_formatter;

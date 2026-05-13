@@ -128,4 +128,5 @@ function render_uuid_generator(container, toolMeta) {
 }
 
 // Registrar como funcion global (fallback para carga clasica)
-window.render_uuid_generator = render_uuid_generator;
+// El toolId es 'uuid-generator' (con guion), se accede via bracket notation
+window['render_uuid-generator'] = render_uuid_generator;
