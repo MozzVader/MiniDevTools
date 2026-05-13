@@ -979,6 +979,30 @@ textarea.input {
   }
 }
 
+/* ─── FORM CONTROLS — Dark mode fixes ─── */
+
+/* Checkbox: accent-color adapts to theme in all modern browsers */
+input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Number input spinners: tint for dark mode */
+[data-theme="dark"] .input::-webkit-inner-spin-button,
+[data-theme="dark"] .input::-webkit-outer-spin-button {
+  opacity: 0.6;
+  filter: invert(0.85);
+}
+
+[data-theme="dark"] .input::-moz-inner-spin-button,
+[data-theme="dark"] .input::-moz-outer-spin-button {
+  opacity: 0.6;
+  filter: invert(0.85);
+}
+
 /* Focus visible for keyboard nav */
 :focus-visible {
   outline: 2px solid var(--accent);

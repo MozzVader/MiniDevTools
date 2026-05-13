@@ -21,11 +21,11 @@ function render_uuid_generator(container, toolMeta) {
       <div class="tool-card__body">
 
         <div class="grid-2" style="align-items: end;">
-          <div class="form-group">
+          <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:flex-end;">
             <label class="label">Cantidad</label>
             <input type="number" class="input" id="uuid-count" min="1" max="100" value="${uuidCount}">
           </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:end;">
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end;">
             <label class="btn btn--secondary" style="cursor:pointer;">
               <input type="checkbox" id="uuid-uppercase" ${uppercase ? 'checked' : ''} style="margin-right:4px;">
               Uppercase
