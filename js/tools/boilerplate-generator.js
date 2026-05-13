@@ -217,7 +217,7 @@ function render_boilerplate_generator(container, toolMeta) {
 
   const generators = {
 
-    /* ── HTML5 ── */
+    /* ── HTML5 (esqueleto minimo con archivos externos) ── */
     html5({ opts, comments }) {
       const c = comments;
       let code = `<!DOCTYPE html>
@@ -239,23 +239,72 @@ function render_boilerplate_generator(container, toolMeta) {
 </head>
 <body>
 
-${c ? '  <!-- Contenido principal -->\n' : ''}  <main>
+${c ? '  <!-- Tu contenido va aqui -->\n' : ''}  <main>
+
   </main>
 
-  <script src="app.js">${''}<\/script>
+  <script src="app.js"><\/script>
 </body>
 </html>`;
       return code;
     },
 
-    /* ── HTML + CSS + JS ── */
+    /* ── HTML + CSS + JS (todo inline, listo para usar) ── */
     'html-css-js'({ opts, comments }) {
       const c = comments;
-      let code = generators.html5({ opts, comments });
-      code = code.replace('<link rel="stylesheet" href="styles.css">', `<link rel="stylesheet" href="styles.css">
-${c ? '' : ''}`);
-      code = code.replace('  <main>\n  </main>', `  <main>
-${c ? '    <h1>Hello World</h1>\n' : ''}  </main>`);
+      let code = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">`;
+      if (opts['meta-viewport']) code += `
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">`;
+      if (opts['meta-desc']) code += `
+  <meta name="description" content="">`;
+      code += `
+  <title>Mi Proyecto</title>`;
+      if (opts['normalize-css']) code += `
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">`;
+      if (opts['font-awesome']) code += `
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">`;
+      code += `
+${c ? '  <!-- Estilos inline -->\n' : ''}  <style>
+${c ? '    /* Reset y estilos base */\n' : ''}    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      color: #1e293b;
+      background: #f8fafc;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    h1 { margin-bottom: 1rem; }
+    p  { margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+
+${c ? '  <!-- Contenido principal -->\n' : ''}  <main>
+    <h1>Hello World</h1>
+    <p>Listo para desarrollar.</p>
+  </main>
+
+${c ? '  <!-- Script inline -->\n' : ''}  <script>
+${c ? '    // Inicializacion cuando el DOM este listo\n' : ''}    document.addEventListener('DOMContentLoaded', () => {
+      console.log('App lista');
+    });
+  <\/script>
+</body>
+</html>`;
       return code;
     },
 
