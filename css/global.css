@@ -15,6 +15,7 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   /* Prevent scrollbar layout shift on theme change */
+  scrollbar-gutter: stable;
   overflow-y: scroll;
 }
 
@@ -27,6 +28,7 @@ body {
   background-color: var(--bg-base);
   transition: background-color 0.4s ease, color 0.4s ease;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 a {
@@ -175,20 +177,20 @@ ul, ol {
   pointer-events: none;
   z-index: 0;
   background:
-    /* Orb superior izquierdo (naranja) */
-    radial-gradient(ellipse 55vw 55vh at -5% 5%, var(--orb-1), transparent 65%),
+    /* Orb superior izquierdo (naranja) — grande, sale del viewport */
+    radial-gradient(ellipse 75vw 90vh at -15% 0%, var(--orb-1), transparent 75%),
     /* Orb inferior izquierdo (rosa/magenta) */
-    radial-gradient(ellipse 50vw 50vh at 0% 65%, var(--orb-2), transparent 65%),
+    radial-gradient(ellipse 70vw 80vh at -10% 60%, var(--orb-2), transparent 75%),
     /* Orb superior derecho (cyan) */
-    radial-gradient(ellipse 55vw 55vh at 105% 5%, var(--orb-3), transparent 65%),
+    radial-gradient(ellipse 75vw 90vh at 115% 0%, var(--orb-3), transparent 75%),
     /* Orb inferior derecho (verde) */
-    radial-gradient(ellipse 50vw 50vh at 100% 65%, var(--orb-4), transparent 65%),
-    /* Puente central: mezcla calido→frio para eliminar gap negro */
+    radial-gradient(ellipse 70vw 80vh at 110% 60%, var(--orb-4), transparent 75%),
+    /* Puente central: calido→frio para suavizar transicion */
     linear-gradient(90deg,
-      rgba(255, 107, 0, 0.04) 0%,
-      transparent 25%,
-      transparent 75%,
-      rgba(0, 212, 255, 0.04) 100%
+      rgba(255, 107, 0, 0.05) 0%,
+      transparent 20%,
+      transparent 80%,
+      rgba(0, 212, 255, 0.05) 100%
     ),
     /* Base */
     var(--bg-base);
@@ -201,49 +203,49 @@ ul, ol {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  /* Barras verticales cada 80px */
+  /* Light mode: lineas blancas */
   background: repeating-linear-gradient(
     90deg,
     transparent 0px,
     transparent 79px,
-    rgba(255, 255, 255, 0.03) 79px,
-    rgba(255, 255, 255, 0.03) 80px
+    rgba(255, 255, 255, 0.06) 79px,
+    rgba(255, 255, 255, 0.06) 80px
   );
-  /* Mask horizontal: invisible en centro, visible en bordes */
+  /* Mask: invisible en centro, visible en bordes, fade abajo */
   -webkit-mask-image:
     linear-gradient(to bottom, rgb(0,0,0), rgb(0,0,0) 70%, transparent),
     linear-gradient(90deg,
-      rgba(0,0,0,0.18) 0%,
-      rgba(0,0,0,0.12) 10%,
-      rgba(0,0,0,0.06) 20%,
-      transparent 40%,
-      transparent 60%,
-      rgba(0,0,0,0.06) 80%,
-      rgba(0,0,0,0.12) 90%,
-      rgba(0,0,0,0.18) 100%
+      rgba(0,0,0,0.35) 0%,
+      rgba(0,0,0,0.25) 10%,
+      rgba(0,0,0,0.12) 20%,
+      transparent 38%,
+      transparent 62%,
+      rgba(0,0,0,0.12) 80%,
+      rgba(0,0,0,0.25) 90%,
+      rgba(0,0,0,0.35) 100%
     );
   mask-image:
     linear-gradient(to bottom, rgb(0,0,0), rgb(0,0,0) 70%, transparent),
     linear-gradient(90deg,
-      rgba(0,0,0,0.18) 0%,
-      rgba(0,0,0,0.12) 10%,
-      rgba(0,0,0,0.06) 20%,
-      transparent 40%,
-      transparent 60%,
-      rgba(0,0,0,0.06) 80%,
-      rgba(0,0,0,0.12) 90%,
-      rgba(0,0,0,0.18) 100%
+      rgba(0,0,0,0.35) 0%,
+      rgba(0,0,0,0.25) 10%,
+      rgba(0,0,0,0.12) 20%,
+      transparent 38%,
+      transparent 62%,
+      rgba(0,0,0,0.12) 80%,
+      rgba(0,0,0,0.25) 90%,
+      rgba(0,0,0,0.35) 100%
     );
 }
 
-/* Dark mode: bars barely visible */
+/* Dark mode: lineas NEGRAS */
 [data-theme="dark"] .bg-bars {
   background: repeating-linear-gradient(
     90deg,
     transparent 0px,
     transparent 79px,
-    rgba(255, 255, 255, 0.02) 79px,
-    rgba(255, 255, 255, 0.02) 80px
+    rgba(0, 0, 0, 0.12) 79px,
+    rgba(0, 0, 0, 0.12) 80px
   );
 }
 
@@ -254,10 +256,10 @@ ul, ol {
   }
   .bg-gradient {
     background:
-      radial-gradient(ellipse 70vw 45vh at -10% 5%, var(--orb-1), transparent 60%),
-      radial-gradient(ellipse 65vw 40vh at -5% 55%, var(--orb-2), transparent 60%),
-      radial-gradient(ellipse 70vw 45vh at 110% 5%, var(--orb-3), transparent 60%),
-      radial-gradient(ellipse 65vw 40vh at 105% 55%, var(--orb-4), transparent 60%),
+      radial-gradient(ellipse 80vw 55vh at -15% 0%, var(--orb-1), transparent 70%),
+      radial-gradient(ellipse 75vw 50vh at -10% 50%, var(--orb-2), transparent 70%),
+      radial-gradient(ellipse 80vw 55vh at 115% 0%, var(--orb-3), transparent 70%),
+      radial-gradient(ellipse 75vw 50vh at 110% 50%, var(--orb-4), transparent 70%),
       var(--bg-base);
   }
 }
