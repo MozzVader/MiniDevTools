@@ -242,7 +242,7 @@ function render_boilerplate_generator(container, toolMeta) {
 ${c ? '  <!-- Contenido principal -->\n' : ''}  <main>
   </main>
 
-  <script src="app.js"><\/script>
+  <script src="app.js">${''}<\/script>
 </body>
 </html>`;
       return code;
@@ -260,7 +260,7 @@ ${c ? '    <h1>Hello World</h1>\n' : ''}  </main>`);
     },
 
     /* ── React SPA ── */
-    'react-spa'({ opts, comments }) => {
+    'react-spa'({ opts, comments }) {
       const ts = opts.typescript;
       const ext = ts ? 'tsx' : 'jsx';
       const c = comments;
@@ -286,7 +286,7 @@ root.render(
     },
 
     /* ── Vue SPA ── */
-    'vue-spa'({ opts, comments }) => {
+    'vue-spa'({ opts, comments }) {
       const c = comments;
       return `<template>
   <div>
@@ -304,14 +304,14 @@ export default {
     return { message };
   }
 };
-</script>
+${'</'}script>
 
 <style scoped>
 </style>`;
     },
 
     /* ── Next.js Page ── */
-    'nextjs-page'({ opts, comments }) => {
+    'nextjs-page'({ opts, comments }) {
       const ts = opts.typescript;
       const ext = ts ? 'tsx' : 'jsx';
       const c = comments;
@@ -326,7 +326,7 @@ export default {
     },
 
     /* ── Express API ── */
-    'express-api'({ opts, comments }) => {
+    'express-api'({ opts, comments }) {
       const ts = opts.typescript;
       const c = comments;
       return `${c ? '// Express REST API\n' : ''}${c ? '// npm install express\n\n' : ''}const express = require('express');
@@ -366,7 +366,7 @@ app.listen(PORT, () => {
     },
 
     /* ── React Component ── */
-    'react-component'({ opts, comments }) => {
+    'react-component'({ opts, comments }) {
       const ts = opts.typescript;
       const c = comments;
       return `${c ? '// Componente React reutilizable\n' : ''}${ts ? 'interface Props {\n  title: string;\n  children?: React.ReactNode;\n}\n\n' : ''}export default function Card${ts ? '(props: Props)' : ''}(${ts ? '{ title, children }' : ''}) {
@@ -382,7 +382,7 @@ app.listen(PORT, () => {
     },
 
     /* ── Python Flask ── */
-    'python-flask'({ opts, comments }) => {
+    'python-flask'({ opts, comments }) {
       const c = comments;
       return `${c ? '# Flask REST API\n' : ''}${c ? '# pip install flask\n\n' : ''}from flask import Flask, jsonify, request
 
