@@ -144,7 +144,7 @@ function render_boilerplate_generator(container, toolMeta) {
   }
 
   function getOpt(id) {
-    const cb = container.querySelector(`.bl-option[data-option="${opt.id}"] input`);
+    const cb = container.querySelector(`.bl-option[data-option="${id}"] input`);
     return cb ? cb.checked : false;
   }
 
