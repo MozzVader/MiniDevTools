@@ -1,0 +1,110 @@
+/* ═══════════════════════════════════════════════════════════════
+   Boilerplate Generator — Template grid + options + highlighting
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Template selector grid */
+.bl-templates {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.bl-template-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.bl-template-btn i {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.bl-template-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.bl-template-btn--active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Options grid */
+.bl-options {
+  margin-bottom: 4px;
+}
+
+.bl-options-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bl-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.bl-option:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.bl-option__label {
+  font-weight: 500;
+}
+
+/* Output area */
+.bl-output {
+  font-size: 13px;
+  line-height: 1.7;
+  tab-size: 2;
+}
+
+/* Syntax highlight colors */
+.bl-cmt  { color: #94a3b8; font-style: italic; }
+.bl-str  { color: #16a34a; }
+.bl-tag  { color: #2563eb; }
+.bl-bkt  { color: #64748b; }
+.bl-kw   { color: #6366f1; }
+
+[data-theme="dark"] .bl-cmt { color: #64748b; }
+[data-theme="dark"] .bl-str { color: #4ade80; }
+[data-theme="dark"] .bl-tag { color: #60a5fa; }
+[data-theme="dark"] .bl-bkt { color: #64748b; }
+[data-theme="dark"] .bl-kw  { color: #818cf8; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bl-templates {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}

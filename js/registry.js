@@ -201,6 +201,18 @@ const TOOL_REGISTRY = [
     render: null
   },
 
+  {
+    id: 'boilerplate-generator',
+    name: 'Boilerplate Generator',
+    icon: 'fa-solid fa-file-code',
+    category: 'text',
+    categoryLabel: 'Texto & Código',
+    description: 'Generador de templates para HTML, React, Vue, Express y mas',
+    jsFile: 'js/tools/boilerplate-generator.js',
+    cssFile: 'css/tools/boilerplate-generator.css',
+    render: null
+  },
+
   // ─── UTILITARIOS DEV ───
   {
     id: 'code-formatter',
