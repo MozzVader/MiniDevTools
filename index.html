@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MiniDevTools - Herramientas para Developers</title>
+  <meta name="description" content="Compendio de mini-herramientas para developers. Cropper, generadores CSS, formateadores y mas.">
+
+  <!-- Google Fonts: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/global.css">
+
+  <!-- Favicon (placeholder, se reemplazara) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F6E0;&#xFE0F;</text></svg>">
+</head>
+<body>
+
+  <!-- BACKGROUND: Mesh gradient orbs -->
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="bg-orb bg-orb--left-1"></div>
+    <div class="bg-orb bg-orb--left-2"></div>
+    <div class="bg-orb bg-orb--right-1"></div>
+    <div class="bg-orb bg-orb--right-2"></div>
+  </div>
+
+  <!-- APP LAYOUT: Sidebar + Main -->
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar__header">
+        <a href="#/home" class="sidebar__brand">
+          <span class="sidebar__logo">&#9881;</span>
+          <span class="sidebar__title">MiniDevTools</span>
+        </a>
+        <button class="sidebar__theme-toggle" id="theme-toggle" aria-label="Cambiar tema" title="Cambiar tema claro/oscuro">
+          <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="sidebar__nav" id="sidebar-nav">
+        <!-- Rendered by sidebar.js -->
+      </nav>
+
+      <!-- Mobile: overlay backdrop -->
+      <div class="sidebar__backdrop" id="sidebar-backdrop"></div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main" id="main-content">
+      <!-- Loading state -->
+      <div class="loading-state" id="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Cargando herramienta...</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile menu toggle -->
+  <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- Global toast element -->
+  <div class="copy-toast" id="global-toast"></div>
+
+  <!-- GLOBAL HELPERS -->
+  <script>
+    window.MiniDevTools = {
+      toastTimer: null,
+      showToast(message) {
+        var toast = document.getElementById('global-toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(this.toastTimer);
+        this.toastTimer = setTimeout(function() { toast.classList.remove('show'); }, 2000);
+      }
+    };
+  </script>
+
+  <!-- APP SCRIPTS -->
+  <script src="js/registry.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/sidebar.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
