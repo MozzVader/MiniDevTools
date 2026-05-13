@@ -104,6 +104,7 @@ function render_markdown_preview(container, toolMeta) {
 
   function updatePreview() {
     rawMarkdown = textarea.value;
+    autoResize();
     const html = parseMarkdown(rawMarkdown);
     if (!rawMarkdown.trim()) {
       preview.innerHTML = '<div class="md-empty">El preview aparecera aqui...</div>';
@@ -120,6 +121,12 @@ function render_markdown_preview(container, toolMeta) {
     const words = text.trim() ? text.trim().split(/\s+/).length : 0;
     const lines = text.split('\n').length;
     statsEl.textContent = `${chars} chars · ${words} words · ${lines} lines`;
+  }
+
+  /* Auto-resize textarea to fit content (no internal scroll) */
+  function autoResize() {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
   }
 
   /* ─── Live input ─── */
@@ -252,6 +259,7 @@ function render_markdown_preview(container, toolMeta) {
   });
 
   /* ─── Initial render ─── */
+  autoResize();
   updatePreview();
 
   /* ═══════════════════════════════════════════════════════════════
