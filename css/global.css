@@ -79,7 +79,23 @@ ul, ol {
    THEME VARIABLES
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── LIGHT THEME (default) ─── */
+/* ─── SHARED VARIABLES (both themes) ─── */
+:root {
+  --sidebar-width: 260px;
+  --header-height: 0px; /* No separate header — sidebar is full-height */
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── LIGHT THEME ─── */
 [data-theme="light"] {
   --bg-base: #ffffff;
   --bg-base-secondary: #f8f9fb;
@@ -107,24 +123,11 @@ ul, ol {
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
   --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.18);
 
-  --sidebar-width: 260px;
-  --header-height: 0px; /* No separate header — sidebar is full-height */
-
   /* Mesh gradient colors (warm left, cool right) */
   --orb-1: rgba(255, 107, 0, 0.55);
   --orb-2: rgba(255, 20, 147, 0.45);
   --orb-3: rgba(0, 212, 255, 0.55);
   --orb-4: rgba(0, 255, 136, 0.45);
-
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-full: 9999px;
-
-  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ─── DARK THEME ─── */
