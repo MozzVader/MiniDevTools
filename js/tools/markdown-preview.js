@@ -55,14 +55,18 @@ function render_markdown_preview(container, toolMeta) {
               <span><i class="fa-solid fa-pen-to-square" style="margin-right:4px;"></i> Editor</span>
               <span class="md-editor__stats" id="md-stats"></span>
             </div>
-            <textarea class="md-editor__textarea" id="md-input" placeholder="Escribe tu markdown aqui..." spellcheck="false">${escapeHtml(rawMarkdown)}</textarea>
+            <div class="md-editor__body">
+              <textarea class="md-editor__textarea" id="md-input" placeholder="Escribe tu markdown aqui..." spellcheck="false">${escapeHtml(rawMarkdown)}</textarea>
+            </div>
           </div>
           <!-- Preview -->
           <div class="md-preview">
             <div class="md-preview__label">
               <i class="fa-solid fa-eye" style="margin-right:4px;"></i> Preview
             </div>
-            <div class="md-preview__content" id="md-preview"></div>
+            <div class="md-preview__body">
+              <div class="md-preview__content" id="md-preview"></div>
+            </div>
           </div>
         </div>
 
