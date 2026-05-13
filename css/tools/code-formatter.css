@@ -1,0 +1,94 @@
+/* ═══════════════════════════════════════════════════════════════
+   Code Formatter — Tabs + JSON & HTML Syntax Highlighting
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Tabs ─── */
+.cf-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+.cf-tab {
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+  margin-bottom: -1px;
+}
+
+.cf-tab:hover {
+  color: var(--text-secondary);
+}
+
+.cf-tab--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ─── Action bar ─── */
+.cf-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.cf-indent-group {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─── Status ─── */
+.cf-status {
+  margin-bottom: 12px;
+  font-size: 13px;
+  min-height: 20px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   JSON Syntax Colors
+   ═══════════════════════════════════════════════════════════════ */
+
+.json-key { color: #6366f1; }
+.json-string { color: #16a34a; }
+.json-number { color: #ea580c; }
+.json-boolean { color: #2563eb; }
+.json-null { color: #9333ea; font-style: italic; }
+
+[data-theme="dark"] .json-key { color: #818cf8; }
+[data-theme="dark"] .json-string { color: #4ade80; }
+[data-theme="dark"] .json-number { color: #fb923c; }
+[data-theme="dark"] .json-boolean { color: #60a5fa; }
+[data-theme="dark"] .json-null { color: #c084fc; }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   HTML Syntax Colors
+   ═══════════════════════════════════════════════════════════════ */
+
+.html-bracket { color: #64748b; }
+.html-tag { color: #2563eb; }
+.html-attr-name { color: #6366f1; }
+.html-attr-value { color: #16a34a; }
+.html-comment { color: #94a3b8; font-style: italic; }
+.html-doctype { color: #94a3b8; font-style: italic; }
+
+[data-theme="dark"] .html-bracket { color: #64748b; }
+[data-theme="dark"] .html-tag { color: #60a5fa; }
+[data-theme="dark"] .html-attr-name { color: #818cf8; }
+[data-theme="dark"] .html-attr-value { color: #4ade80; }
+[data-theme="dark"] .html-comment { color: #64748b; }
+[data-theme="dark"] .html-doctype { color: #64748b; }

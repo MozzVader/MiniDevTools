@@ -204,14 +204,14 @@ const TOOL_REGISTRY = [
 
   // ─── UTILITARIOS DEV ───
   {
-    id: 'json-formatter',
-    name: 'JSON Formatter',
-    icon: '{ }',
+    id: 'code-formatter',
+    name: 'Code Formatter',
+    icon: '</> ',
     category: 'utils',
     categoryLabel: 'Utilitarios Dev',
-    description: 'Formatear, validar y visualizar JSON',
-    jsFile: 'js/tools/json-formatter.js',
-    cssFile: 'css/tools/json-formatter.css',
+    description: 'Formatear, minificar y validar JSON y HTML',
+    jsFile: 'js/tools/code-formatter.js',
+    cssFile: 'css/tools/code-formatter.css',
     render: null
   },
   {
