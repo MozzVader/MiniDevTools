@@ -136,7 +136,7 @@ ul, ol {
   --bg-base-secondary: #111827;
   --bg-card: #1e293b;
   --bg-sidebar: rgba(15, 23, 42, 0.88);
-  --bg-input: #1e293b;
+  --bg-input: #111827;
   --bg-hover: rgba(255, 255, 255, 0.06);
 
   --text-primary: #e2e8f0;
@@ -565,12 +565,13 @@ ul, ol {
   padding: 10px 20px;
   font-size: 14px;
   font-weight: 500;
+  font-family: inherit;
   border-radius: var(--radius-full);
+  min-height: 42px;
   transition: all var(--transition-fast);
   cursor: pointer;
   border: none;
   outline: none;
-  font-family: inherit;
   white-space: nowrap;
 }
 
@@ -626,6 +627,7 @@ ul, ol {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   outline: none;
+  min-height: 42px;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
@@ -979,28 +981,60 @@ textarea.input {
   }
 }
 
-/* ─── FORM CONTROLS — Dark mode fixes ─── */
+/* ─── FORM CONTROLS — Custom appearance ─── */
 
-/* Checkbox: accent-color adapts to theme in all modern browsers */
+/* Hide native number spinners (cleaner in both themes) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Custom checkbox — themed via CSS vars, no white flash in dark mode */
 input[type="checkbox"] {
-  accent-color: var(--accent);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   width: 16px;
   height: 16px;
+  border: 1.5px solid var(--border-hover);
+  border-radius: 4px;
+  background: var(--bg-card);
   cursor: pointer;
   flex-shrink: 0;
+  position: relative;
+  vertical-align: middle;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
-/* Number input spinners: tint for dark mode */
-[data-theme="dark"] .input::-webkit-inner-spin-button,
-[data-theme="dark"] .input::-webkit-outer-spin-button {
-  opacity: 0.6;
-  filter: invert(0.85);
+input[type="checkbox"]:hover {
+  border-color: var(--accent);
 }
 
-[data-theme="dark"] .input::-moz-inner-spin-button,
-[data-theme="dark"] .input::-moz-outer-spin-button {
-  opacity: 0.6;
-  filter: invert(0.85);
+input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 4.5px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 /* Focus visible for keyboard nav */
