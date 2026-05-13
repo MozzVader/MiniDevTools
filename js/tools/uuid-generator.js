@@ -1,14 +1,15 @@
 /* ═══════════════════════════════════════════════════════════════
    UUID Generator — Generador de UUIDs v4
+   Usa ToolStorage para persistir preferencias y
+   MiniDevTools.copyToClipboard como estandar de copiado.
    ═══════════════════════════════════════════════════════════════ */
 
 function render_uuid_generator(container, toolMeta) {
 
-  // Leer estado guardado
-  const savedState = JSON.parse(localStorage.getItem('minidevtools-uuid') || '{}');
-  let uuidCount = savedState.count || 1;
-  let uppercase = savedState.uppercase || false;
-  let noDashes = savedState.noDashes || false;
+  // Leer estado guardado via ToolStorage
+  let uuidCount = ToolStorage.getField('uuid-generator', 'count', 1);
+  let uppercase = ToolStorage.getField('uuid-generator', 'uppercase', false);
+  let noDashes = ToolStorage.getField('uuid-generator', 'noDashes', false);
   let generatedUUIDs = [];
 
   container.innerHTML = `
@@ -55,7 +56,6 @@ function render_uuid_generator(container, toolMeta) {
   const output = document.getElementById('uuid-output');
 
   function generateUUID() {
-    // UUID v4
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
       const r = Math.random() * 16 | 0;
       const v = c === 'x' ? r : (r & 0x3 | 0x8);
@@ -70,11 +70,11 @@ function render_uuid_generator(container, toolMeta) {
   }
 
   function saveState() {
-    localStorage.setItem('minidevtools-uuid', JSON.stringify({
+    ToolStorage.save('uuid-generator', {
       count: parseInt(countInput.value) || 1,
       uppercase: uppercaseCheck.checked,
       noDashes: noDashesCheck.checked
-    }));
+    });
   }
 
   function render() {
@@ -89,13 +89,11 @@ function render_uuid_generator(container, toolMeta) {
 
     generatedUUIDs.forEach((uuid, i) => {
       const formatted = formatUUID(uuid);
+      const escaped = formatted.replace(/'/g, "\\'");
       html += `
         <div class="code-output" style="padding:10px 40px 10px 14px; font-size:14px; position:relative; word-break:break-all;">
           <span style="color:var(--text-muted); font-size:11px; margin-right:8px;">#${i + 1}</span>${formatted}
-          <button class="btn btn--ghost btn--icon btn--sm" style="position:absolute; top:6px; right:6px;" onclick="
-            navigator.clipboard.writeText('${formatted}');
-            MiniDevTools.showToast('Copiado!');
-          " title="Copiar">📋</button>
+          <button class="btn btn--ghost btn--icon btn--sm copy-single-btn" data-uuid="${escaped}" style="position:absolute; top:6px; right:6px;" title="Copiar">📋</button>
         </div>
       `;
     });
@@ -107,6 +105,14 @@ function render_uuid_generator(container, toolMeta) {
     saveState();
   }
 
+  // Delegacion de eventos para botones de copiar individual
+  output.addEventListener('click', (e) => {
+    const btn = e.target.closest('.copy-single-btn');
+    if (btn) {
+      MiniDevTools.copyToClipboard(btn.dataset.uuid);
+    }
+  });
+
   generateBtn.addEventListener('click', render);
   countInput.addEventListener('change', saveState);
   uppercaseCheck.addEventListener('change', () => { saveState(); if (generatedUUIDs.length) render(); });
@@ -114,19 +120,12 @@ function render_uuid_generator(container, toolMeta) {
 
   copyAllBtn.addEventListener('click', () => {
     const text = generatedUUIDs.map(formatUUID).join('\n');
-    navigator.clipboard.writeText(text).then(() => {
-      MiniDevTools.showToast(`${generatedUUIDs.length} UUIDs copiados!`);
-    });
+    MiniDevTools.copyToClipboard(text, generatedUUIDs.length + ' UUIDs copiados!');
   });
 
   // Auto-generate on load
   render();
 }
 
-// Registrar como función global (fallback para carga clásica)
+// Registrar como funcion global (fallback para carga clasica)
 window.render_uuid_generator = render_uuid_generator;
-
-// Exportar como ES module
-if (typeof window !== 'undefined') {
-  render_uuid_generator.render = render_uuid_generator;
-}

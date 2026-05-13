@@ -98,11 +98,44 @@
         toast.classList.add('show');
         clearTimeout(this.toastTimer);
         this.toastTimer = setTimeout(function() { toast.classList.remove('show'); }, 2000);
+      },
+
+      /**
+       * Copia texto al clipboard y muestra toast de confirmacion.
+       * Estandar para todas las herramientas que generan codigo/datos.
+       * @param {string} text - Texto a copiar
+       * @param {string} [successMsg] - Mensaje del toast (default: "Copiado!")
+       * @returns {Promise<boolean>} true si se copio, false si hubo error
+       */
+      async copyToClipboard(text, successMsg) {
+        try {
+          await navigator.clipboard.writeText(text);
+          this.showToast(successMsg || 'Copiado al portapapeles');
+          return true;
+        } catch (e) {
+          // Fallback para navegadores sin soporte de Clipboard API
+          try {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            this.showToast(successMsg || 'Copiado al portapapeles');
+            return true;
+          } catch (e2) {
+            this.showToast('Error al copiar');
+            return false;
+          }
+        }
       }
     };
   </script>
 
   <!-- APP SCRIPTS -->
+  <script src="js/storage.js"></script>
   <script src="js/registry.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/sidebar.js"></script>
