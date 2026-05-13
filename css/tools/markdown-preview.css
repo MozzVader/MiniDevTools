@@ -12,6 +12,9 @@
   border: 1px solid var(--border);
   border-bottom: none;
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  position: sticky;
+  top: 32px;
+  z-index: 10;
 }
 
 .md-toolbar__btn {
@@ -77,6 +80,9 @@
   background: var(--bg-input);
   border-bottom: 1px solid var(--border);
   user-select: none;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .md-editor__stats {
@@ -122,6 +128,9 @@
   background: var(--bg-input);
   border-bottom: 1px solid var(--border);
   user-select: none;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .md-preview__content {
