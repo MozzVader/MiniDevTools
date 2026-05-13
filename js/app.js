@@ -55,7 +55,7 @@ const App = (() => {
       cat.tools.forEach(tool => {
         toolsCardsHtml += `
           <a href="#/${tool.id}" class="hero__tool-card">
-            <span class="hero__tool-card__icon">${tool.icon}</span>
+            <span class="hero__tool-card__icon"><i class="${tool.icon}"></i></span>
             <div>
               <span class="hero__tool-card__name">${tool.name}</span>
               <span class="hero__tool-card__cat">${cat.label}</span>

@@ -352,6 +352,30 @@ ul, ol {
   box-shadow: 0 0 0 2px var(--accent-light);
 }
 
+.sidebar__search-clear {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px;
+  display: none; /* hidden by default */
+  transition: color var(--transition-fast);
+  line-height: 1;
+}
+
+.sidebar__search-clear:hover {
+  color: var(--text-primary);
+}
+
+.sidebar__search-input:not(:placeholder-shown) ~ .sidebar__search-clear {
+  display: block;
+}
+
 .sidebar__brand {
   display: flex;
   align-items: center;
@@ -367,6 +391,10 @@ ul, ol {
 .sidebar__logo {
   font-size: 24px;
   line-height: 1;
+}
+
+.sidebar__logo i {
+  font-size: 22px;
 }
 
 .sidebar__title {

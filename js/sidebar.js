@@ -27,7 +27,7 @@ const Sidebar = (() => {
     // Home link (siempre visible, no se filtra)
     html += `
       <a href="#/home" class="nav-item nav-item--home ${currentHash === '/home' ? 'active' : ''}" data-route="/home">
-        <span class="nav-item__icon">🏠</span>
+        <span class="nav-item__icon"><i class="fa-solid fa-house"></i></span>
         <span class="nav-item__label">Inicio</span>
       </a>
     `;
@@ -42,7 +42,7 @@ const Sidebar = (() => {
         const isActive = currentHash === `/${tool.id}` ? 'active' : '';
         html += `
           <a href="#/${tool.id}" class="nav-item" data-route="/${tool.id}" data-tool-name="${tool.name.toLowerCase()}" data-tool-desc="${tool.description.toLowerCase()}" data-tool-cat="${cat.label.toLowerCase()}" title="${tool.description}">
-            <span class="nav-item__icon">${tool.icon}</span>
+            <span class="nav-item__icon"><i class="${tool.icon}"></i></span>
             <span class="nav-item__label">${tool.name}</span>
           </a>
         `;
@@ -85,6 +85,16 @@ const Sidebar = (() => {
         searchInput.blur();
       }
     });
+
+    // Clear button
+    const clearBtn = document.getElementById('sidebar-search-clear');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        applyFilter('');
+        searchInput.focus();
+      });
+    }
   }
 
   function applyFilter(query) {

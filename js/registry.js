@@ -12,19 +12,18 @@ const TOOL_REGISTRY = [
   {
     id: 'image-cropper',
     name: 'Image Cropper',
-    icon: '🖼️',
+    icon: 'fa-solid fa-crop-simple',
     category: 'images',
     categoryLabel: 'Imágenes',
     description: 'Recortar imágenes a proporciones específicas',
-    // render se carga via lazy loading desde js/tools/
     jsFile: 'js/tools/image-cropper.js',
     cssFile: 'css/tools/image-cropper.css',
-    render: null // se llena dinámicamente
+    render: null
   },
   {
     id: 'image-resizer',
     name: 'Image Resizer',
-    icon: '📐',
+    icon: 'fa-solid fa-up-right-and-down-left-from-center',
     category: 'images',
     categoryLabel: 'Imágenes',
     description: 'Redimensionar con opciones de calidad y formato',
@@ -35,7 +34,7 @@ const TOOL_REGISTRY = [
   {
     id: 'image-to-base64',
     name: 'Image to Base64',
-    icon: '🔢',
+    icon: 'fa-solid fa-code',
     category: 'images',
     categoryLabel: 'Imágenes',
     description: 'Convertir imágenes a base64 para CSS/HTML',
@@ -46,7 +45,7 @@ const TOOL_REGISTRY = [
   {
     id: 'mac-frame',
     name: 'Marco macOS',
-    icon: '🖥️',
+    icon: 'fa-brands fa-apple',
     category: 'images',
     categoryLabel: 'Imágenes',
     description: 'Agregar marco estilo ventana macOS a imágenes',
@@ -57,7 +56,7 @@ const TOOL_REGISTRY = [
   {
     id: 'favicon-generator',
     name: 'Favicon Generator',
-    icon: '⭐',
+    icon: 'fa-solid fa-star',
     category: 'images',
     categoryLabel: 'Imágenes',
     description: 'Generar favicons en todos los tamaños',
@@ -68,7 +67,7 @@ const TOOL_REGISTRY = [
   {
     id: 'placeholder-generator',
     name: 'Placeholder Generator',
-    icon: '🖼️',
+    icon: 'fa-solid fa-image',
     category: 'images',
     categoryLabel: 'Imágenes',
     description: 'Generar placeholders con texto y colores',
@@ -81,7 +80,7 @@ const TOOL_REGISTRY = [
   {
     id: 'shadow-generator',
     name: 'Shadow Generator',
-    icon: '🌑',
+    icon: 'fa-solid fa-clone',
     category: 'css',
     categoryLabel: 'CSS & Diseño',
     description: 'Generador visual de box-shadow con preview',
@@ -92,7 +91,7 @@ const TOOL_REGISTRY = [
   {
     id: 'border-radius-generator',
     name: 'Border Radius',
-    icon: '⬜',
+    icon: 'fa-regular fa-square',
     category: 'css',
     categoryLabel: 'CSS & Diseño',
     description: 'Crear bordes redondeados personalizados',
@@ -103,7 +102,7 @@ const TOOL_REGISTRY = [
   {
     id: 'gradient-generator',
     name: 'Gradient Generator',
-    icon: '🌈',
+    icon: 'fa-solid fa-palette',
     category: 'css',
     categoryLabel: 'CSS & Diseño',
     description: 'Gradientes CSS con preview y código copiable',
@@ -114,7 +113,7 @@ const TOOL_REGISTRY = [
   {
     id: 'color-palette',
     name: 'Color Palette',
-    icon: '🎨',
+    icon: 'fa-solid fa-droplet',
     category: 'css',
     categoryLabel: 'CSS & Diseño',
     description: 'Generar paletas de colores exportables',
@@ -125,7 +124,7 @@ const TOOL_REGISTRY = [
   {
     id: 'flexbox-playground',
     name: 'Flexbox Playground',
-    icon: '📦',
+    icon: 'fa-solid fa-table-cells-large',
     category: 'css',
     categoryLabel: 'CSS & Diseño',
     description: 'Visualizador interactivo de flexbox',
@@ -136,7 +135,7 @@ const TOOL_REGISTRY = [
   {
     id: 'image-color-picker',
     name: 'Image Color Picker',
-    icon: '💧',
+    icon: 'fa-solid fa-eye-dropper',
     category: 'css',
     categoryLabel: 'CSS & Diseño',
     description: 'Extraer colores de una imagen',
@@ -149,7 +148,7 @@ const TOOL_REGISTRY = [
   {
     id: 'lorem-ipsum',
     name: 'Lorem Ipsum AR',
-    icon: '📝',
+    icon: 'fa-solid fa-align-left',
     category: 'text',
     categoryLabel: 'Texto & Código',
     description: 'Generador de texto de relleno en español',
@@ -160,7 +159,7 @@ const TOOL_REGISTRY = [
   {
     id: 'minifier',
     name: 'Minifier CSS/JS/HTML',
-    icon: '🗜️',
+    icon: 'fa-solid fa-compress',
     category: 'text',
     categoryLabel: 'Texto & Código',
     description: 'Comprimir código para producción',
@@ -171,7 +170,7 @@ const TOOL_REGISTRY = [
   {
     id: 'markdown-preview',
     name: 'Markdown Previewer',
-    icon: '📋',
+    icon: 'fa-brands fa-markdown',
     category: 'text',
     categoryLabel: 'Texto & Código',
     description: 'Escribir markdown y ver preview en tiempo real',
@@ -182,7 +181,7 @@ const TOOL_REGISTRY = [
   {
     id: 'character-counter',
     name: 'Character Counter',
-    icon: '🔢',
+    icon: 'fa-solid fa-hashtag',
     category: 'text',
     categoryLabel: 'Texto & Código',
     description: 'Contar caracteres, palabras, oraciones',
@@ -193,7 +192,7 @@ const TOOL_REGISTRY = [
   {
     id: 'text-case-converter',
     name: 'Text Case Converter',
-    icon: '🔤',
+    icon: 'fa-solid fa-font',
     category: 'text',
     categoryLabel: 'Texto & Código',
     description: 'Convertir entre mayúsculas, camelCase, snake_case...',
@@ -206,7 +205,7 @@ const TOOL_REGISTRY = [
   {
     id: 'code-formatter',
     name: 'Code Formatter',
-    icon: '</> ',
+    icon: 'fa-solid fa-code',
     category: 'utils',
     categoryLabel: 'Utilitarios Dev',
     description: 'Formatear, minificar y validar JSON y HTML',
@@ -217,7 +216,7 @@ const TOOL_REGISTRY = [
   {
     id: 'base64-encoder',
     name: 'Base64 Encode/Decode',
-    icon: '🔐',
+    icon: 'fa-solid fa-lock',
     category: 'utils',
     categoryLabel: 'Utilitarios Dev',
     description: 'Codificar y decodificar en base64',
@@ -228,7 +227,7 @@ const TOOL_REGISTRY = [
   {
     id: 'url-encoder',
     name: 'URL Encode/Decode',
-    icon: '🔗',
+    icon: 'fa-solid fa-link',
     category: 'utils',
     categoryLabel: 'Utilitarios Dev',
     description: 'Encodear y decodear URLs',
@@ -239,7 +238,7 @@ const TOOL_REGISTRY = [
   {
     id: 'timestamp-converter',
     name: 'Timestamp Converter',
-    icon: '🕐',
+    icon: 'fa-regular fa-clock',
     category: 'utils',
     categoryLabel: 'Utilitarios Dev',
     description: 'Convertir entre Unix timestamp y fecha legible',
@@ -250,7 +249,7 @@ const TOOL_REGISTRY = [
   {
     id: 'uuid-generator',
     name: 'UUID Generator',
-    icon: '🔑',
+    icon: 'fa-solid fa-key',
     category: 'utils',
     categoryLabel: 'Utilitarios Dev',
     description: 'Generar UUIDs v4',
