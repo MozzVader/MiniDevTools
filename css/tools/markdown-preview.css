@@ -82,7 +82,7 @@
   user-select: none;
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 5;
 }
 
 .md-editor__stats {
@@ -132,7 +132,7 @@
   user-select: none;
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 5;
 }
 
 .md-preview__content {
