@@ -27,6 +27,11 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
+  background: #fff;
+}
+
+[data-theme="dark"] .sg-preview {
+  background: #0f172a;
 }
 
 /* Checkerboard background */
@@ -245,7 +250,6 @@
   cursor: pointer;
   transition: all var(--transition-fast);
   position: relative;
-  overflow: hidden;
 }
 
 .sg-preset:hover {

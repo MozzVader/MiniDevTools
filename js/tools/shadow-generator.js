@@ -262,7 +262,7 @@ function render_shadow_generator(container, toolMeta) {
       const inset = p.inset ? 'inset ' : '';
       const shadow = `${inset}${p.ox}px ${p.oy}px ${p.blur}px ${p.spread}px ${p.color}`;
       return `
-        <div class="sg-preset" data-pi="${i}" data-tooltip-bottom="${p.name}" style="background:var(--bg-base-secondary);">
+        <div class="sg-preset" data-pi="${i}" data-tooltip="${p.name}" data-tooltip-bottom style="background:var(--bg-base-secondary);">
           <div class="sg-preset__box" style="box-shadow:${shadow}; border-radius:${Math.min(p.radius, 12)}px;"></div>
         </div>`;
     }).join('');
