@@ -11,9 +11,20 @@ function render_color_palette(container, toolMeta) {
   const saved = ToolStorage.load('color-palette');
   const s = saved ? saved.state : null;
 
+  /* Check for incoming color from URL (e.g. from Image Color Picker) */
+  const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+  const incomingColor = urlParams.get('color');
+
   let mode = s ? s.mode : 'analogous';
+  let baseHex = s ? s.base : '#6366f1';
   let colors = s ? s.colors : generatePalette('#6366f1', 'analogous');
   let locked = s ? (s.locked || [false, false, false, false, false]) : [false, false, false, false, false];
+
+  /* Override with incoming color if present */
+  if (incomingColor && /^#[0-9a-fA-F]{6}$/.test(incomingColor)) {
+    baseHex = incomingColor.toLowerCase();
+    colors = generatePalette(baseHex, mode);
+  }
 
   const COUNT = 5;
 
@@ -188,8 +199,8 @@ function render_color_palette(container, toolMeta) {
             <div class="cp-base-row" id="cp-base-row">
               <label class="label">Color base</label>
               <div class="cp-base-picker">
-                <input type="color" id="cp-base-color" value="${s ? s.base : '#6366f1'}">
-                <input type="text" class="input" id="cp-base-hex" value="${s ? s.base : '#6366f1'}" maxlength="7" spellcheck="false" style="width:90px;">
+                <input type="color" id="cp-base-color" value="${baseHex}">
+                <input type="text" class="input" id="cp-base-hex" value="${baseHex}" maxlength="7" spellcheck="false" style="width:90px;">
               </div>
               <button class="btn btn--secondary btn--icon" id="cp-random" data-tooltip="Random" style="flex-shrink:0;">
                 <i class="fa-solid fa-dice"></i>
@@ -266,7 +277,7 @@ function render_color_palette(container, toolMeta) {
   const exportBtns = container.querySelectorAll('.cp-export-btn');
 
   let exportFormat = 'css';
-  let baseHex = s ? s.base : '#6366f1';
+  /* baseHex already declared above with incoming color support */
 
   /* ─── Render Palette ─── */
   function renderPalette() {

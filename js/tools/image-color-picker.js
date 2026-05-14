@@ -326,6 +326,26 @@ function render_image_color_picker(container, toolMeta) {
      IMAGE LOADING
      ═══════════════════════════════════════════════════════ */
 
+  function fitImage() {
+    /* Size the image element to fill the wrapper while keeping aspect ratio.
+       This eliminates object-fit:contain issues with coordinate mapping. */
+    const wrapW = imageWrap.clientWidth || 600;
+    const maxH = 520;
+    const natW = img.naturalWidth || 1;
+    const natH = img.naturalHeight || 1;
+    const imgRatio = natW / natH;
+    let elW, elH;
+    if (natW / wrapW > natH / maxH) {
+      elW = wrapW;
+      elH = wrapW / imgRatio;
+    } else {
+      elH = maxH;
+      elW = maxH * imgRatio;
+    }
+    img.style.width = Math.round(elW) + 'px';
+    img.style.height = Math.round(elH) + 'px';
+  }
+
   function loadImageSrc(src, crossOrigin) {
     img.onload = () => {
       imgNatW = img.naturalWidth;
@@ -346,6 +366,10 @@ function render_image_color_picker(container, toolMeta) {
       /* Show image, hide dropzone */
       dropzone.style.display = 'none';
       imageWrap.style.display = '';
+
+      /* Fit image to container (replaces object-fit:contain) */
+      fitImage();
+
       hasImage = true;
 
       /* Extract palette */
@@ -440,36 +464,16 @@ function render_image_color_picker(container, toolMeta) {
     lensCtx.stroke();
   }
 
-  /* ─── Helper: get actual rendered size within object-fit:contain ─── */
-  function getRenderedSize() {
-    const natW = img.naturalWidth || 1;
-    const natH = img.naturalHeight || 1;
-    const elW = img.clientWidth;
-    const elH = img.clientHeight;
-    const imgRatio = natW / natH;
-    const elRatio = elW / elH;
-    let rW, rH, offX, offY;
-    if (imgRatio > elRatio) {
-      rW = elW; rH = elW / imgRatio;
-      offX = 0; offY = (elH - rH) / 2;
-    } else {
-      rH = elH; rW = elH * imgRatio;
-      offX = (elW - rW) / 2; offY = 0;
-    }
-    return { renderedW: rW, renderedH: rH, offsetX: offX, offsetY: offY };
-  }
-
   /* ─── Mouse events on image ─── */
-  let isOverImage = false;
+  /* No object-fit:contain needed — image is sized via JS to match container.
+     This means clientWidth/clientHeight IS the actual rendered size, 1:1 mapping. */
 
   img.addEventListener('mouseenter', () => {
     if (!hasImage) return;
-    isOverImage = true;
     squaresWrap.style.display = '';
   });
 
   img.addEventListener('mouseleave', () => {
-    isOverImage = false;
     lens.style.display = 'none';
     hoverColor = null;
     if (sqHover.style.background) sqHover.style.background = '';
@@ -480,28 +484,14 @@ function render_image_color_picker(container, toolMeta) {
     if (!hasImage) return;
 
     const rect = img.getBoundingClientRect();
-    const { renderedW, renderedH, offsetX: imgOffX, offsetY: imgOffY } = getRenderedSize();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
 
-    /* Mouse position relative to the element */
-    const elX = e.clientX - rect.left;
-    const elY = e.clientY - rect.top;
-
-    /* Position relative to the actual rendered image (inside object-fit:contain) */
-    const relX = elX - imgOffX;
-    const relY = elY - imgOffY;
-
-    /* If outside the rendered image area, hide lens */
-    if (relX < 0 || relX > renderedW || relY < 0 || relY > renderedH) {
-      lens.style.display = 'none';
-      img.style.cursor = '';
-      return;
-    }
-
-    /* Map to canvas coordinates */
-    const scaleX = offCanvas.width / renderedW;
-    const scaleY = offCanvas.height / renderedH;
-    const cx = Math.round(relX * scaleX);
-    const cy = Math.round(relY * scaleY);
+    /* Map to canvas coordinates — 1:1 since we sized the image ourselves */
+    const scaleX = offCanvas.width / rect.width;
+    const scaleY = offCanvas.height / rect.height;
+    const cx = Math.round(offsetX * scaleX);
+    const cy = Math.round(offsetY * scaleY);
 
     /* Clamp to valid canvas range */
     const px = Math.max(0, Math.min(offCanvas.width - 1, cx));
@@ -544,7 +534,8 @@ function render_image_color_picker(container, toolMeta) {
   });
 
   /* ─── Click to pick ─── */
-  img.addEventListener('click', () => {
+  img.addEventListener('click', (e) => {
+    /* Don't pick if click was outside image bounds */
     if (!hoverColor) return;
     pickedColor = { ...hoverColor };
 
@@ -763,12 +754,21 @@ function render_image_color_picker(container, toolMeta) {
     btn.addEventListener('click', () => {
       const type = btn.dataset.copy;
       let text = '';
+      if (!pickedColor) return;
       if (type === 'hex') text = pickedColor.hex.toUpperCase();
       else if (type === 'rgb') text = `rgb(${pickedColor.r}, ${pickedColor.g}, ${pickedColor.b})`;
       else if (type === 'hsl') text = `hsl(${pickedColor.h}, ${pickedColor.s}%, ${pickedColor.l}%)`;
       MiniDevTools.copyToClipboard(text, 'Color copiado!');
     });
   });
+
+  /* ─── Click swatch → navigate to Color Palette with this color ─── */
+  infoSwatch.addEventListener('click', () => {
+    if (!pickedColor) return;
+    window.location.hash = `#/color-palette?color=${encodeURIComponent(pickedColor.hex)}`;
+  });
+  infoSwatch.style.cursor = 'pointer';
+  infoSwatch.title = 'Generar paleta con este color';
 
   /* ═══════════════════════════════════════════════════════
      HISTORY
@@ -817,6 +817,11 @@ function render_image_color_picker(container, toolMeta) {
      INIT
      ═══════════════════════════════════════════════════════ */
   renderHistory();
+
+  /* Re-fit image on window resize */
+  window.addEventListener('resize', () => {
+    if (hasImage) fitImage();
+  });
 }
 
 /* Registro global */
