@@ -176,7 +176,7 @@ function render_color_palette(container, toolMeta) {
 
   /* ─── Saved Palettes ─── */
   const MAX_SAVED = 24;
-  let savedPalettes = (saved && saved.savedPalettes) ? saved.savedPalettes : [];
+  let savedPalettes = s && s.savedPalettes ? s.savedPalettes : [];
 
   /* ─── Render UI ─── */
   container.innerHTML = `
