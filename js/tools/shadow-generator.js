@@ -97,7 +97,7 @@ function render_shadow_generator(container, toolMeta) {
               <button class="btn btn--primary" id="sg-copy" style="flex:1;">
                 <i class="fa-regular fa-copy"></i> Copiar CSS
               </button>
-              <button class="btn btn--secondary btn--icon" id="sg-reset" title="Reset">
+              <button class="btn btn--secondary btn--icon" id="sg-reset" data-tooltip="Reset">
                 <i class="fa-solid fa-rotate-left"></i>
               </button>
             </div>
@@ -262,7 +262,7 @@ function render_shadow_generator(container, toolMeta) {
       const inset = p.inset ? 'inset ' : '';
       const shadow = `${inset}${p.ox}px ${p.oy}px ${p.blur}px ${p.spread}px ${p.color}`;
       return `
-        <div class="sg-preset" data-pi="${i}" title="${p.name}" style="background:var(--bg-base-secondary);">
+        <div class="sg-preset" data-pi="${i}" data-tooltip="${p.name}" style="background:var(--bg-base-secondary);">
           <div class="sg-preset__box" style="box-shadow:${shadow}; border-radius:${Math.min(p.radius, 12)}px;"></div>
         </div>`;
     }).join('');

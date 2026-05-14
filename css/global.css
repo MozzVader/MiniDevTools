@@ -1070,3 +1070,77 @@ input[type="checkbox"]:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   CUSTOM TOOLTIPS — Themed via CSS variables
+   Usage: add data-tooltip="Text" to any element.
+   Tooltips appear above by default; add data-tooltip-bottom
+   to show below instead.
+   ═══════════════════════════════════════════════════════════════ */
+
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--text-inverse);
+  background: var(--text-primary);
+  border-radius: 6px;
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 9999;
+}
+
+[data-tooltip]::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  border: 5px solid transparent;
+  border-top-color: var(--text-primary);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 9999;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Bottom variant */
+[data-tooltip-bottom]::after {
+  bottom: auto;
+  top: calc(100% + 8px);
+  transform: translateX(-50%) translateY(-4px);
+}
+
+[data-tooltip-bottom]::before {
+  bottom: auto;
+  top: calc(100% + 4px);
+  transform: translateX(-50%) translateY(-4px);
+  border-top-color: transparent;
+  border-bottom-color: var(--text-primary);
+}
+
+[data-tooltip-bottom]:hover::after,
+[data-tooltip-bottom]:hover::before {
+  transform: translateX(-50%) translateY(0);
+}

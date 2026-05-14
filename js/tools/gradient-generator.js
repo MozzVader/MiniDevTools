@@ -85,7 +85,7 @@ function render_gradient_generator(container, toolMeta) {
               <button class="btn btn--primary" id="gg-copy" style="flex:1;">
                 <i class="fa-regular fa-copy"></i> Copiar CSS
               </button>
-              <button class="btn btn--secondary btn--icon" id="gg-random" title="Random">
+              <button class="btn btn--secondary btn--icon" id="gg-random" data-tooltip="Random">
                 <i class="fa-solid fa-shuffle"></i>
               </button>
             </div>
@@ -166,7 +166,7 @@ function render_gradient_generator(container, toolMeta) {
         <input type="color" class="gg-stop__color" value="${stop.color}" data-i="${i}">
         <input type="text" class="input gg-stop__hex" value="${stop.color}" data-i="${i}" maxlength="7" spellcheck="false">
         <input type="number" class="input gg-stop__pos" value="${stop.position}" data-i="${i}" min="0" max="100">
-        <button class="gg-stop__remove" data-i="${i}" title="Eliminar" ${stops.length <= 2 ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>
+        <button class="gg-stop__remove" data-i="${i}" data-tooltip="Eliminar" ${stops.length <= 2 ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -236,7 +236,7 @@ function render_gradient_generator(container, toolMeta) {
         case 'radial': bg = `radial-gradient(circle, ${stopsStr})`; break;
         case 'conic':  bg = `conic-gradient(from ${p.angle}deg, ${stopsStr})`; break;
       }
-      return `<div class="gg-preset" data-pi="${i}" style="background:${bg};" title="Preset ${i + 1}"></div>`;
+      return `<div class="gg-preset" data-pi="${i}" style="background:${bg};" data-tooltip="Preset ${i + 1}"></div>`;
     }).join('');
 
     presetsWrap.querySelectorAll('.gg-preset').forEach(el => {

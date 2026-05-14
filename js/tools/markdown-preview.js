@@ -24,27 +24,27 @@ function render_markdown_preview(container, toolMeta) {
 
         <!-- Toolbar -->
         <div class="md-toolbar">
-          <button class="md-toolbar__btn" data-action="h1" title="Heading 1"><b>H1</b></button>
-          <button class="md-toolbar__btn" data-action="h2" title="Heading 2"><b>H2</b></button>
-          <button class="md-toolbar__btn" data-action="h3" title="Heading 3"><b>H3</b></button>
+          <button class="md-toolbar__btn" data-action="h1" data-tooltip="Heading 1"><b>H1</b></button>
+          <button class="md-toolbar__btn" data-action="h2" data-tooltip="Heading 2"><b>H2</b></button>
+          <button class="md-toolbar__btn" data-action="h3" data-tooltip="Heading 3"><b>H3</b></button>
           <div class="md-toolbar__sep"></div>
-          <button class="md-toolbar__btn" data-action="bold" title="Bold (Ctrl+B)"><i class="fa-solid fa-bold"></i></button>
-          <button class="md-toolbar__btn" data-action="italic" title="Italic (Ctrl+I)"><i class="fa-solid fa-italic"></i></button>
-          <button class="md-toolbar__btn" data-action="strike" title="Strikethrough"><i class="fa-solid fa-strikethrough"></i></button>
+          <button class="md-toolbar__btn" data-action="bold" data-tooltip="Bold (Ctrl+B)"><i class="fa-solid fa-bold"></i></button>
+          <button class="md-toolbar__btn" data-action="italic" data-tooltip="Italic (Ctrl+I)"><i class="fa-solid fa-italic"></i></button>
+          <button class="md-toolbar__btn" data-action="strike" data-tooltip="Strikethrough"><i class="fa-solid fa-strikethrough"></i></button>
           <div class="md-toolbar__sep"></div>
-          <button class="md-toolbar__btn" data-action="link" title="Link"><i class="fa-solid fa-link"></i></button>
-          <button class="md-toolbar__btn" data-action="image" title="Image"><i class="fa-solid fa-image"></i></button>
+          <button class="md-toolbar__btn" data-action="link" data-tooltip="Link"><i class="fa-solid fa-link"></i></button>
+          <button class="md-toolbar__btn" data-action="image" data-tooltip="Image"><i class="fa-solid fa-image"></i></button>
           <div class="md-toolbar__sep"></div>
-          <button class="md-toolbar__btn" data-action="code" title="Inline code"><i class="fa-solid fa-code"></i></button>
-          <button class="md-toolbar__btn" data-action="codeblock" title="Code block"><i class="fa-solid fa-terminal"></i></button>
+          <button class="md-toolbar__btn" data-action="code" data-tooltip="Inline code"><i class="fa-solid fa-code"></i></button>
+          <button class="md-toolbar__btn" data-action="codeblock" data-tooltip="Code block"><i class="fa-solid fa-terminal"></i></button>
           <div class="md-toolbar__sep"></div>
-          <button class="md-toolbar__btn" data-action="ul" title="Unordered list"><i class="fa-solid fa-list-ul"></i></button>
-          <button class="md-toolbar__btn" data-action="ol" title="Ordered list"><i class="fa-solid fa-list-ol"></i></button>
-          <button class="md-toolbar__btn" data-action="task" title="Task list"><i class="fa-solid fa-square-check"></i></button>
+          <button class="md-toolbar__btn" data-action="ul" data-tooltip="Unordered list"><i class="fa-solid fa-list-ul"></i></button>
+          <button class="md-toolbar__btn" data-action="ol" data-tooltip="Ordered list"><i class="fa-solid fa-list-ol"></i></button>
+          <button class="md-toolbar__btn" data-action="task" data-tooltip="Task list"><i class="fa-solid fa-square-check"></i></button>
           <div class="md-toolbar__sep"></div>
-          <button class="md-toolbar__btn" data-action="quote" title="Blockquote"><i class="fa-solid fa-quote-left"></i></button>
-          <button class="md-toolbar__btn" data-action="table" title="Table"><i class="fa-solid fa-table"></i></button>
-          <button class="md-toolbar__btn" data-action="hr" title="Horizontal rule"><i class="fa-solid fa-minus"></i></button>
+          <button class="md-toolbar__btn" data-action="quote" data-tooltip="Blockquote"><i class="fa-solid fa-quote-left"></i></button>
+          <button class="md-toolbar__btn" data-action="table" data-tooltip="Table"><i class="fa-solid fa-table"></i></button>
+          <button class="md-toolbar__btn" data-action="hr" data-tooltip="Horizontal rule"><i class="fa-solid fa-minus"></i></button>
         </div>
 
         <!-- Split pane -->
@@ -78,7 +78,7 @@ function render_markdown_preview(container, toolMeta) {
           <button class="btn btn--secondary" id="md-copy-html">
             <i class="fa-solid fa-code"></i> Copiar HTML
           </button>
-          <button class="btn btn--ghost btn--sm" id="md-clear" title="Limpiar todo">
+          <button class="btn btn--ghost btn--sm" id="md-clear" data-tooltip="Limpiar todo">
             <i class="fa-solid fa-trash-can"></i>
           </button>
           <span class="md-actions__info" id="md-info"></span>

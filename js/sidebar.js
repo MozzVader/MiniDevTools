@@ -41,7 +41,7 @@ const Sidebar = (() => {
       cat.tools.forEach(tool => {
         const isActive = currentHash === `/${tool.id}` ? 'active' : '';
         html += `
-          <a href="#/${tool.id}" class="nav-item" data-route="/${tool.id}" data-tool-name="${tool.name.toLowerCase()}" data-tool-desc="${tool.description.toLowerCase()}" data-tool-cat="${cat.label.toLowerCase()}" title="${tool.description}">
+          <a href="#/${tool.id}" class="nav-item" data-route="/${tool.id}" data-tool-name="${tool.name.toLowerCase()}" data-tool-desc="${tool.description.toLowerCase()}" data-tool-cat="${cat.label.toLowerCase()}" data-tooltip="${tool.description}">
             <span class="nav-item__icon"><i class="${tool.icon}"></i></span>
             <span class="nav-item__label">${tool.name}</span>
           </a>

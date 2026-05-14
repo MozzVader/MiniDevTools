@@ -35,8 +35,8 @@ function render_code_formatter(container, toolMeta) {
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
               <label class="label" style="margin-bottom:0;">JSON de entrada</label>
               <div style="display:flex; gap:6px;">
-                <button class="btn btn--ghost btn--sm cf-sample-btn" data-lang="json" title="Cargar ejemplo">Ejemplo</button>
-                <button class="btn btn--ghost btn--sm cf-clear-btn" data-lang="json" title="Limpiar">Limpiar</button>
+                <button class="btn btn--ghost btn--sm cf-sample-btn" data-lang="json" data-tooltip="Cargar ejemplo">Ejemplo</button>
+                <button class="btn btn--ghost btn--sm cf-clear-btn" data-lang="json" data-tooltip="Limpiar">Limpiar</button>
               </div>
             </div>
             <textarea class="input cf-textarea" id="cf-json-input" data-lang="json" rows="8" placeholder='{"key": "value"}' spellcheck="false">${escapeHtml(savedJSON)}</textarea>
@@ -49,8 +49,8 @@ function render_code_formatter(container, toolMeta) {
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
               <label class="label" style="margin-bottom:0;">HTML de entrada</label>
               <div style="display:flex; gap:6px;">
-                <button class="btn btn--ghost btn--sm cf-sample-btn" data-lang="html" title="Cargar ejemplo">Ejemplo</button>
-                <button class="btn btn--ghost btn--sm cf-clear-btn" data-lang="html" title="Limpiar">Limpiar</button>
+                <button class="btn btn--ghost btn--sm cf-sample-btn" data-lang="html" data-tooltip="Cargar ejemplo">Ejemplo</button>
+                <button class="btn btn--ghost btn--sm cf-clear-btn" data-lang="html" data-tooltip="Limpiar">Limpiar</button>
               </div>
             </div>
             <textarea class="input cf-textarea" id="cf-html-input" data-lang="html" rows="8" placeholder='<div class="app"><h1>Hola</h1></div>' spellcheck="false">${escapeHtml(savedHTML)}</textarea>

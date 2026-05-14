@@ -93,7 +93,7 @@ function render_uuid_generator(container, toolMeta) {
       html += `
         <div class="code-output" style="padding:10px 40px 10px 14px; font-size:14px; position:relative; word-break:break-all;">
           <span style="color:var(--text-muted); font-size:11px; margin-right:8px;">#${i + 1}</span>${formatted}
-          <button class="btn btn--ghost btn--icon btn--sm copy-single-btn" data-uuid="${escaped}" style="position:absolute; top:6px; right:6px;" title="Copiar">📋</button>
+          <button class="btn btn--ghost btn--icon btn--sm copy-single-btn" data-uuid="${escaped}" style="position:absolute; top:6px; right:6px;" data-tooltip="Copiar">📋</button>
         </div>
       `;
     });
