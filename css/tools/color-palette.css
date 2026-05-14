@@ -1,0 +1,470 @@
+/* ═══════════════════════════════════════════════════════════════
+   Color Palette Generator — Visual color palette builder
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.cp-layout {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 24px;
+  align-items: start;
+}
+
+.cp-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cp-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ─── Mode Selector ─── */
+.cp-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cp-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: var(--radius-full);
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.cp-mode-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.cp-mode-btn--active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ─── Base Color Row ─── */
+.cp-base-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cp-base-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.cp-base-picker input[type="color"] {
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.cp-base-picker input[type="color"]:hover {
+  border-color: var(--accent);
+}
+
+.cp-base-picker input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.cp-base-picker input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
+.cp-base-picker input[type="color"]::-moz-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
+/* ─── Palette Swatches ─── */
+.cp-palette {
+  display: flex;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  min-height: 280px;
+}
+
+.cp-swatch {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 8px;
+  position: relative;
+  cursor: pointer;
+  transition: flex var(--transition-base);
+  gap: 6px;
+}
+
+.cp-swatch:hover {
+  flex: 1.5;
+}
+
+.cp-swatch--light {
+  color: #0f172a;
+}
+
+.cp-swatch:not(.cp-swatch--light) {
+  color: #f1f5f9;
+}
+
+/* Lock button */
+.cp-swatch__lock {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.15);
+  color: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity var(--transition-fast), background var(--transition-fast);
+  z-index: 2;
+}
+
+.cp-swatch:hover .cp-swatch__lock {
+  opacity: 1;
+}
+
+.cp-swatch__lock:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.cp-swatch__lock[data-locked] {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.cp-swatch__lock[data-locked] i {
+  color: #fbbf24;
+}
+
+/* Color info */
+.cp-swatch__info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  text-align: center;
+}
+
+.cp-swatch__hex {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.cp-swatch__sub {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 10px;
+  opacity: 0.7;
+  line-height: 1.3;
+}
+
+/* Hidden color picker (native) */
+.cp-swatch__picker {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1;
+  border: none;
+}
+
+/* Copy button */
+.cp-swatch__copy {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: none;
+  background: rgba(0, 0, 0, 0.15);
+  color: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--transition-fast), background var(--transition-fast);
+  z-index: 2;
+}
+
+.cp-swatch:hover .cp-swatch__copy {
+  opacity: 0.7;
+}
+
+.cp-swatch__copy:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* ─── Export Row ─── */
+.cp-export-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cp-export-btns {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.cp-export-btn {
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.cp-export-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.cp-export-btn--active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ─── Code Output ─── */
+.cp-code-wrap {
+  position: relative;
+}
+
+.cp-code {
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-x: auto;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.cp-copy-code {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 1;
+}
+
+.cp-copy-code:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+/* ─── Presets ─── */
+.cp-presets-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.cp-presets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.cp-preset {
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.cp-preset:hover {
+  border-color: var(--accent);
+  transform: scale(1.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.cp-preset__bar {
+  height: 40px;
+  border-radius: 6px;
+}
+
+/* ─── Actions ─── */
+.cp-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ─── Keyboard Hint ─── */
+.cp-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cp-hint kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  box-shadow: 0 1px 0 var(--border);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .cp-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cp-palette {
+    min-height: 200px;
+  }
+
+  .cp-swatch {
+    padding: 10px 4px;
+  }
+
+  .cp-swatch__sub {
+    display: none;
+  }
+
+  .cp-modes {
+    gap: 4px;
+  }
+
+  .cp-mode-btn {
+    padding: 6px 10px;
+    font-size: 11.5px;
+  }
+
+  .cp-presets {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .cp-palette {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .cp-swatch {
+    flex: none;
+    height: 60px;
+    flex-direction: row;
+    padding: 8px 12px;
+    gap: 10px;
+  }
+
+  .cp-swatch:hover {
+    flex: none;
+  }
+
+  .cp-swatch__info {
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .cp-swatch__lock {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 4px;
+    opacity: 0.6;
+  }
+
+  .cp-swatch__copy {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 4px;
+    opacity: 0.6;
+  }
+
+  .cp-swatch__picker {
+    position: static;
+    width: 28px;
+    height: 28px;
+    opacity: 1;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+}
