@@ -140,7 +140,7 @@ const TOOL_REGISTRY = [
     categoryLabel: 'CSS & Diseño',
     description: 'Extraer colores de una imagen',
     jsFile: 'js/tools/image-color-picker.js',
-    cssFile: null,
+    cssFile: 'css/tools/image-color-picker.css',
     render: null
   },
 
