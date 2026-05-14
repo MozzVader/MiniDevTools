@@ -256,7 +256,7 @@ function render_image_color_picker(container, toolMeta) {
 
             <!-- Tools -->
             <div class="icp-tools">
-              <button class="btn btn--secondary icp-tool-btn" id="icp-eyedropper" style="width:100%;display:none;">
+              <button class="btn btn--secondary icp-tool-btn" id="icp-eyedropper" style="width:100%;">
                 <i class="fa-solid fa-eye-dropper"></i> Pick from screen
               </button>
               <div class="icp-url-row">
@@ -319,8 +319,8 @@ function render_image_color_picker(container, toolMeta) {
   lensCtx.scale(dpr, dpr);
 
   /* ─── EyeDropper support ─── */
-  const hasEyeDropper = 'EyeDropper' in window;
-  if (hasEyeDropper) eyedropperBtn.style.display = '';
+  /* Always visible — handle unsupported browsers gracefully */
+  eyedropperBtn.style.display = '';
 
   /* ═══════════════════════════════════════════════════════
      IMAGE LOADING
@@ -440,13 +440,31 @@ function render_image_color_picker(container, toolMeta) {
     lensCtx.stroke();
   }
 
+  /* ─── Helper: get actual rendered size within object-fit:contain ─── */
+  function getRenderedSize() {
+    const natW = img.naturalWidth || 1;
+    const natH = img.naturalHeight || 1;
+    const elW = img.clientWidth;
+    const elH = img.clientHeight;
+    const imgRatio = natW / natH;
+    const elRatio = elW / elH;
+    let rW, rH, offX, offY;
+    if (imgRatio > elRatio) {
+      rW = elW; rH = elW / imgRatio;
+      offX = 0; offY = (elH - rH) / 2;
+    } else {
+      rH = elH; rW = elH * imgRatio;
+      offX = (elW - rW) / 2; offY = 0;
+    }
+    return { renderedW: rW, renderedH: rH, offsetX: offX, offsetY: offY };
+  }
+
   /* ─── Mouse events on image ─── */
   let isOverImage = false;
 
   img.addEventListener('mouseenter', () => {
     if (!hasImage) return;
     isOverImage = true;
-    lens.style.display = 'block';
     squaresWrap.style.display = '';
   });
 
@@ -455,23 +473,37 @@ function render_image_color_picker(container, toolMeta) {
     lens.style.display = 'none';
     hoverColor = null;
     if (sqHover.style.background) sqHover.style.background = '';
+    img.style.cursor = '';
   });
 
   img.addEventListener('mousemove', (e) => {
     if (!hasImage) return;
 
-    /* Map mouse position to canvas coordinates */
     const rect = img.getBoundingClientRect();
-    const displayW = img.clientWidth;
-    const displayH = img.clientHeight;
-    const offsetX = e.clientX - rect.left;
-    const offsetY = e.clientY - rect.top;
-    const scaleX = offCanvas.width / displayW;
-    const scaleY = offCanvas.height / displayH;
-    const cx = Math.round(offsetX * scaleX);
-    const cy = Math.round(offsetY * scaleY);
+    const { renderedW, renderedH, offsetX: imgOffX, offsetY: imgOffY } = getRenderedSize();
 
-    /* Clamp */
+    /* Mouse position relative to the element */
+    const elX = e.clientX - rect.left;
+    const elY = e.clientY - rect.top;
+
+    /* Position relative to the actual rendered image (inside object-fit:contain) */
+    const relX = elX - imgOffX;
+    const relY = elY - imgOffY;
+
+    /* If outside the rendered image area, hide lens */
+    if (relX < 0 || relX > renderedW || relY < 0 || relY > renderedH) {
+      lens.style.display = 'none';
+      img.style.cursor = '';
+      return;
+    }
+
+    /* Map to canvas coordinates */
+    const scaleX = offCanvas.width / renderedW;
+    const scaleY = offCanvas.height / renderedH;
+    const cx = Math.round(relX * scaleX);
+    const cy = Math.round(relY * scaleY);
+
+    /* Clamp to valid canvas range */
     const px = Math.max(0, Math.min(offCanvas.width - 1, cx));
     const py = Math.max(0, Math.min(offCanvas.height - 1, cy));
 
@@ -486,25 +518,28 @@ function render_image_color_picker(container, toolMeta) {
     /* Update lens border to show hover color */
     lens.style.borderColor = hoverColor.hex;
 
-    /* Position lens */
-    const lensOffset = 20;
-    let lensLeft = offsetX - LENS_SIZE / 2;
-    let lensTop = offsetY - LENS_SIZE / 2 - LENS_SIZE / 2 - lensOffset;
+    /* Position lens — follow mouse, prefer above, flip below if near top */
+    const gap = 15;
+    let lensLeft = elX - LENS_SIZE / 2;
+    let lensTop = elY - LENS_SIZE - gap;
 
-    /* If lens would go above image, show below */
+    /* Flip below cursor if near top */
     if (lensTop < 0) {
-      lensTop = offsetY + lensOffset;
+      lensTop = elY + gap;
     }
-    /* Clamp horizontal */
-    lensLeft = Math.max(0, Math.min(displayW - LENS_SIZE, lensLeft));
 
+    /* Allow horizontal overflow — don't clamp tightly */
+    if (lensLeft < 0) lensLeft = 4;
+    if (lensLeft + LENS_SIZE > rect.width) lensLeft = rect.width - LENS_SIZE - 4;
+
+    lens.style.display = 'block';
     lens.style.left = lensLeft + 'px';
     lens.style.top = lensTop + 'px';
 
     /* Draw lens canvas */
     drawLens(px, py);
 
-    /* Cursor style */
+    /* Hide cursor */
     img.style.cursor = 'none';
   });
 
@@ -599,32 +634,34 @@ function render_image_color_picker(container, toolMeta) {
      EYEDROPPER API
      ═══════════════════════════════════════════════════════ */
 
-  if (hasEyeDropper) {
-    eyedropperBtn.addEventListener('click', async () => {
-      try {
-        const eyeDropper = new EyeDropper();
-        const result = await eyeDropper.open();
-        const hex = result.sRGBHex;
-        if (hex && /^#[0-9a-fA-F]{6}$/.test(hex)) {
-          const { r, g, b } = hexToRGB(hex);
-          const hsl = rgbToHSL(r, g, b);
-          pickedColor = { hex, r, g, b, ...hsl };
+  eyedropperBtn.addEventListener('click', async () => {
+    if (!('EyeDropper' in window)) {
+      MiniDevTools.showToast('EyeDropper solo disponible en Chrome y Edge', 'error');
+      return;
+    }
+    try {
+      const eyeDropper = new EyeDropper();
+      const result = await eyeDropper.open();
+      const hex = result.sRGBHex;
+      if (hex && /^#[0-9a-fA-F]{6}$/.test(hex)) {
+        const { r, g, b } = hexToRGB(hex);
+        const hsl = rgbToHSL(r, g, b);
+        pickedColor = { hex, r, g, b, ...hsl };
 
-          infoPlaceholder.style.display = 'none';
-          infoContent.style.display = '';
-          infoSwatch.style.background = hex;
-          hexEl.textContent = hex.toUpperCase();
-          rgbEl.textContent = `${r}, ${g}, ${b}`;
-          hslEl.textContent = `${hsl.h}°, ${hsl.s}%, ${hsl.l}%`;
+        infoPlaceholder.style.display = 'none';
+        infoContent.style.display = '';
+        infoSwatch.style.background = hex;
+        hexEl.textContent = hex.toUpperCase();
+        rgbEl.textContent = `${r}, ${g}, ${b}`;
+        hslEl.textContent = `${hsl.h}°, ${hsl.s}%, ${hsl.l}%`;
 
-          addToHistory(hex);
-          saveState();
-        }
-      } catch (err) {
-        /* User cancelled the eyedropper */
+        addToHistory(hex);
+        saveState();
       }
-    });
-  }
+    } catch (err) {
+      /* User cancelled the eyedropper — do nothing */
+    }
+  });
 
   /* ═══════════════════════════════════════════════════════
      IMAGE URL
