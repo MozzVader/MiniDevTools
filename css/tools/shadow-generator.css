@@ -1,0 +1,287 @@
+/* ═══════════════════════════════════════════════════════════════
+   Shadow Generator — Visual box-shadow builder
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.sg-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+}
+
+/* ─── Preview ─── */
+.sg-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
+
+.sg-preview {
+  width: 100%;
+  min-height: 320px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Checkerboard background */
+.sg-preview::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+    linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+    linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+}
+
+[data-theme="dark"] .sg-preview::before {
+  background-image:
+    linear-gradient(45deg, #1e293b 25%, transparent 25%),
+    linear-gradient(-45deg, #1e293b 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #1e293b 75%),
+    linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+}
+
+.sg-preview__box {
+  position: relative;
+  z-index: 1;
+  width: 160px;
+  height: 160px;
+  border-radius: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  transition: box-shadow 0.15s ease, border-radius 0.15s ease, width 0.15s ease, height 0.15s ease;
+}
+
+/* ─── Code output ─── */
+.sg-code {
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+/* ─── Controls Panel ─── */
+.sg-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Slider groups */
+.sg-slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sg-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sg-slider-row label {
+  min-width: 90px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.sg-slider-row input[type="range"] {
+  flex: 1;
+}
+
+.sg-slider-val {
+  min-width: 42px;
+  text-align: center;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+}
+
+/* Custom range slider */
+.sg-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  outline: none;
+  cursor: pointer;
+}
+
+.sg-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.sg-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.sg-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+
+/* Color picker row */
+.sg-color-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sg-color-row label {
+  min-width: 90px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.sg-color-input {
+  width: 40px;
+  height: 34px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.sg-color-input:hover {
+  border-color: var(--accent);
+}
+
+.sg-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.sg-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.sg-color-input::-moz-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.sg-color-hex {
+  flex: 1;
+}
+
+/* Checkbox options */
+.sg-options {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sg-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ─── Presets ─── */
+.sg-presets-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.sg-presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.sg-preset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.sg-preset:hover {
+  border-color: var(--accent);
+  transform: scale(1.08);
+}
+
+.sg-preset__box {
+  width: 40%;
+  height: 40%;
+  border-radius: 4px;
+  background: var(--bg-card);
+}
+
+[data-theme="dark"] .sg-preset__box {
+  background: var(--bg-card);
+}
+
+/* ─── Actions ─── */
+.sg-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .sg-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sg-preview {
+    min-height: 200px;
+  }
+
+  .sg-slider-row label {
+    min-width: 70px;
+    font-size: 12px;
+  }
+}
