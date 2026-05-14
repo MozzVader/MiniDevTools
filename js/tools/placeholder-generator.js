@@ -66,51 +66,51 @@ function render_placeholder_generator(container, toolMeta) {
     },
     {
       id: 'image', label: 'Imagen',
-      render: (s) => `<path d="M${s*0.28},${s*0.25} L${s*0.72},${s*0.25} Q${s*0.78},${s*0.25} ${s*0.78},${s*0.31} L${s*0.78},${s*0.69} Q${s*0.78},${s*0.75} ${s*0.72},${s*0.75} L${s*0.28},${s*0.75} Q${s*0.22},${s*0.75} ${s*0.22},${s*0.69} L${s*0.22},${s*0.31} Q${s*0.22},${s*0.25} ${s*0.28},${s*0.25} Z M${s*0.31},${s*0.4} L${s*0.45},${s*0.54} L${s*0.55},${s*0.44} L${s*0.62},${s*0.54} L${s*0.69},${s*0.4}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/>`
+      render: (s) => `<path d="M${s*0.28},${s*0.25} L${s*0.72},${s*0.25} Q${s*0.78},${s*0.25} ${s*0.78},${s*0.31} L${s*0.78},${s*0.69} Q${s*0.78},${s*0.75} ${s*0.72},${s*0.75} L${s*0.28},${s*0.75} Q${s*0.22},${s*0.75} ${s*0.22},${s*0.69} L${s*0.22},${s*0.31} Q${s*0.22},${s*0.25} ${s*0.28},${s*0.25} Z M${s*0.31},${s*0.4} L${s*0.45},${s*0.54} L${s*0.55},${s*0.44} L${s*0.62},${s*0.54} L${s*0.69},${s*0.4}" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/>`
     },
     {
       id: 'user', label: 'Usuario',
-      render: (s) => `<circle cx="${s*0.5}" cy="${s*0.36}" r="${s*0.14}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}"/><path d="M${s*0.3},${s*0.78} Q${s*0.3},${s*0.58} ${s*0.5},${s*0.58} Q${s*0.7},${s*0.58} ${s*0.7},${s*0.78}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round"/>`
+      render: (s) => `<circle cx="${s*0.5}" cy="${s*0.36}" r="${s*0.14}" fill="none" stroke="currentColor" stroke-width="${s*0.03}"/><path d="M${s*0.3},${s*0.78} Q${s*0.3},${s*0.58} ${s*0.5},${s*0.58} Q${s*0.7},${s*0.58} ${s*0.7},${s*0.78}" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linecap="round"/>`
     },
     {
       id: 'camera', label: 'Cámara',
-      render: (s) => `<path d="M${s*0.23},${s*0.33} L${s*0.32},${s*0.33} L${s*0.38},${s*0.25} L${s*0.62},${s*0.25} L${s*0.68},${s*0.33} L${s*0.77},${s*0.33} Q${s*0.82},${s*0.33} ${s*0.82},${s*0.38} L${s*0.82},${s*0.68} Q${s*0.82},${s*0.73} ${s*0.77},${s*0.73} L${s*0.23},${s*0.73} Q${s*0.18},${s*0.73} ${s*0.18},${s*0.68} L${s*0.18},${s*0.38} Q${s*0.18},${s*0.33} ${s*0.23},${s*0.33} Z" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}"/><circle cx="${s*0.5}" cy="${s*0.53}" r="${s*0.12}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}"/>`
+      render: (s) => `<path d="M${s*0.23},${s*0.33} L${s*0.32},${s*0.33} L${s*0.38},${s*0.25} L${s*0.62},${s*0.25} L${s*0.68},${s*0.33} L${s*0.77},${s*0.33} Q${s*0.82},${s*0.33} ${s*0.82},${s*0.38} L${s*0.82},${s*0.68} Q${s*0.82},${s*0.73} ${s*0.77},${s*0.73} L${s*0.23},${s*0.73} Q${s*0.18},${s*0.73} ${s*0.18},${s*0.68} L${s*0.18},${s*0.38} Q${s*0.18},${s*0.33} ${s*0.23},${s*0.33} Z" fill="none" stroke="currentColor" stroke-width="${s*0.03}"/><circle cx="${s*0.5}" cy="${s*0.53}" r="${s*0.12}" fill="none" stroke="currentColor" stroke-width="${s*0.03}"/>`
     },
     {
       id: 'landscape', label: 'Paisaje',
-      render: (s) => `<path d="M${s*0.22},${s*0.7} L${s*0.38},${s*0.45} L${s*0.55},${s*0.6} L${s*0.68},${s*0.38} L${s*0.78},${s*0.7} Z" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${s*0.7}" cy="${s*0.3}" r="${s*0.06}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.025}"/>`
+      render: (s) => `<path d="M${s*0.22},${s*0.7} L${s*0.38},${s*0.45} L${s*0.55},${s*0.6} L${s*0.68},${s*0.38} L${s*0.78},${s*0.7} Z" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${s*0.7}" cy="${s*0.3}" r="${s*0.06}" fill="none" stroke="currentColor" stroke-width="${s*0.025}"/>`
     },
     {
       id: 'star', label: 'Estrella',
-      render: (s) => `<polygon points="${s*0.5},${s*0.18} ${s*0.58},${s*0.38} ${s*0.78},${s*0.38} ${s*0.62},${s*0.5} ${s*0.68},${s*0.7} ${s*0.5},${s*0.58} ${s*0.32},${s*0.7} ${s*0.38},${s*0.5} ${s*0.22},${s*0.38} ${s*0.42},${s*0.38}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/>`
+      render: (s) => `<polygon points="${s*0.5},${s*0.18} ${s*0.58},${s*0.38} ${s*0.78},${s*0.38} ${s*0.62},${s*0.5} ${s*0.68},${s*0.7} ${s*0.5},${s*0.58} ${s*0.32},${s*0.7} ${s*0.38},${s*0.5} ${s*0.22},${s*0.38} ${s*0.42},${s*0.38}" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linejoin="round"/>`
     },
     {
       id: 'heart', label: 'Corazón',
-      render: (s) => `<path d="M${s*0.5},${s*0.75} L${s*0.25},${s*0.5} Q${s*0.18},${s*0.32} ${s*0.32},${s*0.28} Q${s*0.45},${s*0.24} ${s*0.5},${s*0.38} Q${s*0.55},${s*0.24} ${s*0.68},${s*0.28} Q${s*0.82},${s*0.32} ${s*0.75},${s*0.5} Z" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/>`
+      render: (s) => `<path d="M${s*0.5},${s*0.75} L${s*0.25},${s*0.5} Q${s*0.18},${s*0.32} ${s*0.32},${s*0.28} Q${s*0.45},${s*0.24} ${s*0.5},${s*0.38} Q${s*0.55},${s*0.24} ${s*0.68},${s*0.28} Q${s*0.82},${s*0.32} ${s*0.75},${s*0.5} Z" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linejoin="round"/>`
     },
     {
       id: 'play', label: 'Play',
-      render: (s) => `<polygon points="${s*0.38},${s*0.25} ${s*0.75},${s*0.5} ${s*0.38},${s*0.75}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/>`
+      render: (s) => `<polygon points="${s*0.38},${s*0.25} ${s*0.75},${s*0.5} ${s*0.38},${s*0.75}" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linejoin="round"/>`
     },
     {
       id: 'music', label: 'Música',
-      render: (s) => `<path d="M${s*0.55},${s*0.25} L${s*0.55},${s*0.62} Q${s*0.55},${s*0.72} ${s*0.45},${s*0.72} Q${s*0.35},${s*0.72} ${s*0.35},${s*0.62} Q${s*0.35},${s*0.52} ${s*0.45},${s*0.52} Q${s*0.5},${s*0.52} ${s*0.55},${s*0.55}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/><path d="M${s*0.7},${s*0.22} L${s*0.7},${s*0.57} Q${s*0.7},${s*0.67} ${s*0.6},${s*0.67} Q${s*0.5},${s*0.67} ${s*0.5},${s*0.57} Q${s*0.5},${s*0.47} ${s*0.6},${s*0.47} Q${s*0.65},${s*0.47} ${s*0.7},${s*0.5}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/><line x1="${s*0.55}" y1="${s*0.25}" x2="${s*0.7}" y2="${s*0.22}" stroke="${s*0.04}" stroke-width="${s*0.03}"/>`
+      render: (s) => `<path d="M${s*0.55},${s*0.25} L${s*0.55},${s*0.62} Q${s*0.55},${s*0.72} ${s*0.45},${s*0.72} Q${s*0.35},${s*0.72} ${s*0.35},${s*0.62} Q${s*0.35},${s*0.52} ${s*0.45},${s*0.52} Q${s*0.5},${s*0.52} ${s*0.55},${s*0.55}" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linejoin="round"/><path d="M${s*0.7},${s*0.22} L${s*0.7},${s*0.57} Q${s*0.7},${s*0.67} ${s*0.6},${s*0.67} Q${s*0.5},${s*0.67} ${s*0.5},${s*0.57} Q${s*0.5},${s*0.47} ${s*0.6},${s*0.47} Q${s*0.65},${s*0.47} ${s*0.7},${s*0.5}" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linejoin="round"/><line x1="${s*0.55}" y1="${s*0.25}" x2="${s*0.7}" y2="${s*0.22}" stroke="currentColor" stroke-width="${s*0.03}"/>`
     },
     {
       id: 'upload', label: 'Subir',
-      render: (s) => `<path d="M${s*0.22},${s*0.65} L${s*0.22},${s*0.72} Q${s*0.22},${s*0.78} ${s*0.28},${s*0.78} L${s*0.72},${s*0.78} Q${s*0.78},${s*0.78} ${s*0.78},${s*0.72} L${s*0.78},${s*0.65}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${s*0.38},${s*0.55} ${s*0.5},${s*0.4} ${s*0.62},${s*0.55}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><line x1="${s*0.5}" y1="${s*0.4}" x2="${s*0.5}" y2="${s*0.68}" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round"/>`
+      render: (s) => `<path d="M${s*0.22},${s*0.65} L${s*0.22},${s*0.72} Q${s*0.22},${s*0.78} ${s*0.28},${s*0.78} L${s*0.72},${s*0.78} Q${s*0.78},${s*0.78} ${s*0.78},${s*0.72} L${s*0.78},${s*0.65}" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${s*0.38},${s*0.55} ${s*0.5},${s*0.4} ${s*0.62},${s*0.55}" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><line x1="${s*0.5}" y1="${s*0.4}" x2="${s*0.5}" y2="${s*0.68}" stroke="currentColor" stroke-width="${s*0.03}" stroke-linecap="round"/>`
     },
     {
       id: 'doc', label: 'Documento',
-      render: (s) => `<path d="M${s*0.3},${s*0.2} L${s*0.6},${s*0.2} L${s*0.7},${s*0.3} L${s*0.7},${s*0.8} L${s*0.3},${s*0.8} Z" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/><polyline points="${s*0.6},${s*0.2} ${s*0.6},${s*0.3} ${s*0.7},${s*0.3}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/>`
+      render: (s) => `<path d="M${s*0.3},${s*0.2} L${s*0.6},${s*0.2} L${s*0.7},${s*0.3} L${s*0.7},${s*0.8} L${s*0.3},${s*0.8} Z" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linejoin="round"/><polyline points="${s*0.6},${s*0.2} ${s*0.6},${s*0.3} ${s*0.7},${s*0.3}" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linejoin="round"/>`
     },
     {
       id: 'code', label: 'Código',
-      render: (s) => `<polyline points="${s*0.35},${s*0.38} ${s*0.22},${s*0.5} ${s*0.35},${s*0.62}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${s*0.65},${s*0.38} ${s*0.78},${s*0.5} ${s*0.65},${s*0.62}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><line x1="${s*0.44}" y1="${s*0.32}" x2="${s*0.56}" y2="${s*0.68}" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round"/>`
+      render: (s) => `<polyline points="${s*0.35},${s*0.38} ${s*0.22},${s*0.5} ${s*0.35},${s*0.62}" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${s*0.65},${s*0.38} ${s*0.78},${s*0.5} ${s*0.65},${s*0.62}" fill="none" stroke="currentColor" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><line x1="${s*0.44}" y1="${s*0.32}" x2="${s*0.56}" y2="${s*0.68}" stroke="currentColor" stroke-width="${s*0.03}" stroke-linecap="round"/>`
     },
     {
       id: 'globe', label: 'Globo',
-      render: (s) => `<circle cx="${s*0.5}" cy="${s*0.5}" r="${s*0.28}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}"/><ellipse cx="${s*0.5}" cy="${s*0.5}" rx="${s*0.12}" ry="${s*0.28}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.025}"/><line x1="${s*0.22}" y1="${s*0.5}" x2="${s*0.78}" y2="${s*0.5}" stroke="${s*0.04}" stroke-width="${s*0.025}"/>`
+      render: (s) => `<circle cx="${s*0.5}" cy="${s*0.5}" r="${s*0.28}" fill="none" stroke="currentColor" stroke-width="${s*0.03}"/><ellipse cx="${s*0.5}" cy="${s*0.5}" rx="${s*0.12}" ry="${s*0.28}" fill="none" stroke="currentColor" stroke-width="${s*0.025}"/><line x1="${s*0.22}" y1="${s*0.5}" x2="${s*0.78}" y2="${s*0.5}" stroke="currentColor" stroke-width="${s*0.025}"/>`
     },
   ];
 
@@ -171,12 +171,12 @@ function render_placeholder_generator(container, toolMeta) {
           /* Icon above text */
           const iconY = height * 0.38;
           const textY = height * 0.7;
-          content += `<g transform="translate(${(width - is) / 2}, ${iconY - is / 2})">${iconDef.render(is)}</g>`;
+          content += `<g transform="translate(${(width - is) / 2}, ${iconY - is / 2})" color="${txtRGBA}">${iconDef.render(is)}</g>`;
           content += `<text x="50%" y="${textY}" dominant-baseline="central" text-anchor="middle" font-family="${fontFamily}, sans-serif" font-size="${fs}" font-weight="600" fill="${txtRGBA}">${escaped}</text>`;
         } else {
           /* Icon centered */
           const iconY = height * 0.5;
-          content += `<g transform="translate(${(width - is) / 2}, ${iconY - is / 2})">${iconDef.render(is)}</g>`;
+          content += `<g transform="translate(${(width - is) / 2}, ${iconY - is / 2})" color="${txtRGBA}">${iconDef.render(is)}</g>`;
         }
       }
     } else if (text) {
