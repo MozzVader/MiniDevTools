@@ -1,0 +1,446 @@
+/* ═══════════════════════════════════════════════════════════════
+   Placeholder Generator — Visual placeholder image builder
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.pg-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  align-items: start;
+}
+
+.pg-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pg-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ─── Preview ─── */
+.pg-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pg-preview {
+  width: 100%;
+  min-height: 260px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--bg-base-secondary);
+  /* Checkerboard */
+  background-image:
+    linear-gradient(45deg, var(--border) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--border) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--border) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--border) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+  background-color: var(--bg-card);
+}
+
+.pg-preview img {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  display: block;
+}
+
+.pg-preview-info {
+  font-size: 12px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  color: var(--text-muted);
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+/* ─── Code Section ─── */
+.pg-code-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pg-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pg-format-btns {
+  display: flex;
+  gap: 4px;
+}
+
+.pg-format-btn {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.pg-format-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.pg-format-btn--active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.pg-code-wrap {
+  position: relative;
+}
+
+.pg-code {
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-x: auto;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+/* ─── Sections (controls) ─── */
+.pg-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ─── Size Controls ─── */
+.pg-size-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pg-size-input {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.pg-size-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 16px;
+}
+
+.pg-num-input {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  -moz-appearance: textfield;
+}
+
+.pg-num-input::-webkit-inner-spin-button,
+.pg-num-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.pg-size-x {
+  color: var(--text-muted);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.pg-size-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.pg-chip {
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.pg-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+/* ─── Color Controls ─── */
+.pg-color-presets {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pg-color-preset {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+}
+
+.pg-color-preset:hover {
+  border-color: var(--accent);
+  transform: scale(1.15);
+}
+
+.pg-color-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pg-colors-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pg-color-pair {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pg-color-which {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  min-width: 44px;
+}
+
+.pg-color-input {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: border-color var(--transition-fast);
+}
+
+.pg-color-input:hover {
+  border-color: var(--accent);
+}
+
+.pg-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.pg-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.pg-color-input::-moz-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.pg-hex-input {
+  flex: 1;
+  min-width: 0;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+}
+
+/* ─── Text Options ─── */
+.pg-options {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pg-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.pg-option input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+/* ─── Font Controls ─── */
+.pg-font-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pg-select {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.pg-font-size-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.pg-font-size-wrap .pg-num-input {
+  width: 60px;
+}
+
+.pg-fs-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ─── Slider ─── */
+.pg-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pg-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  outline: none;
+  cursor: pointer;
+  flex: 1;
+}
+
+.pg-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.pg-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.pg-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.pg-slider-val {
+  min-width: 40px;
+  text-align: center;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .pg-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .pg-preview {
+    min-height: 180px;
+  }
+
+  .pg-preview img {
+    max-height: 280px;
+  }
+
+  .pg-size-presets {
+    gap: 3px;
+  }
+
+  .pg-color-presets {
+    gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pg-font-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pg-font-size-wrap {
+    width: 100%;
+  }
+
+  .pg-font-size-wrap .pg-num-input {
+    flex: 1;
+    width: auto;
+  }
+}

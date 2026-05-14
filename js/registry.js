@@ -72,7 +72,7 @@ const TOOL_REGISTRY = [
     categoryLabel: 'Imágenes',
     description: 'Generar placeholders con texto y colores',
     jsFile: 'js/tools/placeholder-generator.js',
-    cssFile: null,
+    cssFile: 'css/tools/placeholder-generator.css',
     render: null
   },
 
