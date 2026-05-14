@@ -406,6 +406,50 @@
   flex-shrink: 0;
 }
 
+/* ─── Icon Grid ─── */
+.pg-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.pg-icon-btn {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.pg-icon-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+.pg-icon-btn--active {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.pg-icon-btn--active svg * {
+  stroke: var(--accent);
+}
+
+/* ─── Action Buttons ─── */
+.pg-actions {
+  display: flex;
+  gap: 8px;
+}
+
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
   .pg-layout {
@@ -426,6 +470,10 @@
 
   .pg-color-presets {
     gap: 4px;
+  }
+
+  .pg-icon-grid {
+    grid-template-columns: repeat(7, 1fr);
   }
 }
 

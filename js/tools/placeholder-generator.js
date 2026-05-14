@@ -1,8 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════
    Placeholder Generator — Generar imágenes placeholder SVG/CSS
    Controles: ancho, alto, color de fondo, color de texto, texto,
-   formato (SVG, CSS, URL), opacidad, fuentes comunes.
-   Preview en tiempo real, copiar código, presets rápidos.
+   ícono, formato (SVG, CSS, URL), opacidad, fuentes comunes.
+   Preview en tiempo real, copiar código, PNG al clipboard.
    Usa ToolStorage para persistir estado.
    ═══════════════════════════════════════════════════════════════ */
 
@@ -22,6 +22,7 @@ function render_placeholder_generator(container, toolMeta) {
   let fontFamily = s ? s.fontFamily : 'sans-serif';
   let fontSize = s ? s.fontSize : 0; /* 0 = auto */
   let format = s ? s.format : 'svg'; /* svg, css, url */
+  let selectedIcon = s ? s.selectedIcon : 'none';
 
   /* ─── Size Presets ─── */
   const sizePresets = [
@@ -35,18 +36,18 @@ function render_placeholder_generator(container, toolMeta) {
     { label: 'Story', w: 1080, h: 1920 },
   ];
 
-  /* ─── Color Presets ─── */
+  /* ─── Color Presets (bg-only) ─── */
   const colorPresets = [
-    { bg: '#94a3b8', text: '#ffffff', label: 'Slate' },
-    { bg: '#cbd5e1', text: '#475569', label: 'Light' },
-    { bg: '#1e293b', text: '#e2e8f0', label: 'Dark' },
-    { bg: '#6366f1', text: '#ffffff', label: 'Indigo' },
-    { bg: '#22c55e', text: '#ffffff', label: 'Green' },
-    { bg: '#f43f5e', text: '#ffffff', label: 'Rose' },
-    { bg: '#f97316', text: '#ffffff', label: 'Orange' },
-    { bg: '#0ea5e9', text: '#ffffff', label: 'Sky' },
-    { bg: '#000000', text: '#ffffff', label: 'Black' },
-    { bg: '#ffffff', text: '#000000', label: 'White' },
+    { bg: '#94a3b8', label: 'Slate' },
+    { bg: '#cbd5e1', label: 'Light' },
+    { bg: '#1e293b', label: 'Dark' },
+    { bg: '#6366f1', label: 'Indigo' },
+    { bg: '#22c55e', label: 'Green' },
+    { bg: '#f43f5e', label: 'Rose' },
+    { bg: '#f97316', label: 'Orange' },
+    { bg: '#0ea5e9', label: 'Sky' },
+    { bg: '#000000', label: 'Black' },
+    { bg: '#ffffff', label: 'White' },
   ];
 
   /* ─── Font Options ─── */
@@ -57,15 +58,77 @@ function render_placeholder_generator(container, toolMeta) {
     { value: 'system-ui', label: 'System UI' },
   ];
 
+  /* ─── Icons (SVG paths) ─── */
+  const icons = [
+    {
+      id: 'none', label: 'Ninguno',
+      render: () => ''
+    },
+    {
+      id: 'image', label: 'Imagen',
+      render: (s) => `<path d="M${s*0.28},${s*0.25} L${s*0.72},${s*0.25} Q${s*0.78},${s*0.25} ${s*0.78},${s*0.31} L${s*0.78},${s*0.69} Q${s*0.78},${s*0.75} ${s*0.72},${s*0.75} L${s*0.28},${s*0.75} Q${s*0.22},${s*0.75} ${s*0.22},${s*0.69} L${s*0.22},${s*0.31} Q${s*0.22},${s*0.25} ${s*0.28},${s*0.25} Z M${s*0.31},${s*0.4} L${s*0.45},${s*0.54} L${s*0.55},${s*0.44} L${s*0.62},${s*0.54} L${s*0.69},${s*0.4}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/>`
+    },
+    {
+      id: 'user', label: 'Usuario',
+      render: (s) => `<circle cx="${s*0.5}" cy="${s*0.36}" r="${s*0.14}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}"/><path d="M${s*0.3},${s*0.78} Q${s*0.3},${s*0.58} ${s*0.5},${s*0.58} Q${s*0.7},${s*0.58} ${s*0.7},${s*0.78}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round"/>`
+    },
+    {
+      id: 'camera', label: 'Cámara',
+      render: (s) => `<path d="M${s*0.23},${s*0.33} L${s*0.32},${s*0.33} L${s*0.38},${s*0.25} L${s*0.62},${s*0.25} L${s*0.68},${s*0.33} L${s*0.77},${s*0.33} Q${s*0.82},${s*0.33} ${s*0.82},${s*0.38} L${s*0.82},${s*0.68} Q${s*0.82},${s*0.73} ${s*0.77},${s*0.73} L${s*0.23},${s*0.73} Q${s*0.18},${s*0.73} ${s*0.18},${s*0.68} L${s*0.18},${s*0.38} Q${s*0.18},${s*0.33} ${s*0.23},${s*0.33} Z" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}"/><circle cx="${s*0.5}" cy="${s*0.53}" r="${s*0.12}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}"/>`
+    },
+    {
+      id: 'landscape', label: 'Paisaje',
+      render: (s) => `<path d="M${s*0.22},${s*0.7} L${s*0.38},${s*0.45} L${s*0.55},${s*0.6} L${s*0.68},${s*0.38} L${s*0.78},${s*0.7} Z" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${s*0.7}" cy="${s*0.3}" r="${s*0.06}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.025}"/>`
+    },
+    {
+      id: 'star', label: 'Estrella',
+      render: (s) => `<polygon points="${s*0.5},${s*0.18} ${s*0.58},${s*0.38} ${s*0.78},${s*0.38} ${s*0.62},${s*0.5} ${s*0.68},${s*0.7} ${s*0.5},${s*0.58} ${s*0.32},${s*0.7} ${s*0.38},${s*0.5} ${s*0.22},${s*0.38} ${s*0.42},${s*0.38}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/>`
+    },
+    {
+      id: 'heart', label: 'Corazón',
+      render: (s) => `<path d="M${s*0.5},${s*0.75} L${s*0.25},${s*0.5} Q${s*0.18},${s*0.32} ${s*0.32},${s*0.28} Q${s*0.45},${s*0.24} ${s*0.5},${s*0.38} Q${s*0.55},${s*0.24} ${s*0.68},${s*0.28} Q${s*0.82},${s*0.32} ${s*0.75},${s*0.5} Z" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/>`
+    },
+    {
+      id: 'play', label: 'Play',
+      render: (s) => `<polygon points="${s*0.38},${s*0.25} ${s*0.75},${s*0.5} ${s*0.38},${s*0.75}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/>`
+    },
+    {
+      id: 'music', label: 'Música',
+      render: (s) => `<path d="M${s*0.55},${s*0.25} L${s*0.55},${s*0.62} Q${s*0.55},${s*0.72} ${s*0.45},${s*0.72} Q${s*0.35},${s*0.72} ${s*0.35},${s*0.62} Q${s*0.35},${s*0.52} ${s*0.45},${s*0.52} Q${s*0.5},${s*0.52} ${s*0.55},${s*0.55}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/><path d="M${s*0.7},${s*0.22} L${s*0.7},${s*0.57} Q${s*0.7},${s*0.67} ${s*0.6},${s*0.67} Q${s*0.5},${s*0.67} ${s*0.5},${s*0.57} Q${s*0.5},${s*0.47} ${s*0.6},${s*0.47} Q${s*0.65},${s*0.47} ${s*0.7},${s*0.5}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/><line x1="${s*0.55}" y1="${s*0.25}" x2="${s*0.7}" y2="${s*0.22}" stroke="${s*0.04}" stroke-width="${s*0.03}"/>`
+    },
+    {
+      id: 'upload', label: 'Subir',
+      render: (s) => `<path d="M${s*0.22},${s*0.65} L${s*0.22},${s*0.72} Q${s*0.22},${s*0.78} ${s*0.28},${s*0.78} L${s*0.72},${s*0.78} Q${s*0.78},${s*0.78} ${s*0.78},${s*0.72} L${s*0.78},${s*0.65}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${s*0.38},${s*0.55} ${s*0.5},${s*0.4} ${s*0.62},${s*0.55}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><line x1="${s*0.5}" y1="${s*0.4}" x2="${s*0.5}" y2="${s*0.68}" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round"/>`
+    },
+    {
+      id: 'doc', label: 'Documento',
+      render: (s) => `<path d="M${s*0.3},${s*0.2} L${s*0.6},${s*0.2} L${s*0.7},${s*0.3} L${s*0.7},${s*0.8} L${s*0.3},${s*0.8} Z" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/><polyline points="${s*0.6},${s*0.2} ${s*0.6},${s*0.3} ${s*0.7},${s*0.3}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linejoin="round"/>`
+    },
+    {
+      id: 'code', label: 'Código',
+      render: (s) => `<polyline points="${s*0.35},${s*0.38} ${s*0.22},${s*0.5} ${s*0.35},${s*0.62}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${s*0.65},${s*0.38} ${s*0.78},${s*0.5} ${s*0.65},${s*0.62}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round" stroke-linejoin="round"/><line x1="${s*0.44}" y1="${s*0.32}" x2="${s*0.56}" y2="${s*0.68}" stroke="${s*0.04}" stroke-width="${s*0.03}" stroke-linecap="round"/>`
+    },
+    {
+      id: 'globe', label: 'Globo',
+      render: (s) => `<circle cx="${s*0.5}" cy="${s*0.5}" r="${s*0.28}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.03}"/><ellipse cx="${s*0.5}" cy="${s*0.5}" rx="${s*0.12}" ry="${s*0.28}" fill="none" stroke="${s*0.04}" stroke-width="${s*0.025}"/><line x1="${s*0.22}" y1="${s*0.5}" x2="${s*0.78}" y2="${s*0.5}" stroke="${s*0.04}" stroke-width="${s*0.025}"/>`
+    },
+  ];
+
   /* ─── Helpers ─── */
   function getDisplayText() {
     if (customText.trim()) return customText.trim();
-    if (showDimensions) return `${width} x ${height}`;
+    if (showDimensions && selectedIcon === 'none') return `${width} x ${height}`;
+    if (showDimensions && selectedIcon !== 'none') return `${width} x ${height}`;
     return '';
   }
 
   function getAutoFontSize() {
     const smaller = Math.min(width, height);
+    if (selectedIcon !== 'none') {
+      /* If icon is shown, use smaller font */
+      if (smaller <= 64) return Math.max(8, Math.floor(smaller * 0.18));
+      return Math.max(10, Math.floor(smaller * 0.07));
+    }
     if (smaller <= 64) return Math.max(10, Math.floor(smaller * 0.28));
     if (smaller <= 150) return Math.max(12, Math.floor(smaller * 0.16));
     if (smaller <= 300) return Math.max(14, Math.floor(smaller * 0.1));
@@ -74,6 +137,11 @@ function render_placeholder_generator(container, toolMeta) {
 
   function getEffectiveFontSize() {
     return fontSize > 0 ? fontSize : getAutoFontSize();
+  }
+
+  function getIconSize() {
+    const smaller = Math.min(width, height);
+    return Math.max(20, Math.floor(smaller * 0.28));
   }
 
   /* ─── SVG Generator ─── */
@@ -89,13 +157,35 @@ function render_placeholder_generator(container, toolMeta) {
     const txtRGBA = `rgba(${txtRGB.r},${txtRGB.g},${txtRGB.b},${alpha})`;
 
     /* Escape special chars for XML */
-    const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+    let content = '';
+
+    /* Icon */
+    if (selectedIcon !== 'none') {
+      const iconDef = icons.find(i => i.id === selectedIcon);
+      if (iconDef) {
+        const is = getIconSize();
+        const hasText = !!text;
+        if (hasText) {
+          /* Icon above text */
+          const iconY = height * 0.38;
+          const textY = height * 0.7;
+          content += `<g transform="translate(${(width - is) / 2}, ${iconY - is / 2})">${iconDef.render(is)}</g>`;
+          content += `<text x="50%" y="${textY}" dominant-baseline="central" text-anchor="middle" font-family="${fontFamily}, sans-serif" font-size="${fs}" font-weight="600" fill="${txtRGBA}">${escaped}</text>`;
+        } else {
+          /* Icon centered */
+          const iconY = height * 0.5;
+          content += `<g transform="translate(${(width - is) / 2}, ${iconY - is / 2})">${iconDef.render(is)}</g>`;
+        }
+      }
+    } else if (text) {
+      content += `<text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-family="${fontFamily}, sans-serif" font-size="${fs}" font-weight="600" fill="${txtRGBA}">${escaped}</text>`;
+    }
 
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">` +
       `<rect width="${width}" height="${height}" fill="${bgRGBA}"/>` +
-      (text
-        ? `<text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-family="${fontFamily}, sans-serif" font-size="${fs}" font-weight="600" fill="${txtRGBA}">${escaped}</text>`
-        : '') +
+      content +
       `</svg>`;
   }
 
@@ -196,7 +286,7 @@ function render_placeholder_generator(container, toolMeta) {
               <label class="label">Colores</label>
               <div class="pg-color-presets" id="pg-color-presets">
                 ${colorPresets.map(p => `
-                  <button class="pg-color-preset" data-bg="${p.bg}" data-text="${p.textColor}" data-tooltip="${p.label}" title="${p.label}">
+                  <button class="pg-color-preset" data-bg="${p.bg}" data-tooltip="${p.label}" title="${p.label}">
                     <span class="pg-color-dot" style="background:${p.bg};"></span>
                   </button>
                 `).join('')}
@@ -212,6 +302,21 @@ function render_placeholder_generator(container, toolMeta) {
                   <input type="color" class="pg-color-input" id="pg-text" value="${textColor}">
                   <input type="text" class="input pg-hex-input" id="pg-text-hex" value="${textColor}" maxlength="7" spellcheck="false">
                 </div>
+              </div>
+            </div>
+
+            <!-- Icon -->
+            <div class="pg-section">
+              <label class="label">Icono</label>
+              <div class="pg-icon-grid" id="pg-icon-grid">
+                ${icons.map(ic => `
+                  <button class="pg-icon-btn ${selectedIcon === ic.id ? 'pg-icon-btn--active' : ''}" data-icon="${ic.id}" data-tooltip="${ic.label}" title="${ic.label}">
+                    ${ic.id !== 'none'
+                      ? `<svg viewBox="0 0 100 100" width="18" height="18">${ic.render(100)}</svg>`
+                      : `<i class="fa-solid fa-ban" style="font-size:14px; opacity:0.4;"></i>`
+                    }
+                  </button>
+                `).join('')}
               </div>
             </div>
 
@@ -250,10 +355,15 @@ function render_placeholder_generator(container, toolMeta) {
               </div>
             </div>
 
-            <!-- Download SVG -->
-            <button class="btn btn--primary" id="pg-download" style="width:100%;">
-              <i class="fa-solid fa-download"></i> Descargar SVG
-            </button>
+            <!-- Actions -->
+            <div class="pg-actions">
+              <button class="btn btn--primary" id="pg-download" style="flex:1;">
+                <i class="fa-solid fa-download"></i> SVG
+              </button>
+              <button class="btn btn--secondary" id="pg-copy-png" style="flex:1;">
+                <i class="fa-regular fa-clipboard"></i> PNG
+              </button>
+            </div>
           </div>
         </div>
 
@@ -267,6 +377,7 @@ function render_placeholder_generator(container, toolMeta) {
   const codeEl = document.getElementById('pg-code');
   const copyBtn = document.getElementById('pg-copy-code');
   const downloadBtn = document.getElementById('pg-download');
+  const copyPNGBtn = document.getElementById('pg-copy-png');
 
   const widthInput = document.getElementById('pg-width');
   const heightInput = document.getElementById('pg-height');
@@ -295,8 +406,12 @@ function render_placeholder_generator(container, toolMeta) {
     previewImg.src = url;
 
     /* Info text */
-    const actualFS = fontSize > 0 ? `${fontSize}px` : 'auto';
-    previewInfo.textContent = `${width} × ${height}  ·  ${getEffectiveFontSize()}px  ·  ${opacity}%`;
+    const parts = [`${width} × ${height}`, `${getEffectiveFontSize()}px`, `${opacity}%`];
+    if (selectedIcon !== 'none') {
+      const iconLabel = icons.find(i => i.id === selectedIcon)?.label || selectedIcon;
+      parts.unshift(iconLabel);
+    }
+    previewInfo.textContent = parts.join('  ·  ');
 
     /* Code output */
     codeEl.textContent = generateCode();
@@ -360,15 +475,23 @@ function render_placeholder_generator(container, toolMeta) {
     }
   });
 
-  /* Color presets */
+  /* Color presets — bg only, doesn't touch text color */
   container.querySelectorAll('#pg-color-presets .pg-color-preset').forEach(btn => {
     btn.addEventListener('click', () => {
       bgColor = btn.dataset.bg;
-      textColor = btn.dataset.text;
       bgInput.value = bgColor;
       bgHexInput.value = bgColor;
-      textInput.value = textColor;
-      textHexInput.value = textColor;
+      update();
+    });
+  });
+
+  /* ─── Icon Events ─── */
+  container.querySelectorAll('#pg-icon-grid .pg-icon-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedIcon = btn.dataset.icon;
+      container.querySelectorAll('#pg-icon-grid .pg-icon-btn').forEach(b => {
+        b.classList.toggle('pg-icon-btn--active', b === btn);
+      });
       update();
     });
   });
@@ -430,11 +553,62 @@ function render_placeholder_generator(container, toolMeta) {
     MiniDevTools.showToast('SVG descargado!', 'success');
   });
 
+  /* ─── Copy as PNG ─── */
+  copyPNGBtn.addEventListener('click', async () => {
+    try {
+      const svg = generateSVG();
+      const svgBlob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+      const svgUrl = URL.createObjectURL(svgBlob);
+
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = svgUrl;
+      });
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      URL.revokeObjectURL(svgUrl);
+
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          MiniDevTools.showToast('Error al generar PNG', 'error');
+          return;
+        }
+        try {
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+          ]);
+          MiniDevTools.showToast('PNG copiado al portapapeles!', 'success');
+        } catch (e) {
+          /* Fallback: download as PNG */
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `placeholder-${width}x${height}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          MiniDevTools.showToast('PNG descargado (clipboard no soportado)', 'info');
+        }
+      }, 'image/png');
+    } catch (e) {
+      MiniDevTools.showToast('Error al generar PNG', 'error');
+    }
+  });
+
   /* ─── Persistence ─── */
   function saveState() {
     ToolStorage.setField('placeholder-generator', 'state', {
       width, height, bgColor, textColor, customText,
-      showDimensions, opacity, fontFamily, fontSize, format
+      showDimensions, opacity, fontFamily, fontSize, format, selectedIcon
     });
   }
 
