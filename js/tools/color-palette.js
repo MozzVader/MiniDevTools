@@ -174,6 +174,10 @@ function render_color_palette(container, toolMeta) {
     { name: 'Nordic',        base: '#38bdf8', mode: 'complementary' },
   ];
 
+  /* ─── Saved Palettes ─── */
+  const MAX_SAVED = 24;
+  let savedPalettes = (saved && saved.savedPalettes) ? saved.savedPalettes : [];
+
   /* ─── Render UI ─── */
   container.innerHTML = `
     <div class="tool-card">
@@ -243,6 +247,9 @@ function render_color_palette(container, toolMeta) {
               <button class="btn btn--primary" id="cp-generate" style="flex:1;">
                 <i class="fa-solid fa-wand-magic-sparkles"></i> Generar
               </button>
+              <button class="btn btn--secondary btn--icon" id="cp-save" data-tooltip="Guardar paleta">
+                <i class="fa-solid fa-bookmark"></i>
+              </button>
               <button class="btn btn--secondary btn--icon" id="cp-lock-all" data-tooltip="Lock all">
                 <i class="fa-solid fa-lock"></i>
               </button>
@@ -254,6 +261,17 @@ function render_color_palette(container, toolMeta) {
             <!-- Keyboard hint -->
             <div class="cp-hint">
               <i class="fa-regular fa-keyboard"></i> Presioná <kbd>Space</kbd> para generar una nueva paleta
+            </div>
+
+            <!-- Saved Palettes -->
+            <div class="cp-saved-section" id="cp-saved-section" style="display:none;">
+              <div class="cp-saved-header">
+                <label class="cp-presets-label">Guardadas <span class="cp-saved-count" id="cp-saved-count">0</span></label>
+                <button class="cp-saved-clear" id="cp-saved-clear" data-tooltip="Borrar todas">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+              <div class="cp-saved-list" id="cp-saved-list"></div>
             </div>
           </div>
         </div>
@@ -273,6 +291,11 @@ function render_color_palette(container, toolMeta) {
   const codeEl = document.getElementById('cp-code');
   const copyCodeBtn = document.getElementById('cp-copy-code');
   const presetsWrap = document.getElementById('cp-presets');
+  const saveBtn = document.getElementById('cp-save');
+  const savedSection = document.getElementById('cp-saved-section');
+  const savedList = document.getElementById('cp-saved-list');
+  const savedCount = document.getElementById('cp-saved-count');
+  const savedClear = document.getElementById('cp-saved-clear');
   const modeBtns = container.querySelectorAll('.cp-mode-btn');
   const exportBtns = container.querySelectorAll('.cp-export-btn');
 
@@ -482,6 +505,80 @@ function render_color_palette(container, toolMeta) {
     MiniDevTools.copyToClipboard(codeEl.textContent, 'Codigo copiado!');
   });
 
+  /* ─── Save Palette ─── */
+  saveBtn.addEventListener('click', () => {
+    const entry = {
+      colors: [...colors],
+      base: baseHex,
+      mode: mode,
+      ts: Date.now()
+    };
+    /* Remove duplicate (same colors in same order) */
+    savedPalettes = savedPalettes.filter(sp => sp.colors.join(',') !== entry.colors.join(','));
+    savedPalettes.unshift(entry);
+    if (savedPalettes.length > MAX_SAVED) savedPalettes = savedPalettes.slice(0, MAX_SAVED);
+    renderSavedPalettes();
+    saveState();
+    MiniDevTools.showToast('Paleta guardada!', 'success');
+  });
+
+  /* ─── Render Saved Palettes ─── */
+  function renderSavedPalettes() {
+    if (savedPalettes.length === 0) {
+      savedSection.style.display = 'none';
+      return;
+    }
+    savedSection.style.display = '';
+    savedCount.textContent = savedPalettes.length;
+
+    savedList.innerHTML = savedPalettes.map((sp, i) => {
+      const grad = sp.colors.map((c, ci) => `${c} ${(ci / (sp.colors.length - 1)) * 100}%`).join(', ');
+      return `
+        <div class="cp-saved-item" data-si="${i}">
+          <div class="cp-saved-item__bar" style="background:linear-gradient(90deg, ${grad});"></div>
+          <button class="cp-saved-item__delete" data-si="${i}" data-tooltip="Eliminar">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>`;
+    }).join('');
+
+    /* Click bar → load palette */
+    savedList.querySelectorAll('.cp-saved-item__bar').forEach(el => {
+      el.addEventListener('click', () => {
+        const sp = savedPalettes[parseInt(el.parentElement.dataset.si)];
+        colors = [...sp.colors];
+        baseHex = sp.base;
+        mode = sp.mode;
+        locked = [false, false, false, false, false];
+        baseColorPicker.value = baseHex;
+        baseHexInput.value = baseHex;
+        syncModeButtons();
+        renderPalette();
+        saveState();
+        MiniDevTools.showToast('Paleta cargada', 'info');
+      });
+    });
+
+    /* Click X → delete */
+    savedList.querySelectorAll('.cp-saved-item__delete').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        savedPalettes.splice(parseInt(el.dataset.si), 1);
+        renderSavedPalettes();
+        saveState();
+      });
+    });
+  }
+
+  /* ─── Clear All Saved Palettes ─── */
+  savedClear.addEventListener('click', () => {
+    if (savedPalettes.length === 0) return;
+    savedPalettes = [];
+    renderSavedPalettes();
+    saveState();
+    MiniDevTools.showToast('Paletas guardadas eliminadas', 'info');
+  });
+
   /* ─── Keyboard: Space to generate ─── */
   container.addEventListener('keydown', (e) => {
     /* Only if not focused on input */
@@ -527,12 +624,14 @@ function render_color_palette(container, toolMeta) {
       mode,
       colors,
       locked,
-      base: baseHex
+      base: baseHex,
+      savedPalettes
     });
   }
 
   /* ─── Init ─── */
   renderPresets();
+  renderSavedPalettes();
   renderPalette();
 }
 
