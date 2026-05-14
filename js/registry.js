@@ -153,7 +153,7 @@ const TOOL_REGISTRY = [
     categoryLabel: 'Texto & Código',
     description: 'Generador de texto de relleno en español',
     jsFile: 'js/tools/lorem-ipsum.js',
-    cssFile: null,
+    cssFile: 'css/tools/lorem-ipsum.css',
     render: null
   },
   {
