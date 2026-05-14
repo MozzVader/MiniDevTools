@@ -377,22 +377,23 @@ function render_color_palette(container, toolMeta) {
 
   /* ─── Generate ─── */
   function generate() {
+    /* Save previous colors BEFORE generating new ones (for lock preservation) */
+    const prevColors = [...colors];
+
     if (mode === 'random') {
       baseHex = randomHex();
       baseColorPicker.value = baseHex;
       baseHexInput.value = baseHex;
       colors = [];
       for (let i = 0; i < COUNT; i++) {
-        colors.push(locked[i] ? colors[i] : randomHex());
+        colors.push(locked[i] && prevColors[i] ? prevColors[i] : randomHex());
       }
     } else {
       colors = generatePalette(baseHex, mode);
-      /* Respect locked colors */
-      const oldColors = [...colors];
+      /* Restore locked colors from previous palette */
       for (let i = 0; i < COUNT; i++) {
-        if (locked[i] && oldColors[i]) {
-          /* Keep locked color from previous state if available */
-          colors[i] = oldColors[i];
+        if (locked[i] && prevColors[i]) {
+          colors[i] = prevColors[i];
         }
       }
     }
