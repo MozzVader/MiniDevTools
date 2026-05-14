@@ -1,0 +1,316 @@
+/* ═══════════════════════════════════════════════════════════════
+   Gradient Generator — Preview, controles y código CSS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.gg-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+}
+
+/* ─── Preview ─── */
+.gg-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gg-preview {
+  width: 100%;
+  min-height: 320px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  transition: background 0.15s ease;
+  position: relative;
+}
+
+.gg-preview__checkerboard {
+  /* visible behind transparent areas */
+  background-image:
+    linear-gradient(45deg, #ccc 25%, transparent 25%),
+    linear-gradient(-45deg, #ccc 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #ccc 75%),
+    linear-gradient(-45deg, transparent 75%, #ccc 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  border-radius: var(--radius-lg);
+}
+
+.gg-preview__gradient {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+}
+
+/* ─── Code output ─── */
+.gg-code {
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  word-break: break-all;
+  white-space: pre-wrap;
+  position: relative;
+}
+
+/* ─── Controls Panel ─── */
+.gg-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Type selector */
+.gg-type-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.gg-type-btn {
+  padding: 8px 4px;
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  font-weight: 500;
+  text-align: center;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.gg-type-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.gg-type-btn--active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Angle slider */
+.gg-angle-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gg-angle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gg-angle-value {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 500;
+  background: var(--accent-light);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+/* Custom range slider */
+.gg-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  outline: none;
+  cursor: pointer;
+}
+
+.gg-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.gg-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.gg-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+
+/* Color stops */
+.gg-stops {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gg-stop {
+  display: grid;
+  grid-template-columns: 40px 1fr 48px 28px;
+  gap: 8px;
+  align-items: center;
+}
+
+.gg-stop__color {
+  width: 40px;
+  height: 34px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.gg-stop__color:hover {
+  border-color: var(--accent);
+}
+
+.gg-stop__color::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.gg-stop__color::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.gg-stop__color::-moz-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.gg-stop__hex {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12.5px;
+  padding: 6px 8px;
+  text-transform: uppercase;
+}
+
+.gg-stop__pos {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12.5px;
+  padding: 6px 4px;
+  text-align: center;
+  width: 48px;
+}
+
+.gg-stop__remove {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.gg-stop__remove:hover {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+[data-theme="dark"] .gg-stop__remove:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* Add stop button */
+.gg-add-stop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-light);
+  border: 1px dashed var(--accent);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.gg-add-stop:hover {
+  background: var(--accent);
+  color: #fff;
+  border-style: solid;
+}
+
+/* ─── Presets ─── */
+.gg-presets-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.gg-presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.gg-preset {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.gg-preset:hover {
+  border-color: var(--accent);
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* ─── Actions ─── */
+.gg-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .gg-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .gg-preview {
+    min-height: 200px;
+  }
+
+  .gg-stop {
+    grid-template-columns: 36px 1fr 42px 28px;
+    gap: 6px;
+  }
+}
