@@ -510,12 +510,12 @@ function render_image_color_picker(container, toolMeta) {
 
     /* Position lens — follow mouse, prefer above, flip below if near top */
     const gap = 15;
-    let lensLeft = elX - LENS_SIZE / 2;
-    let lensTop = elY - LENS_SIZE - gap;
+    let lensLeft = offsetX - LENS_SIZE / 2;
+    let lensTop = offsetY - LENS_SIZE - gap;
 
     /* Flip below cursor if near top */
     if (lensTop < 0) {
-      lensTop = elY + gap;
+      lensTop = offsetY + gap;
     }
 
     /* Allow horizontal overflow — don't clamp tightly */

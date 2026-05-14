@@ -15,6 +15,8 @@ const App = (() => {
 
   // Track herramienta activa para cleanup
   let currentToolId = null;
+  // Track hash completo para detectar cambios en query params
+  let previousHash = null;
 
   function init() {
     ThemeManager.init();
@@ -35,7 +37,9 @@ const App = (() => {
       return;
     }
 
-    const toolId = hash.replace('/', '');
+    /* Strip query params from hash to get clean toolId (e.g. #/color-palette?color=xxx) */
+    const [path] = hash.split('?');
+    const toolId = path.replace('/', '');
     const tool = getToolById(toolId);
 
     if (!tool) {
@@ -95,8 +99,9 @@ const App = (() => {
 
   /* ─── LAZY LOADING DE HERRAMIENTAS ─── */
   async function loadTool(tool) {
-    // Si es la misma herramienta, no recargar
-    if (currentToolId === tool.id) return;
+    // Si es la misma herramienta, solo recargar si cambió el hash completo
+    // (e.g. query params cambiaron como ?color=xxx)
+    if (currentToolId === tool.id && previousHash === window.location.hash) return;
 
     // Cleanup de la herramienta anterior
     cleanupCurrentTool();
@@ -132,6 +137,9 @@ const App = (() => {
       } else if (typeof module === 'function') {
         module(container, tool);
       }
+
+      // 5. Actualizar hash anterior
+      previousHash = window.location.hash;
 
     } catch (error) {
       console.error(`Error loading tool "${tool.id}":`, error);
