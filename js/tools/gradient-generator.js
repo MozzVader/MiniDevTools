@@ -111,6 +111,7 @@ function render_gradient_generator(container, toolMeta) {
 
   /* ─── Presets ─── */
   const presets = [
+    { type: 'linear', angle: 135, stops: [{ color: '#6366f1', position: 0 }, { color: '#ec4899', position: 50 }, { color: '#f97316', position: 100 }] },
     { type: 'linear', angle: 135, stops: [{ color: '#6366f1', position: 0 }, { color: '#a855f7', position: 100 }] },
     { type: 'linear', angle: 90,  stops: [{ color: '#14b8a6', position: 0 }, { color: '#06b6d4', position: 50 }, { color: '#3b82f6', position: 100 }] },
     { type: 'linear', angle: 135, stops: [{ color: '#f43f5e', position: 0 }, { color: '#f97316', position: 100 }] },
@@ -118,7 +119,6 @@ function render_gradient_generator(container, toolMeta) {
     { type: 'radial', angle: 0,   stops: [{ color: '#8b5cf6', position: 0 }, { color: '#ec4899', position: 100 }] },
     { type: 'radial', angle: 0,   stops: [{ color: '#10b981', position: 0 }, { color: '#059669', position: 100 }] },
     { type: 'conic',  angle: 0,   stops: [{ color: '#f43f5e', position: 0 }, { color: '#8b5cf6', position: 33 }, { color: '#3b82f6', position: 66 }, { color: '#10b981', position: 100 }] },
-    { type: 'conic',  angle: 45,  stops: [{ color: '#fbbf24', position: 0 }, { color: '#f97316', position: 25 }, { color: '#ef4444', position: 50 }, { color: '#ec4899', position: 75 }, { color: '#8b5cf6', position: 100 }] },
     { type: 'linear', angle: 180, stops: [{ color: '#0f172a', position: 0 }, { color: '#1e293b', position: 100 }] },
     { type: 'linear', angle: 135, stops: [{ color: '#a78bfa', position: 0 }, { color: '#fbbf24', position: 100 }] },
     { type: 'linear', angle: 90,  stops: [{ color: '#667eea', position: 0 }, { color: '#764ba2', position: 100 }] },
