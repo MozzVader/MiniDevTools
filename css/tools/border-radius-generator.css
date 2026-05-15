@@ -162,7 +162,9 @@
 }
 
 .br-corner-label {
-  min-width: 90px;
+  width: 110px;
+  min-width: 110px;
+  flex-shrink: 0;
   font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
@@ -192,6 +194,8 @@
 /* Number input */
 .br-num-input {
   width: 52px;
+  min-width: 52px;
+  flex-shrink: 0;
   text-align: center;
   font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 12px;
