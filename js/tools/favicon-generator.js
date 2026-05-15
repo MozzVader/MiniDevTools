@@ -66,69 +66,58 @@ window['render_favicon-generator'] = function(container, toolMeta) {
       </div>
       <div class="tool-card__body">
 
-        <div class="fg-layout">
-          <!-- LEFT: Upload & Preview -->
-          <div class="fg-left">
-            <div class="fg-image-area" id="fg-image-area">
+        <!-- TOP: Upload Area (full width) -->
+        <div class="fg-image-area" id="fg-image-area">
 
-              <!-- Drop zone -->
-              <div class="fg-dropzone" id="fg-dropzone">
-                <div class="fg-dropzone__icon">
-                  <i class="fa-solid fa-cloud-arrow-up"></i>
-                </div>
-                <p class="fg-dropzone__text">Arrastrá una imagen aquí</p>
-                <span class="fg-dropzone__sub">Se recomienda imagen cuadrada (mín. 256×256)</span>
-                <span class="fg-dropzone__hint"><i class="fa-regular fa-clipboard"></i> Ctrl+V para pegar</span>
-              </div>
-
-              <!-- Image loaded view -->
-              <div id="fg-loaded-wrap" style="display:none;">
-                <div class="fg-img-info" id="fg-img-info">
-                  <span id="fg-img-name" class="fg-img-info__name"></span>
-                  <span class="fg-img-info__dims" id="fg-img-dims"></span>
-                </div>
-                <div class="fg-original-preview fg-checkerboard">
-                  <img id="fg-img" alt="Original">
-                </div>
-              </div>
-            </div>
+          <!-- Drop zone -->
+          <div class="fg-dropzone" id="fg-dropzone">
+            <span class="fg-dropzone__icon">🖼️</span>
+            <p>Arrastrá una imagen aquí o hacé clic para seleccionarla</p>
+            <span class="fg-dropzone__sub">Se recomienda cuadrada (mín. 256×256) · Ctrl+V para pegar</span>
           </div>
 
-          <!-- RIGHT: Generated Icons -->
-          <div class="fg-right">
-
-            <!-- ICO File -->
-            <div class="fg-section">
-              <div class="fg-section__header">
-                <div class="fg-section__title">favicon.ico</div>
-                <button class="btn btn--primary btn--sm" id="fg-dl-ico" style="display:none;">
-                  <i class="fa-solid fa-download"></i> Descargar .ico
-                </button>
-              </div>
-              <div class="fg-ico-info">Contiene 16×16, 32×32 y 48×48</div>
+          <!-- Image loaded view -->
+          <div id="fg-loaded-wrap" style="display:none;">
+            <div class="fg-img-info" id="fg-img-info">
+              <span id="fg-img-name" class="fg-img-info__name"></span>
+              <span class="fg-img-info__dims" id="fg-img-dims"></span>
             </div>
-
-            <!-- Size Grid -->
-            <div class="fg-section">
-              <div class="fg-section__header">
-                <div class="fg-section__title">PNG por tamaño</div>
-                <button class="btn btn--secondary btn--sm" id="fg-dl-all" style="display:none;">
-                  <i class="fa-solid fa-file-zipper"></i> Descargar todos
-                </button>
-              </div>
-              <div class="fg-sizes-grid" id="fg-sizes-grid">
-                ${sizeCardsHTML}
-              </div>
+            <div class="fg-original-preview fg-checkerboard">
+              <img id="fg-img" alt="Original">
             </div>
+            <button class="btn btn--ghost btn--sm fg-change-btn" id="fg-change-img">
+              <i class="fa-solid fa-image"></i> Cambiar imagen
+            </button>
+          </div>
+        </div>
 
-            <!-- Actions -->
-            <div class="fg-actions">
-              <button class="btn btn--ghost btn--sm" id="fg-change-img">
-                <i class="fa-solid fa-image"></i> Cambiar imagen
+        <!-- BOTTOM: Generated Icons -->
+        <div class="fg-bottom">
+
+          <!-- ICO File -->
+          <div class="fg-section">
+            <div class="fg-section__header">
+              <div class="fg-section__title">favicon.ico</div>
+              <button class="btn btn--primary btn--sm" id="fg-dl-ico" style="display:none;">
+                <i class="fa-solid fa-download"></i> Descargar .ico
               </button>
             </div>
-
+            <div class="fg-ico-info">Contiene 16×16, 32×32 y 48×48</div>
           </div>
+
+          <!-- Size Grid -->
+          <div class="fg-section">
+            <div class="fg-section__header">
+              <div class="fg-section__title">PNG por tamaño</div>
+              <button class="btn btn--secondary btn--sm" id="fg-dl-all" style="display:none;">
+                <i class="fa-solid fa-file-zipper"></i> Descargar todos
+              </button>
+            </div>
+            <div class="fg-sizes-grid" id="fg-sizes-grid">
+              ${sizeCardsHTML}
+            </div>
+          </div>
+
         </div>
 
       </div>

@@ -2,59 +2,39 @@
    Favicon Generator — Generar favicons en todos los tamaños
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Layout ─── */
-.fg-layout {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 24px;
-  align-items: start;
-}
-
-.fg-left {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.fg-right {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
 /* ─── Checkerboard (transparency) ─── */
 .fg-checkerboard {
   background:
     repeating-conic-gradient(#e8e8e8 0% 25%, #ffffff 0% 50%) 50% / 12px 12px;
 }
 
-/* ─── Image Area ─── */
+/* ─── Image Area (full width top section) ─── */
 .fg-image-area {
   position: relative;
-  min-height: 300px;
   border-radius: var(--radius-lg);
   transition: box-shadow var(--transition-fast);
+  margin-bottom: 20px;
 }
 
 .fg-image-area.fg-dragover {
   box-shadow: 0 0 0 3px var(--accent), var(--shadow-lg);
 }
 
-/* ─── Drop Zone ─── */
+/* ─── Drop Zone (compact, mac-frame style) ─── */
 .fg-dropzone {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 300px;
+  width: 100%;
+  padding: 28px 20px;
   border: 2px dashed var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   background: var(--bg-input);
   cursor: pointer;
   transition: all var(--transition-fast);
-  padding: 24px;
+  box-sizing: border-box;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 
 .fg-dropzone:hover {
@@ -68,30 +48,21 @@
 }
 
 .fg-dropzone__icon {
-  font-size: 40px;
-  color: var(--accent);
-  opacity: 0.7;
+  font-size: 32px;
+  margin-bottom: 4px;
+  display: block;
 }
 
-.fg-dropzone__text {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text-primary);
+.fg-dropzone p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .fg-dropzone__sub {
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.fg-dropzone__hint {
-  display: flex;
-  align-items: center;
-  gap: 6px;
   font-size: 12px;
   color: var(--text-muted);
-  margin-top: 2px;
-  opacity: 0.7;
 }
 
 /* ─── Image Info Bar ─── */
@@ -105,6 +76,7 @@
   border-radius: var(--radius-sm);
   font-size: 12.5px;
   color: var(--text-secondary);
+  margin-bottom: 10px;
 }
 
 .fg-img-info__name {
@@ -129,26 +101,39 @@
   justify-content: center;
   align-items: center;
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  min-height: 160px;
-  max-height: 360px;
+  min-height: 120px;
+  max-height: 260px;
   padding: 16px;
+  margin-bottom: 10px;
 }
 
 .fg-original-preview img {
   display: block;
   max-width: 100%;
-  max-height: 320px;
+  max-height: 240px;
   object-fit: contain;
   user-select: none;
   -webkit-user-drag: none;
   border-radius: 4px;
 }
 
+/* ─── Change Image Button ─── */
+.fg-change-btn {
+  align-self: center;
+}
+
 /* ═══════════════════════════════════════════════════════════════
-   RIGHT PANEL SECTIONS
+   BOTTOM SECTION
    ═══════════════════════════════════════════════════════════════ */
+
+.fg-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
 
 .fg-section {
   background: var(--bg-base-secondary);
@@ -179,15 +164,15 @@
 .fg-sizes-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
   margin-top: 10px;
 }
 
 .fg-size-card {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 10px;
+  gap: 4px;
+  padding: 8px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -202,7 +187,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 56px;
+  min-height: 48px;
   border-radius: 4px;
   overflow: hidden;
 }
@@ -242,20 +227,10 @@
   font-size: 11px !important;
 }
 
-/* ─── Actions ─── */
-.fg-actions {
-  display: flex;
-  justify-content: flex-start;
-}
-
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
-  .fg-layout {
+  .fg-bottom {
     grid-template-columns: 1fr;
-  }
-
-  .fg-dropzone {
-    min-height: 200px;
   }
 
   .fg-sizes-grid {
@@ -269,6 +244,6 @@
   }
 
   .fg-original-preview {
-    max-height: 260px;
+    max-height: 200px;
   }
 }
