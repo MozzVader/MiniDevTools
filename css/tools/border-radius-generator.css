@@ -1,0 +1,321 @@
+/* ═══════════════════════════════════════════════════════════════
+   Border Radius Generator — Visual border-radius builder
+   Layout y controles similares a Shadow Generator (.sg-*)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.br-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+}
+
+/* ─── Preview ─── */
+.br-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
+
+.br-preview {
+  width: 100%;
+  min-height: 320px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+}
+
+[data-theme="dark"] .br-preview {
+  background: #0f172a;
+}
+
+/* Subtle dot grid background */
+.br-preview::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.6;
+}
+
+[data-theme="dark"] .br-preview::before {
+  opacity: 0.3;
+}
+
+.br-preview__box {
+  position: relative;
+  z-index: 1;
+  width: 200px;
+  height: 200px;
+  border-radius: 16px;
+  background: var(--accent);
+  transition: border-radius 0.15s ease;
+}
+
+/* Corner value indicators */
+.br-corner-indicator {
+  position: absolute;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(0, 0, 0, 0.55);
+  padding: 2px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  line-height: 1.3;
+}
+
+.br-corner-indicator--tl { top: 10px; left: 10px; }
+.br-corner-indicator--tr { top: 10px; right: 10px; }
+.br-corner-indicator--br { bottom: 10px; right: 10px; }
+.br-corner-indicator--bl { bottom: 10px; left: 10px; }
+
+/* ─── Code output ─── */
+.br-code {
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+/* ─── Controls Panel ─── */
+.br-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ─── Link Toggle ─── */
+.br-link-row {
+  padding-bottom: 4px;
+}
+
+.br-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.br-option input[type="checkbox"] {
+  display: none;
+}
+
+.br-option .fa-link-slash {
+  display: none;
+}
+
+.br-option input[type="checkbox"]:checked ~ .fa-link {
+  display: inline;
+}
+
+.br-option input[type="checkbox"]:checked ~ .fa-link-slash {
+  display: none;
+}
+
+.br-option input[type="checkbox"]:not(:checked) ~ .fa-link {
+  display: none;
+}
+
+.br-option input[type="checkbox"]:not(:checked) ~ .fa-link-slash {
+  display: inline;
+}
+
+.br-option i {
+  font-size: 13px;
+  color: var(--accent);
+  width: 16px;
+  text-align: center;
+}
+
+/* ─── Slider Groups ─── */
+.br-slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.br-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: opacity var(--transition-fast);
+}
+
+.br-corner-label {
+  min-width: 90px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.br-corner-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  border: 2px solid var(--accent);
+  background: transparent;
+}
+
+.br-corner-dot--tl { border-radius: 8px 2px 2px 2px; }
+.br-corner-dot--tr { border-radius: 2px 8px 2px 2px; }
+.br-corner-dot--br { border-radius: 2px 2px 8px 2px; }
+.br-corner-dot--bl { border-radius: 2px 2px 2px 8px; }
+
+.br-slider-row input[type="range"] {
+  flex: 1;
+}
+
+/* Number input */
+.br-num-input {
+  width: 52px;
+  text-align: center;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--accent-light);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 4px 2px;
+  outline: none;
+  transition: all var(--transition-fast);
+  -moz-appearance: textfield;
+}
+
+.br-num-input::-webkit-outer-spin-button,
+.br-num-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.br-num-input:focus {
+  border-color: var(--accent);
+  background: var(--bg-card);
+}
+
+/* Custom range slider */
+.br-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  outline: none;
+  cursor: pointer;
+}
+
+.br-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.br-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.br-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+
+/* ─── Presets ─── */
+.br-presets-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.br-presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.br-preset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  background: var(--bg-base-secondary);
+}
+
+.br-preset:hover {
+  border-color: var(--accent);
+  transform: scale(1.08);
+}
+
+.br-preset__shape {
+  width: 44%;
+  height: 44%;
+  background: var(--accent);
+  transition: border-radius 0.15s ease;
+}
+
+/* ─── Actions ─── */
+.br-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .br-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .br-preview {
+    min-height: 220px;
+  }
+
+  .br-preview__box {
+    width: 160px;
+    height: 160px;
+  }
+
+  .br-corner-label {
+    min-width: 70px;
+    font-size: 12px;
+  }
+}

@@ -96,7 +96,7 @@ const TOOL_REGISTRY = [
     categoryLabel: 'CSS & Diseño',
     description: 'Crear bordes redondeados personalizados',
     jsFile: 'js/tools/border-radius-generator.js',
-    cssFile: null,
+    cssFile: 'css/tools/border-radius-generator.css',
     render: null
   },
   {
