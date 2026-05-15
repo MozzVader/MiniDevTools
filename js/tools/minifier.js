@@ -1,11 +1,11 @@
 /* ═══════════════════════════════════════════════════════════════
    Minifier CSS/JS/HTML — Comprimir código para producción
    Features:
-   - 3 lenguajes: CSS, JavaScript, HTML (tabs estilo Code Formatter)
+   - 3 lenguajes: CSS, JavaScript, HTML (botones estilo Boilerplate Generator)
    - Minificación en tiempo real al escribir/pegar
    - Estadísticas: tamaño original vs minificado + % de reducción
    - Copiar resultado / Descargar / Pegar / Limpiar / Ejemplo
-   - Usa clases globales: .cf-tab, .input, .code-output, .label
+   - Usa clases globales: .input, .code-output, .label
    - Persistencia de preferencias con ToolStorage
    ═══════════════════════════════════════════════════════════════ */
 
@@ -28,11 +28,21 @@ function render_minifier(container, toolMeta) {
       </div>
       <div class="tool-card__body">
 
-        <!-- Tabs -->
-        <div class="cf-tabs">
-          <button class="cf-tab ${activeTab === 'css' ? 'cf-tab--active' : ''}" data-tab="css">CSS</button>
-          <button class="cf-tab ${activeTab === 'js' ? 'cf-tab--active' : ''}" data-tab="js">JavaScript</button>
-          <button class="cf-tab ${activeTab === 'html' ? 'cf-tab--active' : ''}" data-tab="html">HTML</button>
+        <!-- Language selector -->
+        <label class="label">Lenguaje</label>
+        <div class="mn-lang-bar">
+          <button class="mn-lang-btn ${activeTab === 'css' ? 'mn-lang-btn--active' : ''}" data-tab="css">
+            <i class="fa-brands fa-css3-alt"></i>
+            <span>CSS</span>
+          </button>
+          <button class="mn-lang-btn ${activeTab === 'js' ? 'mn-lang-btn--active' : ''}" data-tab="js">
+            <i class="fa-brands fa-js"></i>
+            <span>JavaScript</span>
+          </button>
+          <button class="mn-lang-btn ${activeTab === 'html' ? 'mn-lang-btn--active' : ''}" data-tab="html">
+            <i class="fa-brands fa-html5"></i>
+            <span>HTML</span>
+          </button>
         </div>
 
         <!-- CSS Panel -->
@@ -102,7 +112,7 @@ function render_minifier(container, toolMeta) {
   `;
 
   /* ─── DOM Refs ─── */
-  const tabs = container.querySelectorAll('.cf-tab');
+  const tabs = container.querySelectorAll('.mn-lang-btn');
   const panels = {
     css: document.getElementById('mn-panel-css'),
     js: document.getElementById('mn-panel-js'),
@@ -148,14 +158,14 @@ function render_minifier(container, toolMeta) {
   /* ─── Tab Switching ─── */
   function switchTab(tab) {
     activeTab = tab;
-    tabs.forEach(t => t.classList.toggle('cf-tab--active', t.dataset.tab === tab));
+    tabs.forEach(t => t.classList.toggle('mn-lang-btn--active', t.dataset.tab === tab));
     panels.css.style.display = tab === 'css' ? '' : 'none';
     panels.js.style.display = tab === 'js' ? '' : 'none';
     panels.html.style.display = tab === 'html' ? '' : 'none';
     ToolStorage.setField('minifier', 'activeTab', tab);
   }
 
-  container.querySelectorAll('.cf-tab').forEach(t => {
+  container.querySelectorAll('.mn-lang-btn').forEach(t => {
     t.addEventListener('click', () => switchTab(t.dataset.tab));
   });
 

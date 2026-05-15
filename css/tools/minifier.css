@@ -1,8 +1,52 @@
 /* ═══════════════════════════════════════════════════════════════
    Minifier CSS/JS/HTML
-   Reusa: .cf-tabs, .cf-tab, .cf-tab--active, .cf-actions, .cf-status,
-          .input, .label, .form-group, .code-output (de code-formatter.css + global.css)
+   Botones de lenguaje estilo Boilerplate Generator (.bl-template-btn)
+   Reusa: .input, .label, .form-group, .code-output, .cf-actions, .cf-status
    ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Language selector bar ─── */
+.mn-lang-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.mn-lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.mn-lang-btn i {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.mn-lang-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.mn-lang-btn--active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
 
 /* ─── Stats bar ─── */
 .mn-stats {
