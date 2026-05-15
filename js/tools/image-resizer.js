@@ -14,7 +14,7 @@
    - Persistencia de preferencias con ToolStorage
    ═══════════════════════════════════════════════════════════════ */
 
-function render_image-resizer(container, toolMeta) {
+window['render_image-resizer'] = function(container, toolMeta) {
 
   /* ─── Constants ─── */
   const MAX_DIM = 8000;
@@ -666,5 +666,4 @@ function render_image-resizer(container, toolMeta) {
   }
 }
 
-/* Registro global */
-window['render_image-resizer'] = render_image-resizer;
+
