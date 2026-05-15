@@ -101,10 +101,11 @@
   font-weight: 500;
   color: var(--accent);
   line-height: 1.4;
-  white-space: nowrap;
+  max-height: 2.8em;
   overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-all;
   min-height: 20px;
+  cursor: default;
 }
 
 .tc-card__empty {
