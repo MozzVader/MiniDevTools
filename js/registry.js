@@ -233,7 +233,7 @@ const TOOL_REGISTRY = [
     categoryLabel: 'Utilitarios Dev',
     description: 'Codificar y decodificar en base64',
     jsFile: 'js/tools/base64-encoder.js',
-    cssFile: null,
+    cssFile: 'css/tools/base64-encoder.css',
     render: null
   },
   {
