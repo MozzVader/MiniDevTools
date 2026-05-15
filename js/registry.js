@@ -244,7 +244,7 @@ const TOOL_REGISTRY = [
     categoryLabel: 'Utilitarios Dev',
     description: 'Encodear y decodear URLs',
     jsFile: 'js/tools/url-encoder.js',
-    cssFile: null,
+    cssFile: 'css/tools/url-encoder.css',
     render: null
   },
   {

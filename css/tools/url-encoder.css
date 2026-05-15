@@ -1,0 +1,137 @@
+/* ═══════════════════════════════════════════════════════════════
+   URL Encode/Decode
+   Botones de modo/tipo estilo Boilerplate Generator (.mn-lang-btn)
+   Reusa: .input, .label, .form-group, .code-output, .btn, .btn--ghost, .btn--sm, .btn--primary
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Mode Toggle Bar ─── */
+.ue-mode-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.ue-mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.ue-mode-btn i {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.ue-mode-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.ue-mode-btn--active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ─── Encode Type Bar ─── */
+.ue-type-bar {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ue-type-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.ue-type-btn i {
+  font-size: 13px;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.ue-type-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.ue-type-btn--active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.ue-type-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+.ue-type-hint code {
+  background: var(--bg-hover);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 11px;
+}
+
+/* ─── Textarea ─── */
+.ue-textarea {
+  min-height: 120px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ─── Size Info ─── */
+.ue-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  padding: 8px 0 0;
+  flex-wrap: wrap;
+}
+
+.ue-info strong {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ─── Hint ─── */
+.ue-hint {
+  padding-top: 8px;
+}
