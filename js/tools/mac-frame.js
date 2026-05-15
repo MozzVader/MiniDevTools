@@ -8,7 +8,7 @@ function render_mac_frame(container, toolMeta) {
   container.innerHTML = `
     <div class="tool-card">
       <div class="tool-card__header">
-        <h2 class="tool-card__title">${toolMeta.icon} ${toolMeta.name}</h2>
+        <h2 class="tool-card__title"><i class="${toolMeta.icon}" style="margin-right:8px;"></i>${toolMeta.name}</h2>
         <p class="tool-card__description">${toolMeta.description}</p>
       </div>
       <div class="tool-card__body">
