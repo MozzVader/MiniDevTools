@@ -186,7 +186,7 @@ const TOOL_REGISTRY = [
     categoryLabel: 'Texto & Código',
     description: 'Contar caracteres, palabras, oraciones',
     jsFile: 'js/tools/character-counter.js',
-    cssFile: null,
+    cssFile: 'css/tools/character-counter.css',
     render: null
   },
   {
