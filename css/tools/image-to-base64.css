@@ -1,0 +1,352 @@
+/* ═══════════════════════════════════════════════════════════════
+   Image to Base64 — Convertir imágenes a base64
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.ib-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+.ib-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ib-right {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ─── Image Area ─── */
+.ib-image-area {
+  position: relative;
+  min-height: 300px;
+  border-radius: var(--radius-lg);
+  transition: box-shadow var(--transition-fast);
+}
+
+.ib-image-area.ib-dragover {
+  box-shadow: 0 0 0 3px var(--accent), var(--shadow-lg);
+}
+
+/* ─── Drop Zone ─── */
+.ib-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 300px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-input);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 24px;
+  text-align: center;
+}
+
+.ib-dropzone:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.ib-dragover .ib-dropzone {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.ib-dropzone__icon {
+  font-size: 40px;
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.ib-dropzone__text {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ib-dropzone__sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.ib-dropzone__hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  opacity: 0.7;
+}
+
+/* ─── Image Info Bar ─── */
+.ib-img-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+.ib-img-info__name {
+  font-weight: 500;
+  color: var(--text-primary);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ib-img-info__dims {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ib-img-info__size {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ─── Preview Box ─── */
+.ib-preview-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  min-height: 160px;
+  max-height: 340px;
+}
+
+.ib-preview-box img {
+  display: block;
+  max-width: 100%;
+  max-height: 340px;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ─── Size Comparison ─── */
+.ib-comparison {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+}
+
+.ib-comparison__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ib-comparison__label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.ib-comparison__value {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ib-comparison__arrow {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.ib-comparison__ratio .ib-comparison__value {
+  font-size: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RIGHT PANEL SECTIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+.ib-section {
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.ib-section__title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.ib-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ib-section__header .ib-section__title {
+  margin-bottom: 0;
+}
+
+/* ─── Format Grid ─── */
+.ib-format-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.ib-format-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 6px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.ib-format-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.ib-format-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.ib-format-btn i {
+  font-size: 11px;
+}
+
+/* ─── Output Area ─── */
+.ib-output-wrap {
+  position: relative;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  min-height: 120px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.ib-output-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.ib-output-code {
+  display: block;
+  padding: 12px 14px;
+  margin: 0;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow: auto;
+  max-height: 320px;
+  background: transparent;
+  border: none;
+}
+
+/* ─── Copy Button (in header) ─── */
+.ib-copy-btn {
+  flex-shrink: 0;
+}
+
+/* ─── Characters Info ─── */
+.ib-chars-info {
+  text-align: right;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* ─── Action Buttons ─── */
+.ib-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.ib-actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .ib-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ib-dropzone {
+    min-height: 200px;
+  }
+
+  .ib-preview-box {
+    max-height: 260px;
+  }
+
+  .ib-preview-box img {
+    max-height: 260px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ib-format-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+
+  .ib-format-btn {
+    padding: 7px 4px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .ib-comparison {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

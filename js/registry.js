@@ -39,7 +39,7 @@ const TOOL_REGISTRY = [
     categoryLabel: 'Imágenes',
     description: 'Convertir imágenes a base64 para CSS/HTML',
     jsFile: 'js/tools/image-to-base64.js',
-    cssFile: null,
+    cssFile: 'css/tools/image-to-base64.css',
     render: null
   },
   {
