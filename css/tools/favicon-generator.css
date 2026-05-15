@@ -125,21 +125,62 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   BOTTOM SECTION
+   DOWNLOAD BAR (full-width)
    ═══════════════════════════════════════════════════════════════ */
 
-.fg-bottom {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  align-items: start;
+.fg-download-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
 }
 
-.fg-section {
+.fg-download-bar__info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.fg-download-bar__title {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.fg-download-bar__detail {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.fg-download-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SIZES PREVIEW GRID (3 columns × 2 rows)
+   ═══════════════════════════════════════════════════════════════ */
+
+.fg-sizes-section {
   background: var(--bg-base-secondary);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 14px 16px;
+}
+
+.fg-sizes-section__header {
+  margin-bottom: 10px;
 }
 
 .fg-section__title {
@@ -148,31 +189,18 @@
   color: var(--text-secondary);
 }
 
-.fg-section__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.fg-ico-info {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 6px;
-}
-
-/* ─── Sizes Grid ─── */
+/* ─── Sizes Grid (3×2) ─── */
 .fg-sizes-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  margin-top: 10px;
 }
 
 .fg-size-card {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 8px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -187,13 +215,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
   border-radius: 4px;
   overflow: hidden;
 }
 
 .fg-size-card__preview img {
   display: block;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
   image-rendering: auto;
 }
 
@@ -207,6 +240,7 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
+  min-width: 0;
 }
 
 .fg-size-card__label {
@@ -219,22 +253,32 @@
 .fg-size-card__use {
   font-size: 11px;
   color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .fg-size-card__dl {
   align-self: flex-end;
   padding: 4px 8px !important;
   font-size: 11px !important;
+  flex-shrink: 0;
 }
 
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
-  .fg-bottom {
-    grid-template-columns: 1fr;
+  .fg-sizes-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 
-  .fg-sizes-grid {
-    grid-template-columns: 1fr 1fr 1fr;
+  .fg-download-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .fg-download-bar__actions {
+    align-self: flex-end;
   }
 }
 

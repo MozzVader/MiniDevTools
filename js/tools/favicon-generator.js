@@ -91,33 +91,30 @@ window['render_favicon-generator'] = function(container, toolMeta) {
           </div>
         </div>
 
-        <!-- BOTTOM: Generated Icons -->
-        <div class="fg-bottom">
-
-          <!-- ICO File -->
-          <div class="fg-section">
-            <div class="fg-section__header">
-              <div class="fg-section__title">favicon.ico</div>
-              <button class="btn btn--primary btn--sm" id="fg-dl-ico" style="display:none;">
-                <i class="fa-solid fa-download"></i> Descargar .ico
-              </button>
-            </div>
-            <div class="fg-ico-info">Contiene 16×16, 32×32 y 48×48</div>
+        <!-- Download Bar (full-width) -->
+        <div class="fg-download-bar">
+          <div class="fg-download-bar__info">
+            <span class="fg-download-bar__title">favicon.ico</span>
+            <span class="fg-download-bar__detail">16×16 · 32×32 · 48×48</span>
           </div>
-
-          <!-- Size Grid -->
-          <div class="fg-section">
-            <div class="fg-section__header">
-              <div class="fg-section__title">PNG por tamaño</div>
-              <button class="btn btn--secondary btn--sm" id="fg-dl-all" style="display:none;">
-                <i class="fa-solid fa-file-zipper"></i> Descargar todos
-              </button>
-            </div>
-            <div class="fg-sizes-grid" id="fg-sizes-grid">
-              ${sizeCardsHTML}
-            </div>
+          <div class="fg-download-bar__actions">
+            <button class="btn btn--primary btn--sm" id="fg-dl-ico" style="display:none;">
+              <i class="fa-solid fa-download"></i> .ico
+            </button>
+            <button class="btn btn--secondary btn--sm" id="fg-dl-all" style="display:none;">
+              <i class="fa-solid fa-file-zipper"></i> Descargar todos
+            </button>
           </div>
+        </div>
 
+        <!-- Size Previews Grid (3×2, full-width) -->
+        <div class="fg-sizes-section">
+          <div class="fg-sizes-section__header">
+            <span class="fg-section__title">PNG por tamaño</span>
+          </div>
+          <div class="fg-sizes-grid" id="fg-sizes-grid">
+            ${sizeCardsHTML}
+          </div>
         </div>
 
       </div>
@@ -174,10 +171,10 @@ window['render_favicon-generator'] = function(container, toolMeta) {
         const img = document.createElement('img');
         img.src = canvas.toDataURL('image/png');
         img.alt = `${size}x${size}`;
-        /* Scale display for small icons */
-        const displaySize = Math.max(size, 48);
-        img.style.width = displaySize + 'px';
-        img.style.height = displaySize + 'px';
+        /* Uniform display size to prevent stretching */
+        img.style.width = '56px';
+        img.style.height = '56px';
+        img.style.objectFit = 'contain';
         img.style.imageRendering = size <= 32 ? 'pixelated' : 'auto';
         wrap.appendChild(img);
         if (empty) empty.style.display = 'none';
