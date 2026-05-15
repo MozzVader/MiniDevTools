@@ -1,0 +1,223 @@
+/* ═══════════════════════════════════════════════════════════════
+   Minifier CSS/JS/HTML — Comprimir código para producción
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Language Selector Bar ─── */
+.mn-lang-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.mn-lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text-secondary);
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.mn-lang-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.mn-lang-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.mn-lang-btn i {
+  font-size: 14px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LAYOUT: Input + Output side-by-side
+   ═══════════════════════════════════════════════════════════════ */
+
+.mn-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+/* ─── Panel ─── */
+.mn-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mn-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.mn-panel__title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.mn-panel__actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INPUT EDITOR
+   ═══════════════════════════════════════════════════════════════ */
+
+.mn-editor-wrap {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-input);
+  transition: border-color var(--transition-fast);
+}
+
+.mn-editor-wrap:focus-within {
+  border-color: var(--accent);
+}
+
+.mn-editor {
+  display: block;
+  width: 100%;
+  min-height: 360px;
+  max-height: 500px;
+  padding: 14px 16px;
+  margin: 0;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: vertical;
+  box-sizing: border-box;
+  tab-size: 2;
+}
+
+.mn-editor::placeholder {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   OUTPUT
+   ═══════════════════════════════════════════════════════════════ */
+
+.mn-output-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-input);
+}
+
+.mn-output {
+  display: block;
+  min-height: 360px;
+  max-height: 500px;
+  padding: 14px 16px;
+  margin: 0;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow: auto;
+  background: transparent;
+}
+
+.mn-output.mn-output--filled {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.mn-output-empty {
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STATS BAR
+   ═══════════════════════════════════════════════════════════════ */
+
+.mn-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  padding: 0 2px;
+}
+
+.mn-stats--output {
+  justify-content: flex-end;
+}
+
+.mn-stats__sep {
+  opacity: 0.4;
+}
+
+.mn-savings {
+  font-weight: 600;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.mn-savings--good {
+  color: var(--color-success, #2ecc71);
+}
+
+.mn-savings--bad {
+  color: var(--color-error, #e74c3c);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .mn-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .mn-editor {
+    min-height: 220px;
+  }
+
+  .mn-output {
+    min-height: 180px;
+  }
+
+  .mn-lang-bar {
+    flex-wrap: wrap;
+  }
+
+  .mn-stats {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .mn-stats--output {
+    justify-content: flex-start;
+  }
+}

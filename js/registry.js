@@ -164,7 +164,7 @@ const TOOL_REGISTRY = [
     categoryLabel: 'Texto & Código',
     description: 'Comprimir código para producción',
     jsFile: 'js/tools/minifier.js',
-    cssFile: null,
+    cssFile: 'css/tools/minifier.css',
     render: null
   },
   {
