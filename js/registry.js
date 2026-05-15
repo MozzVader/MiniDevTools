@@ -61,7 +61,7 @@ const TOOL_REGISTRY = [
     categoryLabel: 'Imágenes',
     description: 'Generar favicons en todos los tamaños',
     jsFile: 'js/tools/favicon-generator.js',
-    cssFile: null,
+    cssFile: 'css/tools/favicon-generator.css',
     render: null
   },
   {

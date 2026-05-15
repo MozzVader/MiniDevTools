@@ -1,0 +1,274 @@
+/* ═══════════════════════════════════════════════════════════════
+   Favicon Generator — Generar favicons en todos los tamaños
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.fg-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  align-items: start;
+}
+
+.fg-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fg-right {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ─── Checkerboard (transparency) ─── */
+.fg-checkerboard {
+  background:
+    repeating-conic-gradient(#e8e8e8 0% 25%, #ffffff 0% 50%) 50% / 12px 12px;
+}
+
+/* ─── Image Area ─── */
+.fg-image-area {
+  position: relative;
+  min-height: 300px;
+  border-radius: var(--radius-lg);
+  transition: box-shadow var(--transition-fast);
+}
+
+.fg-image-area.fg-dragover {
+  box-shadow: 0 0 0 3px var(--accent), var(--shadow-lg);
+}
+
+/* ─── Drop Zone ─── */
+.fg-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 300px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-input);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 24px;
+  text-align: center;
+}
+
+.fg-dropzone:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.fg-dragover .fg-dropzone {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.fg-dropzone__icon {
+  font-size: 40px;
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.fg-dropzone__text {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.fg-dropzone__sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.fg-dropzone__hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  opacity: 0.7;
+}
+
+/* ─── Image Info Bar ─── */
+.fg-img-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.fg-img-info__name {
+  font-weight: 500;
+  color: var(--text-primary);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fg-img-info__dims {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* ─── Original Preview ─── */
+.fg-original-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  min-height: 160px;
+  max-height: 360px;
+  padding: 16px;
+}
+
+.fg-original-preview img {
+  display: block;
+  max-width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  border-radius: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RIGHT PANEL SECTIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+.fg-section {
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.fg-section__title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.fg-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fg-ico-info {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* ─── Sizes Grid ─── */
+.fg-sizes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.fg-size-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast);
+}
+
+.fg-size-card:hover {
+  border-color: var(--border-hover);
+}
+
+.fg-size-card__preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.fg-size-card__preview img {
+  display: block;
+  image-rendering: auto;
+}
+
+.fg-size-card__empty {
+  color: var(--text-muted);
+  font-size: 18px;
+  font-weight: 300;
+}
+
+.fg-size-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.fg-size-card__label {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.fg-size-card__use {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.fg-size-card__dl {
+  align-self: flex-end;
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+}
+
+/* ─── Actions ─── */
+.fg-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .fg-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .fg-dropzone {
+    min-height: 200px;
+  }
+
+  .fg-sizes-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .fg-sizes-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .fg-original-preview {
+    max-height: 260px;
+  }
+}
