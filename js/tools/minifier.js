@@ -1,43 +1,24 @@
 /* ═══════════════════════════════════════════════════════════════
    Minifier CSS/JS/HTML — Comprimir código para producción
    Features:
-   - 3 lenguajes: CSS, JavaScript, HTML
+   - 3 lenguajes: CSS, JavaScript, HTML (tabs estilo Code Formatter)
    - Minificación en tiempo real al escribir/pegar
    - Estadísticas: tamaño original vs minificado + % de reducción
-   - Copiar resultado al portapapeles
-   - Descargar resultado como archivo
-   - Botón limpiar / pegar desde portapapeles
-   - Líneas de código contadas
+   - Copiar resultado / Descargar / Pegar / Limpiar / Ejemplo
+   - Usa clases globales: .cf-tab, .input, .code-output, .label
    - Persistencia de preferencias con ToolStorage
    ═══════════════════════════════════════════════════════════════ */
 
-window['render_minifier'] = function(container, toolMeta) {
-
-  /* ─── Constants ─── */
-  const LANGS = [
-    { id: 'css', label: 'CSS', icon: 'fa-brands fa-css3-alt', placeholder: '/* Pegá tu CSS aquí */\nbody {\n  margin: 0;\n  padding: 20px;\n  background-color: #ffffff;\n  color: #333333;\n  font-family: Arial, sans-serif;\n}\n\n.container {\n  max-width: 1200px;\n  margin: 0 auto;\n  padding: 0 16px;\n}' },
-    { id: 'js', label: 'JavaScript', icon: 'fa-brands fa-js', placeholder: '// Pegá tu JavaScript aquí\nfunction saludar(nombre) {\n  const mensaje = "Hola " + nombre;\n  console.log(mensaje);\n  return mensaje;\n}\n\nconst usuarios = ["Ana", "Juan", "Pedro"];\nusuarios.forEach(function(user) {\n  saludar(user);\n});' },
-    { id: 'html', label: 'HTML', icon: 'fa-brands fa-html5', placeholder: '<!-- Pegá tu HTML aquí -->\n<!DOCTYPE html>\n<html lang="es">\n  <head>\n    <meta charset="UTF-8">\n    <title>Mi Página</title>\n    <link rel="stylesheet" href="styles.css">\n  </head>\n  <body>\n    <div class="container">\n      <h1>Hola Mundo</h1>\n      <p>Un párrafo de ejemplo</p>\n    </div>\n  </body>\n</html>' },
-  ];
+function render_minifier(container, toolMeta) {
 
   /* ─── State ─── */
-  const saved = ToolStorage.load('minifier');
-  const s = saved ? saved.state : null;
-  let currentLang = s ? (s.lang ?? 'css') : 'css';
-  let inputCode = '';
-  let minifiedCode = '';
+  let activeTab = ToolStorage.getField('minifier', 'activeTab', 'css');
+  let lastMinified = '';
 
-  /* ═══════════════════════════════════════════════════════
-     RENDER UI
-     ═══════════════════════════════════════════════════════ */
-
-  const langBtnsHTML = LANGS.map(l =>
-    `<button class="mn-lang-btn ${currentLang === l.id ? 'active' : ''}" data-lang="${l.id}">
-      <i class="${l.icon}"></i> ${l.label}
-    </button>`
-  ).join('');
-
-  const activeLang = LANGS.find(l => l.id === currentLang);
+  /* ─── Restore saved input ─── */
+  const savedCSS = ToolStorage.getField('minifier', 'cssInput', '');
+  const savedJS = ToolStorage.getField('minifier', 'jsInput', '');
+  const savedHTML = ToolStorage.getField('minifier', 'htmlInput', '');
 
   container.innerHTML = `
     <div class="tool-card">
@@ -47,91 +28,106 @@ window['render_minifier'] = function(container, toolMeta) {
       </div>
       <div class="tool-card__body">
 
-        <!-- Language Selector -->
-        <div class="mn-lang-bar" id="mn-lang-bar">
-          ${langBtnsHTML}
+        <!-- Tabs -->
+        <div class="cf-tabs">
+          <button class="cf-tab ${activeTab === 'css' ? 'cf-tab--active' : ''}" data-tab="css">CSS</button>
+          <button class="cf-tab ${activeTab === 'js' ? 'cf-tab--active' : ''}" data-tab="js">JavaScript</button>
+          <button class="cf-tab ${activeTab === 'html' ? 'cf-tab--active' : ''}" data-tab="html">HTML</button>
         </div>
 
-        <!-- Editor + Output Layout -->
-        <div class="mn-layout">
-
-          <!-- LEFT: Input -->
-          <div class="mn-panel">
-            <div class="mn-panel__header">
-              <span class="mn-panel__title">Entrada</span>
-              <div class="mn-panel__actions">
-                <button class="btn btn--ghost btn--sm" id="mn-paste" title="Pegar del portapapeles">
-                  <i class="fa-regular fa-clipboard"></i> Pegar
-                </button>
-                <button class="btn btn--ghost btn--sm" id="mn-clear" title="Limpiar">
-                  <i class="fa-solid fa-eraser"></i> Limpiar
-                </button>
+        <!-- CSS Panel -->
+        <div class="cf-panel" id="mn-panel-css" style="${activeTab === 'css' ? '' : 'display:none'}">
+          <div class="form-group">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label class="label" style="margin-bottom:0;">CSS de entrada</label>
+              <div style="display:flex; gap:6px;">
+                <button class="btn btn--ghost btn--sm mn-sample-btn" data-lang="css">Ejemplo</button>
+                <button class="btn btn--ghost btn--sm mn-clear-btn" data-lang="css">Limpiar</button>
               </div>
             </div>
-            <div class="mn-editor-wrap">
-              <textarea class="mn-editor" id="mn-input" placeholder="${activeLang.placeholder}" spellcheck="false"></textarea>
-            </div>
-            <div class="mn-stats" id="mn-input-stats">
-              <span id="mn-input-chars">0 caracteres</span>
-              <span class="mn-stats__sep">·</span>
-              <span id="mn-input-lines">0 líneas</span>
-              <span class="mn-stats__sep">·</span>
-              <span id="mn-input-bytes">0 B</span>
-            </div>
+            <textarea class="input cf-textarea" id="mn-css-input" data-lang="css" rows="8" placeholder='/* Pegá tu CSS aquí */' spellcheck="false">${escapeHtml(savedCSS)}</textarea>
           </div>
-
-          <!-- RIGHT: Output -->
-          <div class="mn-panel">
-            <div class="mn-panel__header">
-              <span class="mn-panel__title">Minificado</span>
-              <div class="mn-panel__actions">
-                <button class="btn btn--ghost btn--sm" id="mn-copy" disabled>
-                  <i class="fa-regular fa-copy"></i> Copiar
-                </button>
-                <button class="btn btn--ghost btn--sm" id="mn-download" disabled>
-                  <i class="fa-solid fa-download"></i> Descargar
-                </button>
-              </div>
-            </div>
-            <div class="mn-output-wrap" id="mn-output-wrap">
-              <pre class="mn-output" id="mn-output"><span class="mn-output-empty">El resultado aparecerá aquí...</span></pre>
-            </div>
-            <div class="mn-stats mn-stats--output" id="mn-output-stats">
-              <span id="mn-output-chars">0 caracteres</span>
-              <span class="mn-stats__sep">·</span>
-              <span id="mn-output-lines">0 líneas</span>
-              <span class="mn-stats__sep">·</span>
-              <span id="mn-output-bytes">0 B</span>
-              <span class="mn-stats__sep">·</span>
-              <span id="mn-savings" class="mn-savings">—</span>
-            </div>
-          </div>
-
         </div>
+
+        <!-- JS Panel -->
+        <div class="cf-panel" id="mn-panel-js" style="${activeTab === 'js' ? '' : 'display:none'}">
+          <div class="form-group">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label class="label" style="margin-bottom:0;">JavaScript de entrada</label>
+              <div style="display:flex; gap:6px;">
+                <button class="btn btn--ghost btn--sm mn-sample-btn" data-lang="js">Ejemplo</button>
+                <button class="btn btn--ghost btn--sm mn-clear-btn" data-lang="js">Limpiar</button>
+              </div>
+            </div>
+            <textarea class="input cf-textarea" id="mn-js-input" data-lang="js" rows="8" placeholder='// Pegá tu JavaScript aquí' spellcheck="false">${escapeHtml(savedJS)}</textarea>
+          </div>
+        </div>
+
+        <!-- HTML Panel -->
+        <div class="cf-panel" id="mn-panel-html" style="${activeTab === 'html' ? '' : 'display:none'}">
+          <div class="form-group">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label class="label" style="margin-bottom:0;">HTML de entrada</label>
+              <div style="display:flex; gap:6px;">
+                <button class="btn btn--ghost btn--sm mn-sample-btn" data-lang="html">Ejemplo</button>
+                <button class="btn btn--ghost btn--sm mn-clear-btn" data-lang="html">Limpiar</button>
+              </div>
+            </div>
+            <textarea class="input cf-textarea" id="mn-html-input" data-lang="html" rows="8" placeholder='<!-- Pegá tu HTML aquí -->' spellcheck="false">${escapeHtml(savedHTML)}</textarea>
+          </div>
+        </div>
+
+        <!-- Action bar -->
+        <div class="cf-actions">
+          <button class="btn btn--primary" id="mn-minify">Minificar</button>
+          <button class="btn btn--secondary" id="mn-copy" disabled>Copiar resultado</button>
+          <button class="btn btn--secondary" id="mn-download" disabled>Descargar</button>
+          <button class="btn btn--secondary" id="mn-paste"><i class="fa-regular fa-clipboard" style="margin-right:4px;"></i>Pegar</button>
+        </div>
+
+        <!-- Status -->
+        <div id="mn-status" class="cf-status"></div>
+
+        <!-- Output -->
+        <div id="mn-output-wrap">
+          <label class="label">Resultado</label>
+          <div class="code-output" id="mn-output" style="min-height:120px; max-height:500px; overflow-y:auto;"></div>
+        </div>
+
+        <!-- Stats bar -->
+        <div id="mn-stats" class="mn-stats"></div>
 
       </div>
     </div>
   `;
 
   /* ─── DOM Refs ─── */
-  const langBar = document.getElementById('mn-lang-bar');
-  const inputEditor = document.getElementById('mn-input');
-  const outputEl = document.getElementById('mn-output');
+  const tabs = container.querySelectorAll('.cf-tab');
+  const panels = {
+    css: document.getElementById('mn-panel-css'),
+    js: document.getElementById('mn-panel-js'),
+    html: document.getElementById('mn-panel-html')
+  };
+  const inputs = {
+    css: document.getElementById('mn-css-input'),
+    js: document.getElementById('mn-js-input'),
+    html: document.getElementById('mn-html-input')
+  };
+  const output = document.getElementById('mn-output');
+  const status = document.getElementById('mn-status');
+  const statsEl = document.getElementById('mn-stats');
   const copyBtn = document.getElementById('mn-copy');
   const downloadBtn = document.getElementById('mn-download');
+  const minifyBtn = document.getElementById('mn-minify');
   const pasteBtn = document.getElementById('mn-paste');
-  const clearBtn = document.getElementById('mn-clear');
-  const inputChars = document.getElementById('mn-input-chars');
-  const inputLines = document.getElementById('mn-input-lines');
-  const inputBytes = document.getElementById('mn-input-bytes');
-  const outputChars = document.getElementById('mn-output-chars');
-  const outputLines = document.getElementById('mn-output-lines');
-  const outputBytesEl = document.getElementById('mn-output-bytes');
-  const savingsEl = document.getElementById('mn-savings');
 
   /* ═══════════════════════════════════════════════════════
      HELPERS
      ═══════════════════════════════════════════════════════ */
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
 
   function formatBytes(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -139,67 +135,50 @@ window['render_minifier'] = function(container, toolMeta) {
     return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
   }
 
-  function countLines(str) {
-    if (!str) return 0;
-    return str.split('\n').length;
+  function setStatus(msg, type) {
+    if (!msg) { status.innerHTML = ''; return; }
+    const colors = {
+      error: 'var(--color-error, #ef4444)',
+      success: 'var(--color-success, #22c55e)',
+      info: 'var(--accent)'
+    };
+    status.innerHTML = `<span style="color:${colors[type] || colors.info}; font-weight:500;">${msg}</span>`;
   }
 
-  function updateInputStats() {
-    const val = inputCode;
-    inputChars.textContent = val.length.toLocaleString('es-AR') + ' caracteres';
-    inputLines.textContent = countLines(val).toLocaleString('es-AR') + ' líneas';
-    inputBytes.textContent = formatBytes(new Blob([val]).size);
+  /* ─── Tab Switching ─── */
+  function switchTab(tab) {
+    activeTab = tab;
+    tabs.forEach(t => t.classList.toggle('cf-tab--active', t.dataset.tab === tab));
+    panels.css.style.display = tab === 'css' ? '' : 'none';
+    panels.js.style.display = tab === 'js' ? '' : 'none';
+    panels.html.style.display = tab === 'html' ? '' : 'none';
+    ToolStorage.setField('minifier', 'activeTab', tab);
   }
 
-  function updateOutputStats() {
-    const val = minifiedCode;
-    outputChars.textContent = val.length.toLocaleString('es-AR') + ' caracteres';
-    outputLines.textContent = countLines(val).toLocaleString('es-AR') + ' líneas';
-    outputBytesEl.textContent = formatBytes(new Blob([val]).size);
-
-    if (inputCode.length > 0 && val.length > 0) {
-      const origSize = new Blob([inputCode]).size;
-      const minSize = new Blob([val]).size;
-      if (origSize > 0) {
-        const pct = Math.round((1 - minSize / origSize) * 100);
-        const isReduction = pct > 0;
-        savingsEl.textContent = (isReduction ? '−' : '+') + Math.abs(pct) + '%';
-        savingsEl.className = 'mn-savings ' + (isReduction ? 'mn-savings--good' : 'mn-savings--bad');
-      }
-    } else {
-      savingsEl.textContent = '—';
-      savingsEl.className = 'mn-savings';
-    }
-  }
+  container.querySelectorAll('.cf-tab').forEach(t => {
+    t.addEventListener('click', () => switchTab(t.dataset.tab));
+  });
 
   /* ═══════════════════════════════════════════════════════
      MINIFIERS
      ═══════════════════════════════════════════════════════ */
 
   function minifyCSS(code) {
-    let result = code;
-    /* Remove multi-line comments */
-    result = result.replace(/\/\*[\s\S]*?\*\//g, '');
-    /* Remove newlines and surrounding whitespace */
-    result = result.replace(/\r?\n/g, '');
-    /* Collapse multiple spaces/tabs into one */
-    result = result.replace(/\s+/g, ' ');
-    /* Remove space around { } : ; , */
-    result = result.replace(/\s*{\s*/g, '{');
-    result = result.replace(/\s*}\s*/g, '}');
-    result = result.replace(/\s*:\s*/g, ':');
-    result = result.replace(/\s*;\s*/g, ';');
-    result = result.replace(/\s*,\s*/g, ',');
-    /* Remove last semicolon before closing brace */
-    result = result.replace(/;}/g, '}');
-    /* Remove leading space */
-    result = result.trim();
-    return result;
+    let r = code;
+    r = r.replace(/\/\*[\s\S]*?\*\//g, '');
+    r = r.replace(/\r?\n/g, '');
+    r = r.replace(/\s+/g, ' ');
+    r = r.replace(/\s*{\s*/g, '{');
+    r = r.replace(/\s*}\s*/g, '}');
+    r = r.replace(/\s*:\s*/g, ':');
+    r = r.replace(/\s*;\s*/g, ';');
+    r = r.replace(/\s*,\s*/g, ',');
+    r = r.replace(/;}/g, '}');
+    return r.trim();
   }
 
   function minifyJS(code) {
     let result = code;
-    /* Tokenize: split into strings, regex, comments, and code */
     const tokens = [];
     let i = 0;
     const len = result.length;
@@ -269,7 +248,7 @@ window['render_minifier'] = function(container, toolMeta) {
             j++;
           }
           if (j < len) {
-            j++; /* closing slash */
+            j++;
             while (j < len && /[gimsuy]/.test(result[j])) j++;
             tokens.push({ type: 'regex', value: result.substring(i, j) });
             i = j;
@@ -277,70 +256,43 @@ window['render_minifier'] = function(container, toolMeta) {
           }
         }
       }
-      /* Regular character */
       tokens.push({ type: 'code', value: result[i] });
       i++;
     }
 
-    /* Process tokens */
     let output = '';
     for (const token of tokens) {
-      if (token.type === 'comment') {
-        output += ' ';
-      } else if (token.type === 'string' || token.type === 'regex') {
-        output += token.value;
-      } else {
-        output += token.value;
-      }
+      output += token.type === 'comment' ? ' ' : token.value;
     }
 
-    /* Collapse whitespace */
     output = output.replace(/\s+/g, ' ');
-    /* Remove spaces around operators (safe ones) */
     output = output.replace(/\s*([{}();,=+\-*/<>!&|?:])\s*/g, '$1');
-    /* Restore space after keywords */
-    const keywords = ['var', 'let', 'const', 'return', 'typeof', 'instanceof', 'in', 'of', 'new', 'delete', 'void', 'throw', 'yield', 'await', 'class', 'extends', 'import', 'export', 'from', 'default', 'function', 'if', 'else', 'for', 'while', 'do', 'switch', 'case', 'break', 'continue', 'try', 'catch', 'finally', 'with', 'debugger'];
-    for (const kw of keywords) {
-      const re = new RegExp('\\b' + kw + '\\b(?=[^\\s;})\\]])', 'g');
-      output = output.replace(re, kw + ' ');
-    }
-    /* Remove space before ( */
-    output = output.replace(/\s+\(/g, '(');
-    /* Remove space before [ */
-    output = output.replace(/\s+\[/g, '[');
-    /* Remove space after ( */
-    output = output.replace(/\(\s+/g, '(');
-    /* Remove space before ; */
-    output = output.replace(/\s+;/g, ';');
-    /* Remove space after { */
-    output = output.replace(/\{\s+/g, '{');
-    /* Remove space before } */
-    output = output.replace(/\s+\}/g, '}');
-    /* Remove trailing space at start */
-    output = output.trim();
 
-    return output;
+    const keywords = ['var','let','const','return','typeof','instanceof','in','of','new','delete','void','throw','yield','await','class','extends','import','export','from','default','function','if','else','for','while','do','switch','case','break','continue','try','catch','finally','with','debugger'];
+    for (const kw of keywords) {
+      output = output.replace(new RegExp('\\b' + kw + '\\b(?=[^\\s;})\\]])', 'g'), kw + ' ');
+    }
+
+    output = output.replace(/\s+\(/g, '(');
+    output = output.replace(/\s+\[/g, '[');
+    output = output.replace(/\(\s+/g, '(');
+    output = output.replace(/\s+;/g, ';');
+    output = output.replace(/\{\s+/g, '{');
+    output = output.replace(/\s+\}/g, '}');
+    return output.trim();
   }
 
   function minifyHTML(code) {
-    let result = code;
-    /* Remove HTML comments (but preserve conditional comments for IE) */
-    result = result.replace(/<!--(?!\[if)[\s\S]*?-->/g, '');
-    /* Collapse whitespace between tags */
-    result = result.replace(/>\s+</g, '><');
-    /* Remove leading/trailing whitespace within tags */
-    result = result.replace(/\s+>/g, '>');
-    result = result.replace(/<\s+/g, '<');
-    /* Collapse multiple spaces into one (outside of tags) */
-    result = result.replace(/\s{2,}/g, ' ');
-    /* Remove optional quotes from simple attribute values */
-    result = result.replace(/(\w+)=["']([a-zA-Z0-9_-]+)["']/g, '$1=$2');
-    /* Remove spaces around = in attributes */
-    result = result.replace(/\s*=\s*/g, '=');
-    /* Collapse whitespace in text content */
-    result = result.replace(/\n\s*/g, '');
-    result = result.trim();
-    return result;
+    let r = code;
+    r = r.replace(/<!--(?!\[if)[\s\S]*?-->/g, '');
+    r = r.replace(/>\s+</g, '><');
+    r = r.replace(/\s+>/g, '>');
+    r = r.replace(/<\s+/g, '<');
+    r = r.replace(/\s{2,}/g, ' ');
+    r = r.replace(/(\w+)=["']([a-zA-Z0-9_-]+)["']/g, '$1=$2');
+    r = r.replace(/\s*=\s*/g, '=');
+    r = r.replace(/\n\s*/g, '');
+    return r.trim();
   }
 
   function minify(code, lang) {
@@ -353,132 +305,91 @@ window['render_minifier'] = function(container, toolMeta) {
   }
 
   /* ═══════════════════════════════════════════════════════
-     MINIFY & UPDATE
+     RUN MINIFY
      ═══════════════════════════════════════════════════════ */
 
-  let debounceTimer = null;
-
   function runMinify() {
-    inputCode = inputEditor.value;
-
-    if (!inputCode.trim()) {
-      outputEl.innerHTML = '<span class="mn-output-empty">El resultado aparecerá aquí...</span>';
-      minifiedCode = '';
+    const raw = inputs[activeTab].value.trim();
+    if (!raw) {
+      setStatus('Pegá código para minificar', 'info');
+      output.textContent = '';
+      statsEl.innerHTML = '';
       copyBtn.disabled = true;
       downloadBtn.disabled = true;
-      updateInputStats();
-      updateOutputStats();
+      lastMinified = '';
       return;
     }
 
-    minifiedCode = minify(inputCode, currentLang);
-    outputEl.textContent = minifiedCode;
-    outputEl.className = 'mn-output mn-output--filled';
+    lastMinified = minify(raw, activeTab);
+    output.textContent = lastMinified;
     copyBtn.disabled = false;
     downloadBtn.disabled = false;
-    updateInputStats();
-    updateOutputStats();
+
+    /* Stats */
+    const origSize = new Blob([raw]).size;
+    const minSize = new Blob([lastMinified]).size;
+    const pct = origSize > 0 ? Math.round((1 - minSize / origSize) * 100) : 0;
+    const isReduction = pct > 0;
+    const savingsColor = isReduction ? 'var(--color-success, #22c55e)' : 'var(--color-error, #ef4444)';
+    const savingsSign = isReduction ? '−' : '+';
+
+    const langNames = { css: 'CSS', js: 'JavaScript', html: 'HTML' };
+    setStatus(`${langNames[activeTab]} minificado`, 'success');
+
+    statsEl.innerHTML = `
+      <span>Original: <strong>${formatBytes(origSize)}</strong></span>
+      <span style="opacity:0.4;">→</span>
+      <span>Minificado: <strong>${formatBytes(minSize)}</strong></span>
+      <span style="color:${savingsColor}; font-weight:600;">${savingsSign}${Math.abs(pct)}%</span>
+    `;
+
+    /* Save input */
+    ToolStorage.setField('minifier', activeTab + 'Input', raw);
   }
 
-  function debouncedMinify() {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(runMinify, 150);
-  }
-
   /* ═══════════════════════════════════════════════════════
-     LANGUAGE TOGGLE
+     SAMPLE DATA
      ═══════════════════════════════════════════════════════ */
 
-  langBar.querySelectorAll('.mn-lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      currentLang = btn.dataset.lang;
-      langBar.querySelectorAll('.mn-lang-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      /* Update placeholder */
-      const lang = LANGS.find(l => l.id === currentLang);
-      inputEditor.placeholder = lang.placeholder;
-
-      /* Re-minify if there's content */
-      if (inputCode.trim()) runMinify();
-      saveState();
-    });
-  });
-
-  /* ═══════════════════════════════════════════════════════
-     INPUT EVENTS
-     ═══════════════════════════════════════════════════════ */
-
-  inputEditor.addEventListener('input', debouncedMinify);
-
-  /* Tab key inserts spaces */
-  inputEditor.addEventListener('keydown', (e) => {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      const start = inputEditor.selectionStart;
-      const end = inputEditor.selectionEnd;
-      inputEditor.value = inputEditor.value.substring(0, start) + '  ' + inputEditor.value.substring(end);
-      inputEditor.selectionStart = inputEditor.selectionEnd = start + 2;
-      debouncedMinify();
+  const samples = {
+    css: () => {
+      inputs.css.value = `/* Reset y base */\nbody {\n  margin: 0;\n  padding: 20px;\n  background-color: #ffffff;\n  color: #333333;\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n}\n\n.container {\n  max-width: 1200px;\n  margin: 0 auto;\n  padding: 0 16px;\n}\n\n.header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 16px 0;\n  border-bottom: 1px solid #eeeeee;\n}\n\n.btn {\n  display: inline-block;\n  padding: 10px 20px;\n  background-color: #3b82f6;\n  color: #ffffff;\n  border: none;\n  border-radius: 6px;\n  cursor: pointer;\n  transition: background-color 0.2s ease;\n}\n\n.btn:hover {\n  background-color: #2563eb;\n}`;
+      switchTab('css');
+      runMinify();
+    },
+    js: () => {
+      inputs.js.value = `// Función de ejemplo\nfunction saludar(nombre) {\n  const mensaje = "Hola " + nombre + "!";\n  console.log(mensaje);\n  return mensaje;\n}\n\n// Array de usuarios\nconst usuarios = ["Ana", "Juan", "Pedro"];\n\nusuarios.forEach(function(user) {\n  saludar(user);\n});\n\n// Clase de ejemplo\nclass Calculadora {\n  constructor() {\n    this.resultado = 0;\n  }\n\n  sumar(a, b) {\n    this.resultado = a + b;\n    return this.resultado;\n  }\n\n  restar(a, b) {\n    this.resultado = a - b;\n    return this.resultado;\n  }\n}`;
+      switchTab('js');
+      runMinify();
+    },
+    html: () => {
+      inputs.html.value = `<!DOCTYPE html>\n<html lang="es">\n  <head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>Mi Página</title>\n    <link rel="stylesheet" href="styles.css">\n  </head>\n  <body>\n    <div class="container">\n      <header class="header">\n        <h1>Hola Mundo</h1>\n        <nav>\n          <a href="/inicio">Inicio</a>\n          <a href="/about">Acerca de</a>\n          <a href="/contacto">Contacto</a>\n        </nav>\n      </header>\n      <main>\n        <p>Un párrafo de ejemplo con <strong>texto en negrita</strong> y <em>texto en cursiva</em>.</p>\n        <img src="imagen.jpg" alt="Una imagen descriptiva">\n      </main>\n      <footer>\n        <p>&copy; 2025 Mi Sitio</p>\n      </footer>\n    </div>\n  </body>\n</html>`;
+      switchTab('html');
+      runMinify();
     }
-  });
+  };
 
   /* ═══════════════════════════════════════════════════════
-     ACTION BUTTONS
+     EVENT LISTENERS
      ═══════════════════════════════════════════════════════ */
 
-  /* Paste from clipboard */
-  pasteBtn.addEventListener('click', async () => {
-    try {
-      const text = await navigator.clipboard.readText();
-      inputEditor.value = text;
-      debouncedMinify();
-      MiniDevTools.showToast('Pegado del portapapeles', 'success');
-    } catch (err) {
-      MiniDevTools.showToast('No se pudo acceder al portapapeles', 'error');
-    }
-  });
-
-  /* Clear */
-  clearBtn.addEventListener('click', () => {
-    inputEditor.value = '';
-    inputCode = '';
-    minifiedCode = '';
-    outputEl.innerHTML = '<span class="mn-output-empty">El resultado aparecerá aquí...</span>';
-    outputEl.className = 'mn-output';
-    copyBtn.disabled = true;
-    downloadBtn.disabled = true;
-    updateInputStats();
-    updateOutputStats();
-    inputEditor.focus();
-  });
+  /* Minify button */
+  minifyBtn.addEventListener('click', runMinify);
 
   /* Copy */
   copyBtn.addEventListener('click', () => {
-    if (!minifiedCode) return;
-    navigator.clipboard.writeText(minifiedCode).then(() => {
-      MiniDevTools.showToast('Copiado al portapapeles', 'success');
-    }).catch(() => {
-      const ta = document.createElement('textarea');
-      ta.value = minifiedCode;
-      ta.style.position = 'fixed';
-      ta.style.left = '-9999px';
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      MiniDevTools.showToast('Copiado al portapapeles', 'success');
-    });
+    if (!lastMinified) return;
+    MiniDevTools.copyToClipboard(lastMinified, 'Código minificado copiado');
   });
 
   /* Download */
   downloadBtn.addEventListener('click', () => {
-    if (!minifiedCode) return;
+    if (!lastMinified) return;
     const extensions = { css: 'css', js: 'js', html: 'html' };
-    const ext = extensions[currentLang] || 'txt';
     const mimeTypes = { css: 'text/css', js: 'application/javascript', html: 'text/html' };
-    const mime = mimeTypes[currentLang] || 'text/plain';
-    const blob = new Blob([minifiedCode], { type: mime });
+    const ext = extensions[activeTab] || 'txt';
+    const mime = mimeTypes[activeTab] || 'text/plain';
+    const blob = new Blob([lastMinified], { type: mime });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -490,30 +401,56 @@ window['render_minifier'] = function(container, toolMeta) {
     MiniDevTools.showToast('Archivo descargado', 'success');
   });
 
-  /* ═══════════════════════════════════════════════════════
-     ROUTE CHANGE CLEANUP
-     ═══════════════════════════════════════════════════════ */
+  /* Paste */
+  pasteBtn.addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      inputs[activeTab].value = text;
+      MiniDevTools.showToast('Pegado del portapapeles', 'success');
+      runMinify();
+    } catch (err) {
+      MiniDevTools.showToast('No se pudo acceder al portapapeles', 'error');
+    }
+  });
 
-  function cleanup() {
-    inputCode = '';
-    minifiedCode = '';
-    clearTimeout(debounceTimer);
-  }
+  /* Sample buttons */
+  container.querySelectorAll('.mn-sample-btn').forEach(btn => {
+    btn.addEventListener('click', () => samples[btn.dataset.lang]());
+  });
 
-  const onHashChange = () => {
-    if (!container.offsetParent) cleanup();
-  };
-  window.addEventListener('hashchange', onHashChange);
+  /* Clear buttons */
+  container.querySelectorAll('.mn-clear-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const lang = btn.dataset.lang;
+      inputs[lang].value = '';
+      output.textContent = '';
+      status.innerHTML = '';
+      statsEl.innerHTML = '';
+      copyBtn.disabled = true;
+      downloadBtn.disabled = true;
+      lastMinified = '';
+      ToolStorage.setField('minifier', lang + 'Input', '');
+    });
+  });
 
-  /* ═══════════════════════════════════════════════════════
-     PERSISTENCE
-     ═══════════════════════════════════════════════════════ */
+  /* Tab key in textareas */
+  container.querySelectorAll('.cf-textarea').forEach(ta => {
+    ta.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const start = ta.selectionStart;
+        const end = ta.selectionEnd;
+        ta.value = ta.value.substring(0, start) + '  ' + ta.value.substring(end);
+        ta.selectionStart = ta.selectionEnd = start + 2;
+      }
+    });
+  });
 
-  function saveState() {
-    ToolStorage.setField('minifier', 'state', { lang: currentLang });
-  }
+  /* ─── Auto-minify on load if saved content ─── */
+  if (activeTab === 'css' && savedCSS) runMinify();
+  if (activeTab === 'js' && savedJS) runMinify();
+  if (activeTab === 'html' && savedHTML) runMinify();
+}
 
-  /* ─── Init stats ─── */
-  updateInputStats();
-  updateOutputStats();
-};
+/* Registro global para carga clasica (fallback) */
+window['render_minifier'] = render_minifier;
