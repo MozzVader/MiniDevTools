@@ -255,7 +255,7 @@ const TOOL_REGISTRY = [
     categoryLabel: 'Utilitarios Dev',
     description: 'Convertir entre Unix timestamp y fecha legible',
     jsFile: 'js/tools/timestamp-converter.js',
-    cssFile: null,
+    cssFile: 'css/tools/timestamp-converter.css',
     render: null
   },
   {
