@@ -1,0 +1,132 @@
+/* ═══════════════════════════════════════════════════════════════
+   Text Case Converter — Conversion grid + cards
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Textarea ─── */
+.tc-textarea {
+  min-height: 100px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ─── Conversions Grid (2 columns) ─── */
+.tc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* ─── Conversion Card ─── */
+.tc-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tc-card:hover {
+  border-color: var(--border-hover);
+}
+
+.tc-card--active {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.tc-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tc-card__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.tc-card__label i {
+  font-size: 11px;
+  color: var(--text-muted);
+  width: 14px;
+  text-align: center;
+}
+
+.tc-card--active .tc-card__label i {
+  color: var(--accent);
+}
+
+.tc-card__copy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  font-size: 11px;
+}
+
+.tc-card__copy:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+}
+
+.tc-card__desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.tc-card__value {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 20px;
+}
+
+.tc-card__empty {
+  color: var(--text-muted);
+  font-family: inherit;
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .tc-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .tc-card {
+    padding: 10px 12px;
+  }
+
+  .tc-card__value {
+    font-size: 12px;
+  }
+}

@@ -197,7 +197,7 @@ const TOOL_REGISTRY = [
     categoryLabel: 'Texto & Código',
     description: 'Convertir entre mayúsculas, camelCase, snake_case...',
     jsFile: 'js/tools/text-case-converter.js',
-    cssFile: null,
+    cssFile: 'css/tools/text-case-converter.css',
     render: null
   },
 
