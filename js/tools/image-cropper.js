@@ -6,8 +6,11 @@
    - Overlay oscuro con box-shadow trick
    - Grid de tercios (rule of thirds)
    - Aspect ratio lock (libre, 1:1, 16:9, 9:16, 4:3, 3:2, 3:4, 2:3)
-   - Vista previa en tiempo real (canvas)
+   - Formas de recorte: rectángulo, bordes redondeados, círculo
+   - Slider de radio de esquinas redondeadas
+   - Vista previa en tiempo real (canvas) con forma aplicada
    - Exportar como PNG o JPEG con calidad ajustable
+   - Clipping mask en exportación (transparencia en esquinas/círculo)
    - Seleccionar todo / Resetear / Cambiar imagen
    - Coordenadas en pixels originales de la imagen
    - Persistencia de preferencias con ToolStorage
@@ -39,6 +42,8 @@ function render_image_cropper(container, toolMeta) {
   let aspectRatio = s ? (s.aspectRatio ?? 0) : 0;
   let format = s ? (s.format ?? 'png') : 'png';
   let jpegQuality = s ? (s.jpegQuality ?? 90) : 90;
+  let shape = s ? (s.shape ?? 'rect') : 'rect'; // 'rect' | 'rounded' | 'circle'
+  let borderRadius = s ? (s.borderRadius ?? 16) : 16; // 0-50 (%)
 
   let currentImage = null; // Image element for offscreen rendering
   let imgNatW = 0, imgNatH = 0;
@@ -133,8 +138,32 @@ function render_image_cropper(container, toolMeta) {
           <!-- RIGHT: Controls Panel -->
           <div class="ic-right">
 
-            <!-- Aspect Ratio -->
+            <!-- Shape -->
             <div class="ic-section">
+              <div class="ic-section__title">Forma</div>
+              <div class="ic-shapes" id="ic-shapes">
+                <button class="ic-shape-chip active" data-shape="rect">
+                  <i class="fa-regular fa-square"></i> Rectángulo
+                </button>
+                <button class="ic-shape-chip" data-shape="rounded">
+                  <i class="fa-solid fa-square"></i> Redondeado
+                </button>
+                <button class="ic-shape-chip" data-shape="circle">
+                  <i class="fa-regular fa-circle"></i> Círculo
+                </button>
+              </div>
+              <div class="ic-radius-row" id="ic-radius-row" style="display:none;">
+                <label>Radio</label>
+                <input type="range" class="ic-radius-slider" id="ic-radius" min="0" max="50" value="${borderRadius}">
+                <span class="ic-radius-val" id="ic-radius-val">${borderRadius}%</span>
+              </div>
+              <div class="ic-shape-note" id="ic-shape-note" style="display:none;">
+                <i class="fa-solid fa-info-circle"></i> El círculo fuerza proporción 1:1
+              </div>
+            </div>
+
+            <!-- Aspect Ratio -->
+            <div class="ic-section" id="ic-ratio-section">
               <div class="ic-section__title">Proporción</div>
               <div class="ic-ratios" id="ic-ratios"></div>
             </div>
@@ -197,6 +226,12 @@ function render_image_cropper(container, toolMeta) {
   const containerEl = document.getElementById('ic-container');
   const cropBox = document.getElementById('ic-box');
   const dimsLabel = document.getElementById('ic-dims-label');
+  const shapesWrap = document.getElementById('ic-shapes');
+  const radiusRow = document.getElementById('ic-radius-row');
+  const radiusSlider = document.getElementById('ic-radius');
+  const radiusVal = document.getElementById('ic-radius-val');
+  const shapeNote = document.getElementById('ic-shape-note');
+  const ratioSection = document.getElementById('ic-ratio-section');
   const ratiosWrap = document.getElementById('ic-ratios');
   const previewWrap = document.getElementById('ic-preview-wrap');
   const previewEmpty = document.getElementById('ic-preview-empty');
@@ -210,6 +245,69 @@ function render_image_cropper(container, toolMeta) {
   const selectAllBtn = document.getElementById('ic-select-all');
   const resetBtn = document.getElementById('ic-reset-crop');
   const changeImgBtn = document.getElementById('ic-change-img');
+
+  /* ═══════════════════════════════════════════════════════
+     SHAPE UI
+     ═══════════════════════════════════════════════════════ */
+
+  function renderShapes() {
+    shapesWrap.querySelectorAll('.ic-shape-chip').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.shape === shape);
+    });
+    radiusRow.style.display = shape === 'rounded' ? 'flex' : 'none';
+    shapeNote.style.display = shape === 'circle' ? 'flex' : 'none';
+
+    /* When circle is selected, force 1:1 ratio and dim the ratio section */
+    if (shape === 'circle') {
+      if (aspectRatio !== 1) {
+        aspectRatio = 1;
+        renderRatios();
+        applyAspectRatioChange();
+      }
+      ratioSection.style.opacity = '0.5';
+      ratioSection.style.pointerEvents = 'none';
+    } else {
+      ratioSection.style.opacity = '1';
+      ratioSection.style.pointerEvents = 'auto';
+    }
+
+    updateCropBoxShape();
+    schedulePreview();
+  }
+
+  shapesWrap.querySelectorAll('.ic-shape-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      shape = btn.dataset.shape;
+      renderShapes();
+      saveState();
+    });
+  });
+
+  radiusSlider.addEventListener('input', () => {
+    borderRadius = parseInt(radiusSlider.value);
+    radiusVal.textContent = borderRadius + '%';
+    updateCropBoxShape();
+    schedulePreview();
+    saveState();
+  });
+
+  function updateCropBoxShape() {
+    cropBox.style.borderRadius = '';
+    if (shape === 'circle') {
+      cropBox.style.borderRadius = '50%';
+    } else if (shape === 'rounded') {
+      cropBox.style.borderRadius = borderRadius + '%';
+    }
+    /* Also update preview canvas visual shape */
+    previewCanvas.style.borderRadius = '';
+    if (shape === 'circle') {
+      previewCanvas.style.borderRadius = '50%';
+    } else if (shape === 'rounded') {
+      previewCanvas.style.borderRadius = borderRadius + '%';
+    }
+  }
+
+  renderShapes();
 
   /* ═══════════════════════════════════════════════════════
      ASPECT RATIO UI
@@ -794,11 +892,40 @@ function render_image_cropper(container, toolMeta) {
     previewCanvas.style.height = ph + 'px';
 
     previewCtx.clearRect(0, 0, pw, ph);
+    previewCtx.save();
+    applyClipPath(previewCtx, pw, ph);
     previewCtx.drawImage(
       offCanvas,
       crop.x, crop.y, crop.w, crop.h,
       0, 0, pw, ph
     );
+    previewCtx.restore();
+  }
+
+  /* ─── Clip path helper (used by preview and export) ─── */
+  function applyClipPath(ctx, w, h) {
+    if (shape === 'circle') {
+      const r = Math.min(w, h) / 2;
+      ctx.beginPath();
+      ctx.arc(w / 2, h / 2, Math.max(1, r), 0, Math.PI * 2);
+      ctx.clip();
+    } else if (shape === 'rounded' && borderRadius > 0) {
+      const r = (borderRadius / 100) * Math.min(w, h) / 2;
+      drawRoundedRect(ctx, 0, 0, w, h, Math.max(0, r));
+      ctx.clip();
+    }
+    /* rect shape = no clip */
+  }
+
+  function drawRoundedRect(ctx, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
   }
 
   function clearPreview() {
@@ -862,17 +989,29 @@ function render_image_cropper(container, toolMeta) {
     exportCanvas.height = h;
     const ctx = exportCanvas.getContext('2d');
 
+    /* For shapes with transparency, PNG is recommended */
+    const needsTransparency = shape !== 'rect';
+    const useFormat = (needsTransparency && format === 'jpeg') ? 'png' : format;
+
     /* For JPEG, fill white background (no transparency) */
-    if (format === 'jpeg') {
+    if (useFormat === 'jpeg') {
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, w, h);
     }
 
+    ctx.save();
+    applyClipPath(ctx, w, h);
     ctx.drawImage(offCanvas, crop.x, crop.y, w, h, 0, 0, w, h);
+    ctx.restore();
 
-    const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
-    const quality = format === 'jpeg' ? jpegQuality / 100 : undefined;
-    const ext = format === 'jpeg' ? 'jpeg' : 'png';
+    const mimeType = useFormat === 'jpeg' ? 'image/jpeg' : 'image/png';
+    const quality = useFormat === 'jpeg' ? jpegQuality / 100 : undefined;
+    const ext = useFormat === 'jpeg' ? 'jpeg' : 'png';
+
+    /* Show toast if format was auto-switched */
+    if (needsTransparency && format === 'jpeg') {
+      MiniDevTools.showToast('PNG usado automáticamente (las formas necesitan transparencia)', 'info');
+    }
 
     exportCanvas.toBlob((blob) => {
       if (!blob) {
@@ -936,7 +1075,9 @@ function render_image_cropper(container, toolMeta) {
     ToolStorage.setField('image-cropper', 'state', {
       aspectRatio,
       format,
-      jpegQuality
+      jpegQuality,
+      shape,
+      borderRadius
     });
   }
 }
