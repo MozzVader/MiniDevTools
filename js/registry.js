@@ -28,7 +28,7 @@ const TOOL_REGISTRY = [
     categoryLabel: 'Imágenes',
     description: 'Redimensionar con opciones de calidad y formato',
     jsFile: 'js/tools/image-resizer.js',
-    cssFile: 'css/tools/image-resizer.js',
+    cssFile: 'css/tools/image-resizer.css',
     render: null
   },
   {

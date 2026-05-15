@@ -1,0 +1,553 @@
+/* ═══════════════════════════════════════════════════════════════
+   Image Resizer — Redimensionar imágenes
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.ir-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+  align-items: start;
+}
+
+.ir-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ir-right {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ─── Image Area ─── */
+.ir-image-area {
+  position: relative;
+  min-height: 300px;
+  border-radius: var(--radius-lg);
+  transition: box-shadow var(--transition-fast);
+}
+
+.ir-image-area.ir-dragover {
+  box-shadow: 0 0 0 3px var(--accent), var(--shadow-lg);
+}
+
+/* ─── Drop Zone ─── */
+.ir-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 340px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-input);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 24px;
+  text-align: center;
+}
+
+.ir-dropzone:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.ir-dragover .ir-dropzone {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.ir-dropzone__icon {
+  font-size: 40px;
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.ir-dropzone__text {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ir-dropzone__sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.ir-dropzone__hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  opacity: 0.7;
+}
+
+/* ─── Image Info Bar ─── */
+.ir-img-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+.ir-img-info__name {
+  font-weight: 500;
+  color: var(--text-primary);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ir-img-info__dims {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ir-img-info__size {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ─── Preview Box ─── */
+.ir-preview-box {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  min-height: 200px;
+  max-height: 460px;
+}
+
+.ir-preview-box img {
+  display: block;
+  max-width: 100%;
+  max-height: 460px;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.ir-preview-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 3px 10px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: var(--radius-full);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RIGHT PANEL SECTIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+.ir-section {
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.ir-section__title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+/* ─── Mode Toggle ─── */
+.ir-mode-toggle {
+  display: flex;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.ir-mode-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 0;
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.ir-mode-btn:hover {
+  color: var(--text-primary);
+}
+
+.ir-mode-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.ir-mode-btn i {
+  font-size: 12px;
+}
+
+/* ─── Dimensions Row ─── */
+.ir-dims-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.ir-dim-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ir-dim-group label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.ir-dim-input {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color var(--transition-fast);
+  -moz-appearance: textfield;
+}
+
+.ir-dim-input::-webkit-outer-spin-button,
+.ir-dim-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.ir-dim-input:focus {
+  border-color: var(--accent);
+}
+
+/* ─── Lock Button ─── */
+.ir-lock-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  font-size: 14px;
+  color: var(--text-muted);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ir-lock-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+}
+
+.ir-lock-btn.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+/* ─── Percentage Presets ─── */
+.ir-pct-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.ir-preset-btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ir-preset-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.ir-preset-btn:active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ─── Percentage Slider ─── */
+.ir-pct-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ir-pct-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+
+.ir-pct-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow var(--transition-fast);
+}
+
+.ir-pct-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+.ir-pct-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.ir-pct-val {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  min-width: 42px;
+  text-align: right;
+}
+
+/* ─── Format Toggle ─── */
+.ir-format-toggle {
+  display: flex;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.ir-format-btn {
+  flex: 1;
+  padding: 7px 0;
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.ir-format-btn:hover {
+  color: var(--text-primary);
+}
+
+.ir-format-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ─── Quality Slider ─── */
+.ir-quality-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.ir-quality-row label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  min-width: 52px;
+}
+
+.ir-quality-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+
+.ir-quality-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow var(--transition-fast);
+}
+
+.ir-quality-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+.ir-quality-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.ir-quality-val {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  min-width: 28px;
+  text-align: right;
+}
+
+/* ─── Output Info ─── */
+.ir-output-grid {
+  display: flex;
+  gap: 16px;
+}
+
+.ir-output-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ir-output-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.ir-output-value {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* ─── Action Buttons ─── */
+.ir-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ir-actions .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.ir-actions .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ir-actions-row {
+  display: flex;
+  gap: 8px;
+}
+
+.ir-actions-row .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .ir-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ir-dropzone {
+    min-height: 220px;
+  }
+
+  .ir-preview-box img {
+    max-height: 340px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ir-dims-row {
+    gap: 6px;
+  }
+
+  .ir-dim-input {
+    padding: 7px 8px;
+    font-size: 12px;
+  }
+
+  .ir-lock-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
+  }
+
+  .ir-preview-box img {
+    max-height: 280px;
+  }
+}
