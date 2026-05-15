@@ -118,7 +118,37 @@ window['render_base64-encoder'] = function(container, toolMeta) {
   }
 
   function base64ToUtf8(str) {
-    return decodeURIComponent(escape(atob(str)));
+    const binary = atob(str);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    const decoded = new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+    return decoded;
+  }
+
+  /* Check if decoded content is mostly printable text */
+  function isPrintableText(str) {
+    if (!str) return false;
+    let printable = 0;
+    for (let i = 0; i < str.length; i++) {
+      const code = str.charCodeAt(i);
+      /* Printable ASCII, common Latin, CJK ranges, newlines/tabs */
+      if (code >= 32 && code <= 126 || code === 9 || code === 10 || code === 13 || code === 8230 ||
+          code >= 160 && code <= 255 || code >= 0x2000 && code <= 0x206F ||
+          code >= 0x20A0 && code <= 0x20CF || code >= 0x2100 && code <= 0x214F ||
+          code >= 0x4E00 && code <= 0x9FFF || code >= 0x3040 && code <= 0x30FF) {
+        printable++;
+      }
+    }
+    const total = str.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '').length;
+    return total > 0 && (printable / total) > 0.8;
+  }
+
+  /* Strip data URI prefix if present */
+  function stripDataUri(str) {
+    const match = str.match(/^data:[^,]+, (.*)$/s);
+    return match ? match[1].trim() : str.trim();
   }
 
   function isLikelyBase64(str) {
@@ -155,7 +185,17 @@ window['render_base64-encoder'] = function(container, toolMeta) {
           infoEl.innerHTML = '';
           return;
         }
-        lastOutput = base64ToUtf8(cleaned);
+        /* Strip data URI prefix if pasted full data URI */
+        const pureBase64 = stripDataUri(cleaned);
+        lastOutput = base64ToUtf8(pureBase64);
+
+        /* Check if result is binary (e.g. image, file) */
+        if (!isPrintableText(lastOutput)) {
+          outputEl.innerHTML = '<span style="color:var(--color-error, #ef4444);"><i class="fa-solid fa-triangle-exclamation" style="margin-right:6px;"></i>El contenido decodificado es datos binarios (imagen, archivo, etc.) y no se puede mostrar como texto.</span>';
+          lastOutput = '';
+          infoEl.innerHTML = '';
+          return;
+        }
       }
 
       outputEl.textContent = lastOutput;
@@ -194,7 +234,7 @@ window['render_base64-encoder'] = function(container, toolMeta) {
     mode = newMode;
     modeBtns.forEach(b => b.classList.toggle('b64-mode-btn--active', b.dataset.mode === mode));
     inputLabel.textContent = mode === 'encode' ? 'Texto plano' : 'Base64';
-    inputEl.placeholder = mode === 'encode' ? 'Escribí o pegá texto aquí...' : 'Pegá texto base64 aquí...';
+    inputEl.placeholder = mode === 'encode' ? 'Escribí o pegá texto aquí...' : 'Pegá texto base64 aquí (o un data URI)...';
     processBtn.innerHTML = `<i class="fa-solid fa-${mode === 'encode' ? 'lock' : 'lock-open'}" style="margin-right:6px;"></i>${mode === 'encode' ? 'Codificar a Base64' : 'Decodificar desde Base64'}`;
     outputEl.innerHTML = '<span style="color:var(--text-muted); font-style:italic;">El resultado aparecerá aquí...</span>';
     lastOutput = '';
