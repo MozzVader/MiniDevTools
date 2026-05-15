@@ -1,7 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════
    Lorem Ipsum AR — Generador de texto de relleno en español y latin
-   Tipos: parrafos, oraciones, palabras, lista
+   Tipos: parrafos, oraciones, palabras, lista, nombres
    Opciones: incluir HTML (<p>), empezar con "Lorem ipsum..."
+   Formatos de nombre: completo, solo nombre, con email
    Estadisticas en tiempo real, copiar al portapapeles.
    Usa ToolStorage para persistir estado.
    ═══════════════════════════════════════════════════════════════ */
@@ -12,11 +13,12 @@ function render_lorem_ipsum(container, toolMeta) {
   const saved = ToolStorage.load('lorem-ipsum');
   const s = saved ? saved.state : null;
 
-  let type = s ? s.type : 'paragraphs';   /* paragraphs, sentences, words, list */
+  let type = s ? s.type : 'paragraphs';   /* paragraphs, sentences, words, list, names */
   let count = s ? s.count : 3;
   let lang = s ? s.lang : 'es';           /* es, latin */
   let startLorem = s ? s.startLorem : false;
   let wrapHTML = s ? s.wrapHTML : false;
+  let nameFormat = s ? s.nameFormat : 'full'; /* full, first, email */
 
   /* ─── Spanish word bank ─── */
   const ES_WORDS = [
@@ -79,6 +81,65 @@ function render_lorem_ipsum(container, toolMeta) {
   /* ─── Classic Latin opening ─── */
   const LOREM_OPENING = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
 
+  /* ─── Spanish name banks ─── */
+  const ES_FIRST_NAMES_F = [
+    'María','Lucía','Valentina','Camila','Sofía','Florencia','Milagros','Nazarena','Abigail','Catalina',
+    'Agustina','Martina','Zoe','Morena','Emma','Juana','Pilar','Elena','Lola','Renata',
+    'Micaela','Josefina','Alma','Olivia','Natalia','Belen','Luciana','Ana','Laura','Daniela',
+    'Gabriela','Valeria','Sol','Celeste','Emilia','Amparo','Luna','Isabella','Ariadna','Tamara',
+    'Rocio','Ayleen','Brisa','Delfina','Esmeralda','Felix','Jimena','Luz','Maia','Paz'
+  ];
+
+  const ES_FIRST_NAMES_M = [
+    'Mateo','Santiago','Bautista','Nicolás','Thiago','Matías','Joaquín','Tomás','Lautaro','Benjamín',
+    'Facundo','Agustín','Franco','Alejandro','Leo','Samuel','Dylan','Joaquín','Gonzalo','Lucas',
+    'Diego','Martín','Emiliano','Ignacio','Valentino','Ezequiel','Federico','Maximiliano','Gabriel','Rafael',
+    'Sebastián','Cristian','Hernán','Andrés','Felipe','Bruno','Lorenzo','Marco','Iván','Daniel','Carlos',
+    'Pedro','Pablo','Marcos','Ricardo','Eduardo','Javier','Alejo','Simón','Osvaldo','Ramiro'
+  ];
+
+  const ES_LAST_NAMES = [
+    'García','Rodríguez','Martínez','López','González','Hernández','Pérez','Sánchez','Ramírez','Torres',
+    'Flores','Rivera','Gómez','Díaz','Cruz','Morales','Reyes','Gutiérrez','Ortiz','Ramos',
+    'Vargas','Castro','Romero','Medina','Chávez','Mendoza','Herrera','Aguirre','Álvarez','Ruiz',
+    'Domínguez','Jiménez','Fernández','Luna','Silva','Paredes','Sosa','Acosta','Blanco','Ibarra',
+    'Cardozo','Benítez','Molina','Paz','Vera','Zárate','Iglesias','Serrano','Navarro','Ríos',
+    'Montoya','Maldonado','Borges','Quiroga','Pellegrini','Ferrer','Costa','Nieves','Balbi','Leguizamón'
+  ];
+
+  /* ─── Fake email domains ─── */
+  const FAKE_DOMAINS = [
+    'correo.com','mail.es','ejemplo.net','falso.org','demo.io','test.co',
+    'placeholder.dev','mockmail.com','sample.ar','temporal.io'
+  ];
+
+  /* ─── Name generation ─── */
+  function removeAccents(str) {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function generateName(format) {
+    const gender = Math.random() > 0.5 ? 'm' : 'f';
+    const names = gender === 'f' ? ES_FIRST_NAMES_F : ES_FIRST_NAMES_M;
+    const firstName = names[Math.floor(Math.random() * names.length)];
+    const lastName = ES_LAST_NAMES[Math.floor(Math.random() * ES_LAST_NAMES.length)];
+    const lastName2 = ES_LAST_NAMES[Math.floor(Math.random() * ES_LAST_NAMES.length)];
+
+    switch (format) {
+      case 'first':
+        return firstName;
+      case 'email': {
+        const clean = removeAccents(firstName.toLowerCase());
+        const cleanL = removeAccents(lastName.toLowerCase());
+        const num = Math.floor(Math.random() * 999);
+        const domain = FAKE_DOMAINS[Math.floor(Math.random() * FAKE_DOMAINS.length)];
+        return `${clean}.${cleanL}${num}@${domain}`;
+      }
+      default: /* full */
+        return `${firstName} ${lastName} ${lastName2}`;
+    }
+  }
+
   /* ─── Helpers ─── */
   function getWords() {
     return lang === 'es' ? ES_WORDS : LA_WORDS;
@@ -116,6 +177,7 @@ function render_lorem_ipsum(container, toolMeta) {
   function generate() {
     let result = '';
     const n = Math.max(1, Math.min(count, type === 'words' ? 999 : 99));
+    const isNames = type === 'names';
 
     switch (type) {
       case 'paragraphs': {
@@ -180,6 +242,19 @@ function render_lorem_ipsum(container, toolMeta) {
         }
         break;
       }
+
+      case 'names': {
+        const items = [];
+        for (let i = 0; i < n; i++) {
+          items.push(generateName(nameFormat));
+        }
+        if (wrapHTML) {
+          result = '<ul>\n' + items.map(i => `  <li>${i}</li>`).join('\n') + '\n</ul>';
+        } else {
+          result = items.map(i => `- ${i}`).join('\n');
+        }
+        break;
+      }
     }
 
     return result;
@@ -221,6 +296,9 @@ function render_lorem_ipsum(container, toolMeta) {
               <button class="li-type-btn ${type === 'list' ? 'li-type-btn--active' : ''}" data-type="list">
                 <i class="fa-solid fa-list-ul"></i> Lista
               </button>
+              <button class="li-type-btn ${type === 'names' ? 'li-type-btn--active' : ''}" data-type="names">
+                <i class="fa-solid fa-user"></i> Nombres
+              </button>
             </div>
 
             <div class="li-count-group">
@@ -237,8 +315,18 @@ function render_lorem_ipsum(container, toolMeta) {
             </button>
           </div>
 
-          <!-- Row 2: Language + Options -->
-          <div class="li-options-row">
+          <!-- Row 2: Name format (only when names selected) -->
+          <div class="li-name-format-row ${type !== 'names' ? 'li-hidden' : ''}" id="li-name-format-row">
+            <span class="li-name-format-label">Formato:</span>
+            <div class="li-name-format-group">
+              <button class="li-nf-btn ${nameFormat === 'full' ? 'li-nf-btn--active' : ''}" data-nf="full">Nombre completo</button>
+              <button class="li-nf-btn ${nameFormat === 'first' ? 'li-nf-btn--active' : ''}" data-nf="first">Solo nombre</button>
+              <button class="li-nf-btn ${nameFormat === 'email' ? 'li-nf-btn--active' : ''}" data-nf="email">Email falso</button>
+            </div>
+          </div>
+
+          <!-- Row 3: Language + Options -->
+          <div class="li-options-row ${type === 'names' ? 'li-hidden' : ''}" id="li-options-row">
             <div class="li-lang-group">
               <button class="li-lang-btn ${lang === 'es' ? 'li-lang-btn--active' : ''}" data-lang="es">
                 <i class="fa-solid fa-flag"></i> Español
@@ -263,10 +351,11 @@ function render_lorem_ipsum(container, toolMeta) {
 
         <!-- Stats -->
         <div class="li-stats" id="li-stats">
-          <span class="li-stat"><i class="fa-solid fa-font"></i> <strong id="li-st-words">0</strong> palabras</span>
+          <span class="li-stat"><i class="fa-solid fa-font"></i> <strong id="li-st-words">0</strong> <span class="li-st-word-label">palabras</span></span>
           <span class="li-stat"><i class="fa-solid fa-text-width"></i> <strong id="li-st-chars">0</strong> caracteres</span>
-          <span class="li-stat"><i class="fa-solid fa-align-left"></i> <strong id="li-st-sentences">0</strong> oraciones</span>
-          <span class="li-stat"><i class="fa-solid fa-paragraph"></i> <strong id="li-st-paragraphs">0</strong> párrafos</span>
+          <span class="li-stat li-stat--sentence"><i class="fa-solid fa-align-left"></i> <strong id="li-st-sentences">0</strong> oraciones</span>
+          <span class="li-stat li-stat--paragraph"><i class="fa-solid fa-paragraph"></i> <strong id="li-st-paragraphs">0</strong> párrafos</span>
+          <span class="li-stat li-stat--names" style="display:none;"><i class="fa-solid fa-user"></i> <strong id="li-st-names">0</strong> nombres</span>
         </div>
 
         <!-- Output -->
@@ -301,22 +390,51 @@ function render_lorem_ipsum(container, toolMeta) {
   const htmlCheck = document.getElementById('li-html');
   const typeBtns = container.querySelectorAll('.li-type-btn');
   const langBtns = container.querySelectorAll('.li-lang-btn');
+  const nfBtns = container.querySelectorAll('.li-nf-btn');
+  const nameFormatRow = document.getElementById('li-name-format-row');
+  const optionsRow = document.getElementById('li-options-row');
+  const statsEl = document.getElementById('li-stats');
 
   const stWords = document.getElementById('li-st-words');
   const stChars = document.getElementById('li-st-chars');
   const stSentences = document.getElementById('li-st-sentences');
   const stParagraphs = document.getElementById('li-st-paragraphs');
+  const stNames = document.getElementById('li-st-names');
+  const stWordLabel = container.querySelector('.li-st-word-label');
+  const statSentence = container.querySelector('.li-stat--sentence');
+  const statParagraph = container.querySelector('.li-stat--paragraph');
+  const statNames = container.querySelector('.li-stat--names');
 
   /* ─── Update output ─── */
   function updateOutput() {
     const text = generate();
     outputEl.textContent = text;
 
-    const stats = getStats(text);
-    stWords.textContent = stats.words;
-    stChars.textContent = stats.chars;
-    stSentences.textContent = stats.sentences;
-    stParagraphs.textContent = stats.paragraphs;
+    if (type === 'names') {
+      /* Count names by splitting on newlines (list format) */
+      const nameCount = text.trim() ? text.trim().split('\n').length : 0;
+      stNames.textContent = nameCount;
+      stChars.textContent = text.length;
+
+      /* Swap visible stats */
+      statSentence.style.display = 'none';
+      statParagraph.style.display = 'none';
+      statNames.style.display = '';
+      stWordLabel.textContent = 'nombres';
+      stWords.textContent = nameCount;
+    } else {
+      const stats = getStats(text);
+      stWords.textContent = stats.words;
+      stWordLabel.textContent = 'palabras';
+      stChars.textContent = stats.chars;
+      stSentences.textContent = stats.sentences;
+      stParagraphs.textContent = stats.paragraphs;
+
+      /* Swap visible stats */
+      statSentence.style.display = '';
+      statParagraph.style.display = '';
+      statNames.style.display = 'none';
+    }
 
     saveState();
   }
@@ -335,6 +453,22 @@ function render_lorem_ipsum(container, toolMeta) {
         countInput.value = count;
       }
 
+      /* Show/hide name format row and options row */
+      nameFormatRow.classList.toggle('li-hidden', type !== 'names');
+      optionsRow.classList.toggle('li-hidden', type === 'names');
+
+      /* Change stats labels for names mode */
+      statsEl.classList.toggle('li-stats--names', type === 'names');
+
+      updateOutput();
+    });
+  });
+
+  /* ─── Name format buttons ─── */
+  nfBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      nameFormat = btn.dataset.nf;
+      nfBtns.forEach(b => b.classList.toggle('li-nf-btn--active', b === btn));
       updateOutput();
     });
   });
@@ -403,7 +537,7 @@ function render_lorem_ipsum(container, toolMeta) {
   /* ─── Persistence ─── */
   function saveState() {
     ToolStorage.setField('lorem-ipsum', 'state', {
-      type, count, lang, startLorem, wrapHTML
+      type, count, lang, startLorem, wrapHTML, nameFormat
     });
   }
 

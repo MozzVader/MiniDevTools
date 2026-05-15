@@ -128,6 +128,65 @@
   font-size: 13px;
 }
 
+/* ─── Hidden utility ─── */
+.li-hidden {
+  display: none !important;
+}
+
+/* ─── Name Format Row ─── */
+.li-name-format-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  background: var(--accent-light);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+}
+
+.li-name-format-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.li-name-format-group {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.li-nf-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.li-nf-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.li-nf-btn--active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
 /* ─── Options Row ─── */
 .li-options-row {
   display: flex;
