@@ -1,0 +1,430 @@
+/* ═══════════════════════════════════════════════════════════════
+   Flexbox Playground — Visual flexbox sandbox
+   Layout: preview left, controls right (como Shadow/Border Radius)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.fp-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+}
+
+/* ─── Preview Column ─── */
+.fp-preview-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ─── Items Bar ─── */
+.fp-items-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fp-items-bar__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.fp-items-bar__btn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.fp-items-bar__btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.fp-items-bar__count {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 20px;
+  text-align: center;
+}
+
+/* ─── Preview ─── */
+.fp-preview {
+  width: 100%;
+  min-height: 320px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  padding: 16px;
+}
+
+[data-theme="dark"] .fp-preview {
+  background: #0f172a;
+}
+
+/* Dot grid background */
+.fp-preview::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: 16px 16px;
+  opacity: 0.5;
+}
+
+[data-theme="dark"] .fp-preview::before {
+  opacity: 0.25;
+}
+
+/* ─── Flex Container ─── */
+.fp-container {
+  position: relative;
+  z-index: 1;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.fp-container:empty {
+  min-height: 80px;
+}
+
+/* ─── Flex Items ─── */
+.fp-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  user-select: none;
+}
+
+.fp-item:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  z-index: 2;
+}
+
+.fp-item--selected {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--accent-light), 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 3;
+}
+
+.fp-item__num {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  pointer-events: none;
+}
+
+/* ─── Size Row ─── */
+.fp-size-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fp-size-row label {
+  min-width: 50px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.fp-size-row input[type="range"] {
+  flex: 1;
+}
+
+/* ─── Range Slider ─── */
+.fp-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  outline: none;
+  cursor: pointer;
+}
+
+.fp-range--full {
+  width: 100%;
+}
+
+.fp-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.fp-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.fp-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+
+.fp-range-val {
+  min-width: 48px;
+  text-align: center;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.fp-gap-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ─── Code Output ─── */
+.fp-code-wrap {
+  margin-top: 4px;
+}
+
+.fp-code {
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 0;
+  overflow-x: auto;
+}
+
+/* ─── Controls Panel ─── */
+.fp-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Custom scrollbar */
+.fp-controls::-webkit-scrollbar {
+  width: 4px;
+}
+
+.fp-controls::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.fp-controls::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+/* ─── Section Title ─── */
+.fp-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ─── Property Group ─── */
+.fp-prop-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fp-prop-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+.fp-prop-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.fp-prop-btns--wrap {
+  /* explicit wrap for props with many values */
+}
+
+/* ─── Property Buttons ─── */
+.fp-prop-btn {
+  padding: 5px 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+.fp-prop-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.fp-prop-btn--active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ─── Deselect Button ─── */
+.fp-deselect-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-top: 4px;
+}
+
+.fp-deselect-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+/* ─── Presets ─── */
+.fp-presets {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.fp-preset {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.fp-preset i {
+  font-size: 11px;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+
+.fp-preset:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.fp-preset:hover i {
+  color: var(--accent);
+}
+
+/* ─── Actions ─── */
+.fp-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .fp-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .fp-preview {
+    min-height: 220px;
+  }
+
+  .fp-controls {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 480px) {
+  .fp-presets {
+    grid-template-columns: 1fr;
+  }
+}
