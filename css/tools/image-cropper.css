@@ -1,0 +1,451 @@
+/* ═══════════════════════════════════════════════════════════════
+   Image Cropper — Recortar imágenes a proporciones específicas
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.ic-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 24px;
+  align-items: start;
+}
+
+.ic-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ic-right {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ─── Image Area ─── */
+.ic-image-area {
+  position: relative;
+  min-height: 300px;
+  border-radius: var(--radius-lg);
+  transition: box-shadow var(--transition-fast);
+}
+
+.ic-image-area.ic-dragover {
+  box-shadow: 0 0 0 3px var(--accent), var(--shadow-lg);
+}
+
+/* ─── Drop Zone ─── */
+.ic-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 340px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-input);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 24px;
+  text-align: center;
+}
+
+.ic-dropzone:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.ic-dragover .ic-dropzone {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.ic-dropzone__icon {
+  font-size: 40px;
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.ic-dropzone__text {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ic-dropzone__sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.ic-dropzone__hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  opacity: 0.7;
+}
+
+/* ─── Image Info Bar ─── */
+.ic-img-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.ic-img-info__dims {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* ─── Image Container (crop area) ─── */
+.ic-container {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-input);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: crosshair;
+}
+
+.ic-container img {
+  display: block;
+  max-height: 520px;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* ─── Crop Box ─── */
+.ic-box {
+  position: absolute;
+  display: none;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.ic-box.active {
+  display: block;
+}
+
+/* ─── Rule of Thirds Grid ─── */
+.ic-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ic-grid__line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.ic-grid__line--v1 {
+  left: 33.333%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+
+.ic-grid__line--v2 {
+  left: 66.666%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+
+.ic-grid__line--h1 {
+  top: 33.333%;
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+
+.ic-grid__line--h2 {
+  top: 66.666%;
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+
+/* ─── Crop Handles ─── */
+.ic-handle {
+  position: absolute;
+  z-index: 15;
+  pointer-events: all;
+  background: #ffffff;
+  border: 1.5px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Corner handles: 12x12 squares */
+.ic-handle--nw { top: -6px; left: -6px; width: 12px; height: 12px; border-radius: 2px; cursor: nwse-resize; }
+.ic-handle--ne { top: -6px; right: -6px; width: 12px; height: 12px; border-radius: 2px; cursor: nesw-resize; }
+.ic-handle--sw { bottom: -6px; left: -6px; width: 12px; height: 12px; border-radius: 2px; cursor: nesw-resize; }
+.ic-handle--se { bottom: -6px; right: -6px; width: 12px; height: 12px; border-radius: 2px; cursor: nwse-resize; }
+
+/* Edge handles: bars */
+.ic-handle--n { top: -3px; left: calc(50% - 10px); width: 20px; height: 6px; border-radius: 1px; cursor: ns-resize; }
+.ic-handle--s { bottom: -3px; left: calc(50% - 10px); width: 20px; height: 6px; border-radius: 1px; cursor: ns-resize; }
+.ic-handle--w { left: -3px; top: calc(50% - 10px); width: 6px; height: 20px; border-radius: 1px; cursor: ew-resize; }
+.ic-handle--e { right: -3px; top: calc(50% - 10px); width: 6px; height: 20px; border-radius: 1px; cursor: ew-resize; }
+
+/* ─── Crop Dimensions Overlay ─── */
+.ic-dims {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 12;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RIGHT PANEL SECTIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+.ic-section {
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.ic-section__title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+/* ─── Aspect Ratio Chips ─── */
+.ic-ratios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ic-ratio-chip {
+  padding: 5px 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.ic-ratio-chip:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.ic-ratio-chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ─── Preview ─── */
+.ic-preview-wrap {
+  display: flex;
+  justify-content: center;
+  background:
+    repeating-conic-gradient(#e0e0e0 0% 25%, #ffffff 0% 50%) 50% / 16px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  min-height: 100px;
+  overflow: hidden;
+}
+
+.ic-preview-canvas {
+  display: block;
+  max-width: 220px;
+  max-height: 180px;
+}
+
+.ic-preview-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 16px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* ─── Format Toggle ─── */
+.ic-format-toggle {
+  display: flex;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.ic-format-btn {
+  flex: 1;
+  padding: 7px 0;
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.ic-format-btn:hover {
+  color: var(--text-primary);
+}
+
+.ic-format-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ─── Quality Slider ─── */
+.ic-quality-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.ic-quality-row label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  min-width: 52px;
+}
+
+.ic-quality-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+
+.ic-quality-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow var(--transition-fast);
+}
+
+.ic-quality-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+.ic-quality-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.ic-quality-val {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  min-width: 28px;
+  text-align: right;
+}
+
+/* ─── Action Buttons ─── */
+.ic-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ic-actions .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.ic-actions-row {
+  display: flex;
+  gap: 8px;
+}
+
+.ic-actions-row .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .ic-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ic-dropzone {
+    min-height: 220px;
+  }
+
+  .ic-container img {
+    max-height: 400px;
+  }
+
+  .ic-preview-canvas {
+    max-width: 180px;
+    max-height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ic-ratios {
+    gap: 4px;
+  }
+
+  .ic-ratio-chip {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  .ic-container img {
+    max-height: 320px;
+  }
+}
