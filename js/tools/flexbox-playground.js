@@ -361,6 +361,8 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
     if (state.alignItems !== 'stretch') css += `  align-items: ${state.alignItems};\n`;
     if (state.alignContent !== 'stretch') css += `  align-content: ${state.alignContent};\n`;
     if (state.gap > 0) css += `  gap: ${state.gap}px;\n`;
+    if (state.containerW !== 100) css += `  width: ${state.containerW}%;\n`;
+    if (state.containerH !== 300) css += `  min-height: ${state.containerH}px;\n`;
     css += '}';
 
     /* Item styles */
@@ -557,20 +559,26 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
 
   const presets = [
     { name: 'Center', icon: 'fa-crosshairs', dir: 'row', wrap: 'nowrap', jc: 'center', ai: 'center', ac: 'center', gap: 10, count: 3,
-      labels: ['left', 'center', 'right'] },
+      labels: ['left', 'center', 'right'],
+      customItems: { 0: { flexBasis: '80px' }, 1: { flexBasis: '100px' }, 2: { flexBasis: '80px' } } },
     { name: 'Navbar', icon: 'fa-bars', dir: 'row', wrap: 'nowrap', jc: 'space-between', ai: 'center', ac: 'stretch', gap: 16, count: 4,
-      labels: ['logo', 'nav-links', 'actions', 'cta'] },
+      labels: ['logo', 'nav-links', 'actions', 'cta'],
+      customItems: { 0: { flexBasis: '120px', flexShrink: 0 }, 2: { flexBasis: 'auto' } } },
     { name: 'Columns', icon: 'fa-columns', dir: 'row', wrap: 'nowrap', jc: 'flex-start', ai: 'stretch', ac: 'stretch', gap: 12, count: 3,
       labels: ['col-1', 'col-2', 'col-3'],
       customItems: { 0: { flexGrow: 1 }, 1: { flexGrow: 1 }, 2: { flexGrow: 1 } } },
     { name: 'Sidebar', icon: 'fa-table-columns', dir: 'row', wrap: 'nowrap', jc: 'flex-start', ai: 'stretch', ac: 'stretch', gap: 16, count: 2,
       labels: ['sidebar', 'content'],
       customItems: { 0: { flexBasis: '200px', flexShrink: 0 }, 1: { flexGrow: 1 } } },
-    { name: 'Cards', icon: 'fa-grip', dir: 'row', wrap: 'wrap', jc: 'flex-start', ai: 'stretch', ac: 'stretch', gap: 16, count: 6 },
+    { name: 'Cards', icon: 'fa-grip', dir: 'row', wrap: 'wrap', jc: 'flex-start', ai: 'stretch', ac: 'stretch', gap: 16, count: 6,
+      labels: ['card-1', 'card-2', 'card-3', 'card-4', 'card-5', 'card-6'],
+      customItems: { 0: { flexBasis: '150px' }, 1: { flexBasis: '150px' }, 2: { flexBasis: '150px' },
+                     3: { flexBasis: '150px' }, 4: { flexBasis: '150px' }, 5: { flexBasis: '150px' } } },
     { name: 'Footer', icon: 'fa-arrow-down', dir: 'column', wrap: 'nowrap', jc: 'flex-start', ai: 'stretch', ac: 'stretch', gap: 0, count: 3,
       labels: ['header', 'content', 'footer'],
-      customItems: { 0: {}, 1: { flexGrow: 1 }, 2: {} } },
-    { name: 'Masonry', icon: 'fa-table-cells', dir: 'row', wrap: 'wrap', jc: 'flex-start', ai: 'flex-start', ac: 'flex-start', gap: 10, count: 6 },
+      customItems: { 0: { flexBasis: '60px', flexShrink: 0 }, 1: { flexGrow: 1 }, 2: { flexBasis: '60px', flexShrink: 0 } } },
+    { name: 'Masonry', icon: 'fa-table-cells', dir: 'row', wrap: 'wrap', jc: 'flex-start', ai: 'flex-start', ac: 'flex-start', gap: 10, count: 6,
+      labels: ['masonry-1', 'masonry-2', 'masonry-3', 'masonry-4', 'masonry-5', 'masonry-6'] },
     { name: 'Reverse', icon: 'fa-right-left', dir: 'row-reverse', wrap: 'nowrap', jc: 'flex-start', ai: 'center', ac: 'stretch', gap: 12, count: 4,
       labels: ['item-4', 'item-3', 'item-2', 'item-1'] },
   ];
