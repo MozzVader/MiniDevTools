@@ -24,6 +24,8 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
   const saved = ToolStorage.load('flexbox-playground');
   const s = saved ? saved.state : null;
 
+  let activePresetLabels = null;
+
   const state = {
     flexDirection: s ? s.flexDirection : 'row',
     flexWrap: s ? s.flexWrap : 'nowrap',
@@ -361,27 +363,52 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
     if (state.gap > 0) css += `  gap: ${state.gap}px;\n`;
     css += '}';
 
-    /* Item styles if any have non-default values */
-    const nonDefaultItems = [];
-    for (let i = 0; i < state.itemCount; i++) {
-      const item = state.items[i];
-      const hasCustom = item.flexGrow !== 0 || item.flexShrink !== 1 || item.flexBasis !== 'auto' || item.alignSelf !== 'auto' || item.order !== 0;
-      if (hasCustom) nonDefaultItems.push({ index: i, ...item });
-    }
+    /* Item styles */
+    if (activePresetLabels) {
+      /* Preset mode: show ALL items with descriptive labels */
+      css += '\n\n/* Items */';
+      for (let i = 0; i < state.itemCount; i++) {
+        const item = state.items[i];
+        const label = activePresetLabels[i] || `item-${i + 1}`;
+        const hasCustom = item.flexGrow !== 0 || item.flexShrink !== 1 || item.flexBasis !== 'auto' || item.alignSelf !== 'auto' || item.order !== 0;
 
-    if (nonDefaultItems.length > 0) {
-      css += '\n\n/* Items con estilos personalizados */';
-      nonDefaultItems.forEach(item => {
-        css += `\n.item-${item.index + 1} {`;
-        const parts = [];
-        if (item.flexGrow !== 0) parts.push(`  flex-grow: ${item.flexGrow};`);
-        if (item.flexShrink !== 1) parts.push(`  flex-shrink: ${item.flexShrink};`);
-        if (item.flexBasis !== 'auto') parts.push(`  flex-basis: ${item.flexBasis};`);
-        if (item.alignSelf !== 'auto') parts.push(`  align-self: ${item.alignSelf};`);
-        if (item.order !== 0) parts.push(`  order: ${item.order};`);
-        css += '\n' + parts.join('\n');
+        css += `\n\n.${label} {`;
+        if (hasCustom) {
+          const parts = [];
+          if (item.flexGrow !== 0) parts.push(`  flex-grow: ${item.flexGrow};`);
+          if (item.flexShrink !== 1) parts.push(`  flex-shrink: ${item.flexShrink};`);
+          if (item.flexBasis !== 'auto') parts.push(`  flex-basis: ${item.flexBasis};`);
+          if (item.alignSelf !== 'auto') parts.push(`  align-self: ${item.alignSelf};`);
+          if (item.order !== 0) parts.push(`  order: ${item.order};`);
+          css += '\n' + parts.join('\n');
+        } else {
+          css += '\n  /* Default */';
+        }
         css += '\n}';
-      });
+      }
+    } else {
+      /* Free mode: show only items with non-default values */
+      const nonDefaultItems = [];
+      for (let i = 0; i < state.itemCount; i++) {
+        const item = state.items[i];
+        const hasCustom = item.flexGrow !== 0 || item.flexShrink !== 1 || item.flexBasis !== 'auto' || item.alignSelf !== 'auto' || item.order !== 0;
+        if (hasCustom) nonDefaultItems.push({ index: i, ...item });
+      }
+
+      if (nonDefaultItems.length > 0) {
+        css += '\n\n/* Items con estilos personalizados */';
+        nonDefaultItems.forEach(item => {
+          css += `\n\n.item-${item.index + 1} {`;
+          const parts = [];
+          if (item.flexGrow !== 0) parts.push(`  flex-grow: ${item.flexGrow};`);
+          if (item.flexShrink !== 1) parts.push(`  flex-shrink: ${item.flexShrink};`);
+          if (item.flexBasis !== 'auto') parts.push(`  flex-basis: ${item.flexBasis};`);
+          if (item.alignSelf !== 'auto') parts.push(`  align-self: ${item.alignSelf};`);
+          if (item.order !== 0) parts.push(`  order: ${item.order};`);
+          css += '\n' + parts.join('\n');
+          css += '\n}';
+        });
+      }
     }
 
     codeEl.textContent = css;
@@ -422,6 +449,7 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
     const prop = group.dataset.prop;
     group.querySelectorAll('.fp-prop-btn').forEach(btn => {
       btn.addEventListener('click', () => {
+        activePresetLabels = null; /* user edited manually → exit preset mode */
         state[prop] = btn.dataset.value;
         group.querySelectorAll('.fp-prop-btn').forEach(b => b.classList.remove('fp-prop-btn--active'));
         btn.classList.add('fp-prop-btn--active');
@@ -468,6 +496,7 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
   const gapSlider = document.getElementById('fp-gap');
   const gapVal = document.getElementById('fp-gap-val');
   gapSlider.addEventListener('input', () => {
+    activePresetLabels = null;
     state.gap = parseInt(gapSlider.value);
     gapVal.textContent = state.gap + 'px';
     updatePreview();
@@ -480,6 +509,7 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
   const cwSlider = document.getElementById('fp-cw');
   const cwVal = document.getElementById('fp-cw-val');
   cwSlider.addEventListener('input', () => {
+    activePresetLabels = null;
     state.containerW = parseInt(cwSlider.value);
     cwVal.textContent = state.containerW + '%';
     updatePreview();
@@ -488,6 +518,7 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
   const chSlider = document.getElementById('fp-ch');
   const chVal = document.getElementById('fp-ch-val');
   chSlider.addEventListener('input', () => {
+    activePresetLabels = null;
     state.containerH = parseInt(chSlider.value);
     chVal.textContent = state.containerH + 'px';
     updatePreview();
@@ -499,6 +530,7 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
 
   document.getElementById('fp-add-item').addEventListener('click', () => {
     if (state.itemCount >= 12) return;
+    activePresetLabels = null;
     state.itemCount++;
     if (state.selectedItem !== null && state.selectedItem >= state.itemCount) {
       state.selectedItem = state.itemCount - 1;
@@ -509,6 +541,7 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
 
   document.getElementById('fp-remove-item').addEventListener('click', () => {
     if (state.itemCount <= 1) return;
+    activePresetLabels = null;
     state.itemCount--;
     if (state.selectedItem !== null && state.selectedItem >= state.itemCount) {
       state.selectedItem = null;
@@ -523,14 +556,23 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
      ═══════════════════════════════════════════════════════ */
 
   const presets = [
-    { name: 'Center', icon: 'fa-crosshairs', dir: 'row', wrap: 'nowrap', jc: 'center', ai: 'center', ac: 'center', gap: 10, count: 3 },
-    { name: 'Navbar', icon: 'fa-bars', dir: 'row', wrap: 'nowrap', jc: 'space-between', ai: 'center', ac: 'stretch', gap: 16, count: 4 },
-    { name: 'Columns', icon: 'fa-columns', dir: 'row', wrap: 'nowrap', jc: 'flex-start', ai: 'stretch', ac: 'stretch', gap: 12, count: 3, customItems: { 0: { flexGrow: 1 }, 1: { flexGrow: 1 }, 2: { flexGrow: 1 } } },
-    { name: 'Sidebar', icon: 'fa-table-columns', dir: 'row', wrap: 'nowrap', jc: 'flex-start', ai: 'stretch', ac: 'stretch', gap: 16, count: 2, customItems: { 0: { flexBasis: '200px', flexShrink: 0 }, 1: { flexGrow: 1 } } },
+    { name: 'Center', icon: 'fa-crosshairs', dir: 'row', wrap: 'nowrap', jc: 'center', ai: 'center', ac: 'center', gap: 10, count: 3,
+      labels: ['left', 'center', 'right'] },
+    { name: 'Navbar', icon: 'fa-bars', dir: 'row', wrap: 'nowrap', jc: 'space-between', ai: 'center', ac: 'stretch', gap: 16, count: 4,
+      labels: ['logo', 'nav-links', 'actions', 'cta'] },
+    { name: 'Columns', icon: 'fa-columns', dir: 'row', wrap: 'nowrap', jc: 'flex-start', ai: 'stretch', ac: 'stretch', gap: 12, count: 3,
+      labels: ['col-1', 'col-2', 'col-3'],
+      customItems: { 0: { flexGrow: 1 }, 1: { flexGrow: 1 }, 2: { flexGrow: 1 } } },
+    { name: 'Sidebar', icon: 'fa-table-columns', dir: 'row', wrap: 'nowrap', jc: 'flex-start', ai: 'stretch', ac: 'stretch', gap: 16, count: 2,
+      labels: ['sidebar', 'content'],
+      customItems: { 0: { flexBasis: '200px', flexShrink: 0 }, 1: { flexGrow: 1 } } },
     { name: 'Cards', icon: 'fa-grip', dir: 'row', wrap: 'wrap', jc: 'flex-start', ai: 'stretch', ac: 'stretch', gap: 16, count: 6 },
-    { name: 'Footer', icon: 'fa-arrow-down', dir: 'column', wrap: 'nowrap', jc: 'flex-start', ai: 'stretch', ac: 'stretch', gap: 0, count: 3, customItems: { 0: {}, 1: { flexGrow: 1 }, 2: {} } },
+    { name: 'Footer', icon: 'fa-arrow-down', dir: 'column', wrap: 'nowrap', jc: 'flex-start', ai: 'stretch', ac: 'stretch', gap: 0, count: 3,
+      labels: ['header', 'content', 'footer'],
+      customItems: { 0: {}, 1: { flexGrow: 1 }, 2: {} } },
     { name: 'Masonry', icon: 'fa-table-cells', dir: 'row', wrap: 'wrap', jc: 'flex-start', ai: 'flex-start', ac: 'flex-start', gap: 10, count: 6 },
-    { name: 'Reverse', icon: 'fa-right-left', dir: 'row-reverse', wrap: 'nowrap', jc: 'flex-start', ai: 'center', ac: 'stretch', gap: 12, count: 4 },
+    { name: 'Reverse', icon: 'fa-right-left', dir: 'row-reverse', wrap: 'nowrap', jc: 'flex-start', ai: 'center', ac: 'stretch', gap: 12, count: 4,
+      labels: ['item-4', 'item-3', 'item-2', 'item-1'] },
   ];
 
   function renderPresets() {
@@ -574,6 +616,9 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
       });
     }
 
+    /* Store labels for CSS output */
+    activePresetLabels = p.labels || null;
+
     /* Update UI controls */
     syncContainerButtons();
     itemCountEl.textContent = state.itemCount;
@@ -596,6 +641,7 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
      ═══════════════════════════════════════════════════════ */
 
   document.getElementById('fp-reset').addEventListener('click', () => {
+    activePresetLabels = null;
     state.flexDirection = 'row';
     state.flexWrap = 'nowrap';
     state.justifyContent = 'flex-start';
