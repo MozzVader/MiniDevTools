@@ -262,35 +262,69 @@ window['render_flexbox-playground'] = function(container, toolMeta) {
      UPDATE PREVIEW
      ═══════════════════════════════════════════════════════ */
 
+  /* Varied cross-axis min-sizes so align-items differences are visible */
+  const CROSS_SIZES = [40, 60, 80, 100];
+
   function renderItems() {
     containerEl.innerHTML = '';
+    const isRow = state.flexDirection === 'row' || state.flexDirection === 'row-reverse';
+
     for (let i = 0; i < state.itemCount; i++) {
       const item = state.items[i];
       const color = ITEM_COLORS[i % ITEM_COLORS.length];
-      const size = state.itemSizes[i];
+      const varyIdx = i % CROSS_SIZES.length;
 
       const el = document.createElement('div');
       el.className = 'fp-item' + (state.selectedItem === i ? ' fp-item--selected' : '');
       el.dataset.index = i;
       el.style.backgroundColor = color;
-      el.style.width = size + 'px';
-      el.style.height = (item.flexBasis === 'auto' ? 50 + (i % 3) * 15 : 'auto') + 'px';
 
-      /* Apply item styles */
+      /* Clear all dimension styles to avoid conflicts */
+      el.style.width = '';
+      el.style.height = '';
+      el.style.minWidth = '';
+      el.style.minHeight = '';
+      el.style.flexBasis = '';
+
+      /* Apply flex item properties */
       el.style.flexGrow = item.flexGrow;
       el.style.flexShrink = item.flexShrink;
-      if (item.flexBasis === 'auto') {
-        el.style.flexBasis = 'auto';
-      } else {
-        el.style.flexBasis = item.flexBasis;
-      }
-      if (item.alignSelf !== 'auto') {
-        el.style.alignSelf = item.alignSelf;
-      }
       el.style.order = item.order;
+      el.style.alignSelf = item.alignSelf !== 'auto' ? item.alignSelf : '';
+
+      if (isRow) {
+        /* Row: main axis = horizontal (width), cross axis = vertical (height) */
+        /* Varied min-heights → align-items effects are visible */
+        el.style.minHeight = CROSS_SIZES[varyIdx] + 'px';
+        /* NO explicit height → align-items: stretch works */
+
+        /* Main axis: width controlled by flex-basis or default size */
+        if (item.flexBasis !== 'auto') {
+          el.style.flexBasis = item.flexBasis;
+        } else {
+          el.style.flexBasis = 'auto';
+          el.style.width = state.itemSizes[i] + 'px';
+        }
+      } else {
+        /* Column: main axis = vertical (height), cross axis = horizontal (width) */
+        /* Varied min-widths → align-items effects are visible */
+        el.style.minWidth = CROSS_SIZES[varyIdx] + 'px';
+        /* NO explicit width → align-items: stretch works */
+
+        /* Main axis: height controlled by flex-basis or default size */
+        if (item.flexBasis !== 'auto') {
+          el.style.flexBasis = item.flexBasis;
+        } else {
+          el.style.flexBasis = 'auto';
+          el.style.height = state.itemSizes[i] + 'px';
+        }
+      }
 
       el.innerHTML = `<span class="fp-item__num">${i + 1}</span>`;
-      el.addEventListener('click', () => selectItem(i));
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectItem(i);
+      });
       containerEl.appendChild(el);
     }
   }
