@@ -75,6 +75,17 @@ const TOOL_REGISTRY = [
     cssFile: 'css/tools/placeholder-generator.css',
     render: null
   },
+  {
+    id: 'qr-generator',
+    name: 'QR Generator',
+    icon: 'fa-solid fa-qrcode',
+    category: 'images',
+    categoryLabel: 'Imágenes',
+    description: 'Generar códigos QR con logo personalizado',
+    jsFile: 'js/tools/qr-generator.js',
+    cssFile: 'css/tools/qr-generator.css',
+    render: null
+  },
 
   // ─── CSS & DISEÑO ───
   {

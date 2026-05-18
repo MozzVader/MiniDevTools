@@ -1,0 +1,470 @@
+/* ═══════════════════════════════════════════════════════════════
+   QR Generator — Generador de QR con logo
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.qr-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ─── Left: Input ─── */
+.qr-input-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.qr-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.qr-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.qr-textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--bg-base-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  outline: none;
+  resize: vertical;
+  transition: border-color var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.qr-textarea:focus {
+  border-color: var(--accent);
+}
+
+.qr-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* ─── Options Grid ─── */
+.qr-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.qr-option {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.qr-option--full {
+  grid-column: 1 / -1;
+}
+
+.qr-option label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.qr-option select,
+.qr-option input[type="text"] {
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--bg-base-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.qr-option select:focus,
+.qr-option input[type="text"]:focus {
+  border-color: var(--accent);
+}
+
+.qr-color-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qr-color-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border);
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.qr-color-swatch::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.qr-color-swatch::-webkit-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
+
+.qr-color-swatch::-moz-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
+
+.qr-color-hex {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  background: var(--bg-base-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.qr-color-hex:focus {
+  border-color: var(--accent);
+}
+
+/* ─── Generate Button ─── */
+.qr-generate-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.qr-generate-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.qr-generate-btn:active {
+  transform: translateY(0);
+}
+
+/* ─── Logo Section ─── */
+.qr-logo-section {
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.qr-logo-section__title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qr-logo-methods {
+  display: flex;
+  gap: 8px;
+}
+
+.qr-logo-method-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.qr-logo-method-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.qr-logo-method-btn--active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.qr-logo-url-input {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color var(--transition-fast);
+  display: none;
+}
+
+.qr-logo-url-input--visible {
+  display: block;
+}
+
+.qr-logo-url-input:focus {
+  border-color: var(--accent);
+}
+
+.qr-logo-url-input::placeholder {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+/* ─── Logo Preview ─── */
+.qr-logo-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.qr-logo-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border);
+  object-fit: contain;
+  background: #fff;
+  display: none;
+}
+
+.qr-logo-thumb--visible {
+  display: block;
+}
+
+.qr-logo-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.qr-logo-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.qr-logo-remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: inherit;
+  background: transparent;
+  color: #ef4444;
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-top: 4px;
+}
+
+.qr-logo-remove:hover {
+  background: rgba(239,68,68,0.1);
+  border-color: #ef4444;
+}
+
+.qr-logo-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ─── Right: Preview & Download ─── */
+.qr-preview-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 20px;
+}
+
+.qr-canvas-wrap {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  min-width: 200px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  position: relative;
+}
+
+.qr-canvas-wrap canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.qr-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.qr-placeholder i {
+  font-size: 48px;
+  opacity: 0.3;
+}
+
+.qr-placeholder span {
+  font-size: 13px;
+}
+
+/* ─── Download Buttons ─── */
+.qr-download-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.qr-download-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.qr-download-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.qr-download-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.qr-download-btn:disabled:hover {
+  background: var(--bg-input);
+  border-color: var(--border);
+  color: var(--text-secondary);
+}
+
+/* ─── Paste overlay ─── */
+.qr-paste-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.qr-paste-overlay--visible {
+  display: flex;
+}
+
+.qr-paste-box {
+  background: var(--bg-base);
+  border: 2px dashed var(--accent);
+  border-radius: var(--radius-lg);
+  padding: 40px 60px;
+  text-align: center;
+  color: var(--accent);
+  animation: qr-pulse-border 1.5s ease-in-out infinite;
+}
+
+@keyframes qr-pulse-border {
+  0%, 100% { border-color: var(--accent); }
+  50% { border-color: var(--accent-light); }
+}
+
+.qr-paste-box i {
+  font-size: 36px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.qr-paste-box span {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .qr-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .qr-preview-col {
+    position: static;
+  }
+
+  .qr-options {
+    grid-template-columns: 1fr;
+  }
+
+  .qr-logo-methods {
+    flex-wrap: wrap;
+  }
+}
