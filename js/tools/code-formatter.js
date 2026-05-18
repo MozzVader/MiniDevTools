@@ -411,8 +411,8 @@ function render_code_formatter(container, toolMeta) {
     /* Remove extra blank lines */
     css = css.replace(/\n{2,}/g, '\n');
 
-    /* Split by opening braces to process rules */
-    const parts = css.split(/(\{)/);
+    /* Split by both braces to properly track level */
+    const parts = css.split(/([{}])/);
 
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i].trim();
