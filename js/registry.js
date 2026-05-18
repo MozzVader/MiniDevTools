@@ -248,6 +248,17 @@ const TOOL_REGISTRY = [
     render: null
   },
   {
+    id: 'json-formatter',
+    name: 'JSON Formatter & Viewer',
+    icon: 'fa-solid fa-file-code',
+    category: 'utils',
+    categoryLabel: 'Utilitarios Dev',
+    description: 'Formatear, validar y explorar JSON con tree view interactivo',
+    jsFile: 'js/tools/json-formatter.js',
+    cssFile: 'css/tools/json-formatter.css',
+    render: null
+  },
+  {
     id: 'base64-encoder',
     name: 'Base64 Encode/Decode',
     icon: 'fa-solid fa-lock',

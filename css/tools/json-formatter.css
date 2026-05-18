@@ -1,0 +1,333 @@
+/* ═══════════════════════════════════════════════════════════════
+   JSON Formatter & Viewer
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.jf-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.jf-textarea {
+  width: 100%;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+/* ─── Input Header ─── */
+.jf-input-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+/* ─── Actions ─── */
+.jf-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.jf-actions-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.jf-select {
+  font-size: 12px;
+}
+
+/* ─── Status ─── */
+.jf-status {
+  margin-top: 6px;
+  font-size: 13px;
+  min-height: 20px;
+}
+
+/* ─── Output Section ─── */
+.jf-output-section--hidden {
+  display: none !important;
+}
+
+/* ─── Toolbar (view tabs + search) ─── */
+.jf-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.jf-search-wrap {
+  position: relative;
+  width: 240px;
+}
+
+.jf-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.jf-search {
+  padding-left: 30px !important;
+  width: 100%;
+  font-size: 12px;
+}
+
+/* ─── Scrollable containers ─── */
+.jf-scroll {
+  max-height: 500px;
+  overflow: auto;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: var(--radius-md, 8px);
+  background: var(--bg-base-secondary, #f9fafb);
+}
+
+.jf-tree-wrap {
+  padding: 12px;
+}
+
+.jf-code-wrap {
+  padding: 12px;
+}
+
+/* ─── Code View ─── */
+.jf-code {
+  margin: 0;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre;
+  color: var(--text-primary);
+}
+
+/* ═══════════════════════════════════════════════════════
+   TREE VIEW
+   ═══════════════════════════════════════════════════════ */
+
+.jf-tree-root > .jf-tree-item--root {
+  margin-bottom: 4px;
+}
+
+.jf-tree-children {
+  margin-left: 20px;
+  border-left: 1px dashed var(--border, #d1d5db);
+  padding-left: 8px;
+}
+
+.jf-tree-children--collapsed {
+  display: none;
+}
+
+.jf-tree-item {
+  padding: 3px 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  cursor: default;
+}
+
+.jf-tree-item--root {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.jf-tree-item--leaf {
+  padding: 2px 0;
+}
+
+/* Arrow */
+.jf-tree-arrow {
+  cursor: pointer;
+  width: 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 11px;
+  flex-shrink: 0;
+  user-select: none;
+  transition: transform 0.15s ease;
+}
+
+.jf-tree-arrow:hover {
+  color: var(--accent);
+}
+
+/* Key */
+.jf-tree-key {
+  color: var(--json-key-color, #6366f1);
+  font-weight: 500;
+}
+
+[data-theme="dark"] .jf-tree-key {
+  color: #818cf8;
+}
+
+/* Colon */
+.jf-tree-colon {
+  color: var(--text-muted);
+}
+
+/* Badge (type) */
+.jf-tree-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-family: inherit;
+}
+
+.jf-tree-badge--string   { background: #dcfce7; color: #15803d; }
+.jf-tree-badge--number   { background: #ffedd5; color: #c2410c; }
+.jf-tree-badge--boolean  { background: #dbeafe; color: #1d4ed8; }
+.jf-tree-badge--null     { background: #f3e8ff; color: #7c3aed; }
+.jf-tree-badge--object   { background: #e0e7ff; color: #4338ca; }
+.jf-tree-badge--array    { background: #fef3c7; color: #b45309; }
+
+[data-theme="dark"] .jf-tree-badge--string   { background: #14532d; color: #86efac; }
+[data-theme="dark"] .jf-tree-badge--number   { background: #431407; color: #fdba74; }
+[data-theme="dark"] .jf-tree-badge--boolean  { background: #1e3a5f; color: #93c5fd; }
+[data-theme="dark"] .jf-tree-badge--null     { background: #3b0764; color: #d8b4fe; }
+[data-theme="dark"] .jf-tree-badge--object   { background: #312e81; color: #a5b4fc; }
+[data-theme="dark"] .jf-tree-badge--array    { background: #451a03; color: #fcd34d; }
+
+/* Value */
+.jf-tree-value { margin-left: 2px; }
+.jf-tree-value--string  { color: #16a34a; }
+.jf-tree-value--number  { color: #ea580c; }
+.jf-tree-value--boolean { color: #2563eb; }
+.jf-tree-value--null    { color: #9333ea; font-style: italic; }
+
+[data-theme="dark"] .jf-tree-value--string  { color: #4ade80; }
+[data-theme="dark"] .jf-tree-value--number  { color: #fb923c; }
+[data-theme="dark"] .jf-tree-value--boolean { color: #60a5fa; }
+[data-theme="dark"] .jf-tree-value--null    { color: #c084fc; }
+
+/* Path */
+.jf-tree-path {
+  margin-left: auto;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  padding: 0 4px;
+  border-radius: 3px;
+}
+
+.jf-tree-item:hover .jf-tree-path,
+.jf-tree-item--highlight .jf-tree-path {
+  opacity: 1;
+}
+
+.jf-tree-path:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Close bracket */
+.jf-tree-close {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  padding: 2px 0 4px;
+}
+
+/* Search highlight / dim */
+.jf-tree-item--highlight {
+  background: rgba(250, 204, 21, 0.15);
+  border-radius: 3px;
+}
+
+.jf-tree-item--dim {
+  opacity: 0.3;
+}
+
+/* ═══════════════════════════════════════════════════════
+   STATS BAR
+   ═══════════════════════════════════════════════════════ */
+
+.jf-stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 8px 0;
+  margin-top: 6px;
+  border-top: 1px solid var(--border, #e5e7eb);
+}
+
+.jf-stat-item {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.jf-stat-item i {
+  color: var(--accent);
+  font-size: 11px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   EMPTY STATE
+   ═══════════════════════════════════════════════════════ */
+
+.jf-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.jf-empty i {
+  font-size: 36px;
+  margin-bottom: 12px;
+  opacity: 0.4;
+  display: block;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 600px) {
+  .jf-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .jf-search-wrap {
+    width: 100%;
+  }
+
+  .jf-stats {
+    gap: 10px;
+  }
+
+  .jf-tree-children {
+    margin-left: 12px;
+  }
+
+  .jf-tree-path {
+    display: none;
+  }
+}
