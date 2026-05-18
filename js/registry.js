@@ -253,7 +253,7 @@ const TOOL_REGISTRY = [
     icon: 'fa-solid fa-code',
     category: 'utils',
     categoryLabel: 'Utilitarios Dev',
-    description: 'Formatear, minificar y validar JSON y HTML',
+    description: 'Formatear y minificar JSON, HTML, CSS y JavaScript con auto-detect',
     jsFile: 'js/tools/code-formatter.js',
     cssFile: 'css/tools/code-formatter.css',
     render: null

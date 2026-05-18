@@ -1,8 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════
-   Code Formatter — Tabs + JSON & HTML Syntax Highlighting
+   Code Formatter — Auto-detect + Syntax Highlighting
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Tabs ─── */
+/* ─── Tabs (shared with other tools) ─── */
 .cf-tabs {
   display: flex;
   gap: 4px;
@@ -57,6 +57,31 @@
   min-height: 20px;
 }
 
+/* ─── Language detection badge ─── */
+.cf-lang-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--cf-badge-color, var(--accent)) 12%, transparent);
+  color: var(--cf-badge-color, var(--accent));
+  border: 1px solid color-mix(in srgb, var(--cf-badge-color, var(--accent)) 25%, transparent);
+  transition: opacity 0.2s ease;
+}
+
+.cf-lang-badge i {
+  font-size: 12px;
+}
+
+.cf-lang-badge--hidden {
+  display: none !important;
+}
+
 
 /* ═══════════════════════════════════════════════════════════════
    JSON Syntax Colors
@@ -92,3 +117,45 @@
 [data-theme="dark"] .html-attr-value { color: #4ade80; }
 [data-theme="dark"] .html-comment { color: #64748b; }
 [data-theme="dark"] .html-doctype { color: #64748b; }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   CSS Syntax Colors
+   ═══════════════════════════════════════════════════════════════ */
+
+.css-selector { color: #2563eb; }
+.css-prop { color: #6366f1; }
+.css-value { color: #16a34a; }
+.css-comment { color: #94a3b8; font-style: italic; }
+.css-bracket { color: #64748b; }
+.css-atrule { color: #d97706; }
+.css-unit { color: #ea580c; }
+.css-color { color: #7c3aed; }
+
+[data-theme="dark"] .css-selector { color: #60a5fa; }
+[data-theme="dark"] .css-prop { color: #818cf8; }
+[data-theme="dark"] .css-value { color: #4ade80; }
+[data-theme="dark"] .css-comment { color: #64748b; }
+[data-theme="dark"] .css-bracket { color: #475569; }
+[data-theme="dark"] .css-atrule { color: #fbbf24; }
+[data-theme="dark"] .css-unit { color: #fb923c; }
+[data-theme="dark"] .css-color { color: #c084fc; }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   JavaScript Syntax Colors
+   ═══════════════════════════════════════════════════════════════ */
+
+.js-keyword { color: #d97706; }
+.js-function { color: #2563eb; }
+.js-string { color: #16a34a; }
+.js-number { color: #ea580c; }
+.js-boolean { color: #7c3aed; }
+.js-comment { color: #94a3b8; font-style: italic; }
+
+[data-theme="dark"] .js-keyword { color: #fbbf24; }
+[data-theme="dark"] .js-function { color: #60a5fa; }
+[data-theme="dark"] .js-string { color: #4ade80; }
+[data-theme="dark"] .js-number { color: #fb923c; }
+[data-theme="dark"] .js-boolean { color: #c084fc; }
+[data-theme="dark"] .js-comment { color: #64748b; }
