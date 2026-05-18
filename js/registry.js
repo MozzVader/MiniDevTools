@@ -234,6 +234,17 @@ const TOOL_REGISTRY = [
     cssFile: 'css/tools/boilerplate-generator.css',
     render: null
   },
+  {
+    id: 'html-preview',
+    name: 'HTML Live Preview',
+    icon: 'fa-solid fa-eye',
+    category: 'text',
+    categoryLabel: 'Texto & Código',
+    description: 'Escribí HTML y ves el resultado en tiempo real con multiples viewports',
+    jsFile: 'js/tools/html-preview.js',
+    cssFile: 'css/tools/html-preview.css',
+    render: null
+  },
 
   // ─── UTILITARIOS DEV ───
   {
