@@ -355,10 +355,8 @@ window['render_qr-generator'] = function(container, toolMeta) {
     state.size = parseInt(sizeSelect.value);
 
     try {
-      /* EC level mapping: qrcode-generator uses 1=L, 0=M, 3=Q, 2=H */
-      const ecMap = { 'L': 1, 'M': 0, 'Q': 3, 'H': 2 };
       const typeNumber = 0; /* auto-detect */
-      const qr = qrcode(typeNumber, ecMap[state.ecLevel]);
+      const qr = qrcode(typeNumber, state.ecLevel);
       qr.addData(text);
       qr.make();
 
@@ -490,8 +488,7 @@ window['render_qr-generator'] = function(container, toolMeta) {
     if (!qrGenerated) return;
     /* Re-generate QR data for SVG */
     const text = state.text;
-    const ecMap = { 'L': 1, 'M': 0, 'Q': 3, 'H': 2 };
-    const qr = qrcode(0, ecMap[state.ecLevel]);
+    const qr = qrcode(0, state.ecLevel);
     qr.addData(text);
     qr.make();
     const moduleCount = qr.getModuleCount();
