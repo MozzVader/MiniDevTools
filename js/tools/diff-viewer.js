@@ -77,6 +77,10 @@ window['render_diff-viewer'] = function(container, toolMeta) {
 
           <!-- ═══ Stats ═══ -->
           <div class="dv-stats dv-stats--hidden" id="dv-stats">
+            <div class="dv-stat dv-stat--modified">
+              <i class="fa-solid fa-pen"></i>
+              <strong id="dv-modified">0</strong> modificadas
+            </div>
             <div class="dv-stat dv-stat--added">
               <i class="fa-solid fa-plus"></i>
               <strong id="dv-added">0</strong> agregadas
@@ -136,6 +140,7 @@ window['render_diff-viewer'] = function(container, toolMeta) {
   const resultEl = document.getElementById('dv-result');
   const emptyEl = document.getElementById('dv-empty');
   const tbody = document.getElementById('dv-tbody');
+  const modifiedEl = document.getElementById('dv-modified');
   const addedEl = document.getElementById('dv-added');
   const removedEl = document.getElementById('dv-removed');
   const unchangedEl = document.getElementById('dv-unchanged');
@@ -223,10 +228,6 @@ window['render_diff-viewer'] = function(container, toolMeta) {
     const dp = lcsTable(a, b);
     const ops = backtrackDiff(dp, a, b);
 
-    /* Now fill in the actual text from original arrays */
-    let oi = 0; /* index into origLines */
-    let mi = 0; /* index into modLines */
-
     const diffLines = [];
     for (const op of ops) {
       if (op.type === 'equal') {
@@ -253,7 +254,126 @@ window['render_diff-viewer'] = function(container, toolMeta) {
       }
     }
 
-    return diffLines;
+    return postProcessDiff(diffLines);
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     POST-PROCESS: Group removed+added pairs as "modified"
+     ═══════════════════════════════════════════════════════ */
+
+  function postProcessDiff(diffLines) {
+    const result = [];
+    let i = 0;
+
+    while (i < diffLines.length) {
+      /* Check for a run of consecutive removed followed by consecutive added */
+      if (diffLines[i].type === 'removed') {
+        /* Collect consecutive removed */
+        const removedGroup = [];
+        while (i < diffLines.length && diffLines[i].type === 'removed') {
+          removedGroup.push(diffLines[i]);
+          i++;
+        }
+
+        /* Collect consecutive added that follow */
+        const addedGroup = [];
+        while (i < diffLines.length && diffLines[i].type === 'added') {
+          addedGroup.push(diffLines[i]);
+          i++;
+        }
+
+        /* Pair them up: each removed line pairs with an added line → "modified" */
+        const pairCount = Math.min(removedGroup.length, addedGroup.length);
+
+        for (let p = 0; p < pairCount; p++) {
+          result.push({
+            type: 'modified',
+            origNum: removedGroup[p].origNum,
+            modNum: addedGroup[p].modNum,
+            oldText: removedGroup[p].text,
+            newText: addedGroup[p].text,
+          });
+        }
+
+        /* Unpaired removed lines stay as removed */
+        for (let p = pairCount; p < removedGroup.length; p++) {
+          result.push(removedGroup[p]);
+        }
+
+        /* Unpaired added lines stay as added */
+        for (let p = pairCount; p < addedGroup.length; p++) {
+          result.push(addedGroup[p]);
+        }
+      } else {
+        result.push(diffLines[i]);
+        i++;
+      }
+    }
+
+    return result;
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     WORD-LEVEL DIFF within a modified line
+     ═══════════════════════════════════════════════════════ */
+
+  function wordDiff(oldText, newText) {
+    /* Split by words (keeping spaces/sep as tokens) */
+    const oldWords = oldText.split(/(\s+)/);
+    const newWords = newText.split(/(\s+)/);
+
+    const m = oldWords.length;
+    const n = newWords.length;
+
+    /* Build LCS table for words */
+    const dp = [];
+    for (let i = 0; i <= m; i++) {
+      dp[i] = new Array(n + 1).fill(0);
+    }
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        if (oldWords[i - 1] === newWords[j - 1]) {
+          dp[i][j] = dp[i - 1][j - 1] + 1;
+        } else {
+          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        }
+      }
+    }
+
+    /* Backtrack to get word-level operations */
+    const fragments = [];
+    let wi = m, wj = n;
+
+    while (wi > 0 || wj > 0) {
+      if (wi > 0 && wj > 0 && oldWords[wi - 1] === newWords[wj - 1]) {
+        fragments.push({ type: 'equal', text: oldWords[wi - 1] });
+        wi--;
+        wj--;
+      } else if (wj > 0 && (wi === 0 || dp[wi][wj - 1] >= dp[wi - 1][wj])) {
+        fragments.push({ type: 'added', text: newWords[wj - 1] });
+        wj--;
+      } else {
+        fragments.push({ type: 'removed', text: oldWords[wi - 1] });
+        wi--;
+      }
+    }
+
+    fragments.reverse();
+
+    /* Render HTML: equal = normal, removed = red strikethrough, added = green */
+    let html = '';
+    for (const frag of fragments) {
+      const escaped = escapeHtml(frag.text);
+      if (frag.type === 'equal') {
+        html += escaped;
+      } else if (frag.type === 'removed') {
+        html += `<span class="dv-word--removed">${escaped}</span>`;
+      } else {
+        html += `<span class="dv-word--added">${escaped}</span>`;
+      }
+    }
+
+    return html;
   }
 
   /* ═══════════════════════════════════════════════════════
@@ -266,7 +386,7 @@ window['render_diff-viewer'] = function(container, toolMeta) {
     lastDiffLines = diffLines;
     tbody.innerHTML = '';
 
-    let added = 0, removed = 0, unchanged = 0;
+    let modified = 0, added = 0, removed = 0, unchanged = 0;
 
     for (const line of diffLines) {
       const tr = document.createElement('tr');
@@ -283,19 +403,20 @@ window['render_diff-viewer'] = function(container, toolMeta) {
       /* Marker + content */
       const tdContent = document.createElement('td');
 
-      let marker = '';
-      if (line.type === 'removed') {
-        marker = '<span class="dv-marker dv-marker--removed">-</span> ';
+      if (line.type === 'modified') {
+        /* Modified line: show word-level diff */
+        tdContent.innerHTML = '<span class="dv-marker dv-marker--modified">~</span> ' + wordDiff(line.oldText, line.newText);
+        modified++;
+      } else if (line.type === 'removed') {
+        tdContent.innerHTML = '<span class="dv-marker dv-marker--removed">-</span> ' + escapeHtml(line.text);
         removed++;
       } else if (line.type === 'added') {
-        marker = '<span class="dv-marker dv-marker--added">+</span> ';
+        tdContent.innerHTML = '<span class="dv-marker dv-marker--added">+</span> ' + escapeHtml(line.text);
         added++;
       } else {
-        marker = '<span class="dv-marker dv-marker--equal"> </span> ';
+        tdContent.innerHTML = '<span class="dv-marker dv-marker--equal"> </span> ' + escapeHtml(line.text);
         unchanged++;
       }
-
-      tdContent.innerHTML = marker + escapeHtml(line.text);
 
       tr.appendChild(tdOrigNum);
       tr.appendChild(tdModNum);
@@ -304,11 +425,12 @@ window['render_diff-viewer'] = function(container, toolMeta) {
     }
 
     /* Update stats */
+    modifiedEl.textContent = modified;
     addedEl.textContent = added;
     removedEl.textContent = removed;
     unchangedEl.textContent = unchanged;
 
-    const total = added + removed;
+    const total = modified + added + removed;
     if (total === 0) {
       summaryEl.textContent = 'Los textos son idénticos';
       summaryEl.style.color = '#16a34a';
@@ -368,7 +490,8 @@ window['render_diff-viewer'] = function(container, toolMeta) {
     if (lastDiffLines.length === 0) return;
     let text = '';
     for (const line of lastDiffLines) {
-      if (line.type === 'removed') text += '- ' + line.text + '\n';
+      if (line.type === 'modified') text += '~ ' + line.oldText + '\n+ ' + line.newText + '\n';
+      else if (line.type === 'removed') text += '- ' + line.text + '\n';
       else if (line.type === 'added') text += '+ ' + line.text + '\n';
       else text += '  ' + line.text + '\n';
     }
