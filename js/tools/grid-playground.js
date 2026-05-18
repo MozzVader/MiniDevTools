@@ -322,10 +322,13 @@ window['render_grid-playground'] = function(container, toolMeta) {
      ═══════════════════════════════════════════════════════ */
 
   function updateCode() {
+    const rowsHasFr = state.templateRows && state.templateRows.includes('fr');
+
     let css = '.container {\n';
     css += '  display: grid;\n';
-    css += `  grid-template-columns: ${state.templateCols};\n`;
-    if (state.templateRows !== 'auto') css += `  grid-template-rows: ${state.templateRows};\n`;
+    if (state.templateCols) css += `  grid-template-columns: ${state.templateCols};\n`;
+    if (state.templateRows && state.templateRows !== 'auto') css += `  grid-template-rows: ${state.templateRows};\n`;
+    if (rowsHasFr) css += '  min-height: 100vh;\n';
     if (state.gap > 0) css += `  gap: ${state.gap}px;\n`;
     if (state.justifyItems !== 'stretch') css += `  justify-items: ${state.justifyItems};\n`;
     if (state.alignItems !== 'stretch') css += `  align-items: ${state.alignItems};\n`;
