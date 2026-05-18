@@ -211,8 +211,16 @@ ${raw}
   function setViewport(key) {
     state.viewport = key;
     const vp = viewports[key];
-    iframeWrap.style.maxWidth = vp.width;
-    iframeWrap.style.margin = (vp.width === '100%') ? '0' : '0 auto';
+
+    if (key === 'desktop') {
+      iframeWrap.style.maxWidth = '100%';
+      iframeWrap.style.width = '100%';
+      iframeWrap.style.margin = '0';
+    } else {
+      iframeWrap.style.width = vp.width;
+      iframeWrap.style.maxWidth = '100%';
+      iframeWrap.style.margin = '0 auto';
+    }
 
     /* Update active button */
     container.querySelectorAll('.hp-vp-btn').forEach(btn => {

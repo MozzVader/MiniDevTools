@@ -120,6 +120,8 @@
   flex-direction: column;
   height: 100%;
   background: #fff;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .hp-preview-toolbar {
@@ -166,15 +168,19 @@
 
 .hp-iframe-wrap {
   flex: 1;
-  transition: max-width 0.3s ease;
-  overflow: hidden;
+  width: 100%;
+  transition: max-width 0.3s ease, width 0.3s ease;
+  overflow: auto;
+  margin: 0;
 }
 
 .hp-iframe {
   width: 100%;
+  min-width: 375px;
   height: 100%;
   border: none;
   background: #fff;
+  display: block;
 }
 
 /* ─── Layout Bar ─── */
