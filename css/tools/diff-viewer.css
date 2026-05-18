@@ -1,0 +1,447 @@
+/* ═══════════════════════════════════════════════════════════════
+   Diff Viewer — Side-by-side text comparison
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.dv-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ─── Inputs Row ─── */
+.dv-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.dv-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dv-input-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dv-input-label span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dv-input-label .dv-line-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+.dv-textarea {
+  width: 100%;
+  min-height: 180px;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  line-height: 1.6;
+  background: var(--bg-base-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  outline: none;
+  resize: vertical;
+  transition: border-color var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.dv-textarea:focus {
+  border-color: var(--accent);
+}
+
+.dv-textarea::placeholder {
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 12px;
+}
+
+/* ─── Options Bar ─── */
+.dv-options-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dv-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.dv-checkbox input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.dv-options-spacer {
+  flex: 1;
+}
+
+.dv-compare-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.dv-compare-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.dv-compare-btn:active {
+  transform: translateY(0);
+}
+
+.dv-clear-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.dv-clear-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+/* ─── Stats Bar ─── */
+.dv-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 14px;
+  background: var(--bg-base-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 12.5px;
+  flex-wrap: wrap;
+}
+
+.dv-stats--hidden {
+  display: none;
+}
+
+.dv-stat {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 500;
+}
+
+.dv-stat--added {
+  color: #16a34a;
+}
+
+.dv-stat--removed {
+  color: #dc2626;
+}
+
+.dv-stat--unchanged {
+  color: var(--text-muted);
+}
+
+.dv-stat i {
+  font-size: 11px;
+}
+
+.dv-stat strong {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-weight: 700;
+}
+
+.dv-stats-spacer {
+  flex: 1;
+}
+
+.dv-stats-label {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ─── Diff Output ─── */
+.dv-result {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.dv-result--hidden {
+  display: none;
+}
+
+.dv-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.dv-empty i {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.3;
+}
+
+/* ─── Diff Table ─── */
+.dv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.dv-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--text-muted);
+  background: var(--bg-base-secondary);
+  border-bottom: 2px solid var(--border);
+  text-align: left;
+}
+
+.dv-table th:first-child,
+.dv-table th:nth-child(2) {
+  text-align: center;
+  width: 48px;
+}
+
+.dv-table td {
+  padding: 1px 10px;
+  white-space: pre;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+}
+
+.dv-table td:first-child,
+.dv-table td:nth-child(2) {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 11px;
+  width: 48px;
+  user-select: none;
+  background: var(--bg-base-secondary);
+  border-right: 1px solid var(--border);
+}
+
+.dv-table td:nth-child(2) {
+  border-right: none;
+}
+
+.dv-table td:last-child {
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+/* ─── Diff Line Types ─── */
+
+/* Equal / unchanged */
+.dv-line-equal td {
+  background: transparent;
+}
+
+/* Removed */
+.dv-line-removed td {
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.dv-line-removed td:first-child,
+.dv-line-removed td:nth-child(2) {
+  background: rgba(220, 38, 38, 0.12);
+  color: #dc2626;
+}
+
+.dv-line-removed td:last-child {
+  color: #dc2626;
+}
+
+[data-theme="dark"] .dv-line-removed td {
+  background: rgba(220, 38, 38, 0.12);
+}
+
+[data-theme="dark"] .dv-line-removed td:first-child,
+[data-theme="dark"] .dv-line-removed td:nth-child(2) {
+  background: rgba(220, 38, 38, 0.18);
+}
+
+/* Added */
+.dv-line-added td {
+  background: rgba(22, 163, 74, 0.08);
+}
+
+.dv-line-added td:first-child,
+.dv-line-added td:nth-child(2) {
+  background: rgba(22, 163, 74, 0.12);
+  color: #16a34a;
+}
+
+.dv-line-added td:last-child {
+  color: #16a34a;
+}
+
+[data-theme="dark"] .dv-line-added td {
+  background: rgba(22, 163, 74, 0.12);
+}
+
+[data-theme="dark"] .dv-line-added td:first-child,
+[data-theme="dark"] .dv-line-added td:nth-child(2) {
+  background: rgba(22, 163, 74, 0.18);
+}
+
+/* Diff marker column */
+.dv-marker {
+  font-weight: 700;
+  min-width: 16px;
+  display: inline-block;
+}
+
+.dv-marker--removed {
+  color: #dc2626;
+}
+
+.dv-marker--added {
+  color: #16a34a;
+}
+
+.dv-marker--equal {
+  color: transparent;
+}
+
+/* ─── Diff Content Scroll ─── */
+.dv-scroll {
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.dv-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dv-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dv-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+/* ─── Copy Diff ─── */
+.dv-copy-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 0 0;
+}
+
+.dv-copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.dv-copy-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .dv-inputs {
+    grid-template-columns: 1fr;
+  }
+
+  .dv-options-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dv-options-spacer {
+    display: none;
+  }
+
+  .dv-compare-btn,
+  .dv-clear-btn {
+    justify-content: center;
+  }
+
+  .dv-table {
+    font-size: 11.5px;
+  }
+
+  .dv-table td:first-child,
+  .dv-table td:nth-child(2) {
+    width: 36px;
+  }
+}

@@ -290,6 +290,17 @@ const TOOL_REGISTRY = [
     jsFile: 'js/tools/uuid-generator.js',
     cssFile: null,
     render: null
+  },
+  {
+    id: 'diff-viewer',
+    name: 'Diff Viewer',
+    icon: 'fa-solid fa-code-compare',
+    category: 'utils',
+    categoryLabel: 'Utilitarios Dev',
+    description: 'Comparar textos y resaltar diferencias',
+    jsFile: 'js/tools/diff-viewer.js',
+    cssFile: 'css/tools/diff-viewer.css',
+    render: null
   }
 ];
 
