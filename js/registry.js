@@ -122,6 +122,17 @@ const TOOL_REGISTRY = [
     render: null
   },
   {
+    id: 'grid-playground',
+    name: 'Grid Playground',
+    icon: 'fa-solid fa-border-all',
+    category: 'css',
+    categoryLabel: 'CSS & Diseño',
+    description: 'Sandbox interactivo para CSS Grid',
+    jsFile: 'js/tools/grid-playground.js',
+    cssFile: 'css/tools/grid-playground.css',
+    render: null
+  },
+  {
     id: 'flexbox-playground',
     name: 'Flexbox Playground',
     icon: 'fa-solid fa-table-cells-large',
