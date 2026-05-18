@@ -79,7 +79,7 @@ window['render_diff-viewer'] = function(container, toolMeta) {
           <div class="dv-stats dv-stats--hidden" id="dv-stats">
             <div class="dv-stat dv-stat--modified">
               <i class="fa-solid fa-pen"></i>
-              <strong id="dv-modified">0</strong> modificadas
+              <strong id="dv-stat-modified">0</strong> modificadas
             </div>
             <div class="dv-stat dv-stat--added">
               <i class="fa-solid fa-plus"></i>
@@ -140,7 +140,7 @@ window['render_diff-viewer'] = function(container, toolMeta) {
   const resultEl = document.getElementById('dv-result');
   const emptyEl = document.getElementById('dv-empty');
   const tbody = document.getElementById('dv-tbody');
-  const modifiedEl = document.getElementById('dv-modified');
+  const modifiedEl = document.getElementById('dv-stat-modified');
   const addedEl = document.getElementById('dv-added');
   const removedEl = document.getElementById('dv-removed');
   const unchangedEl = document.getElementById('dv-unchanged');
