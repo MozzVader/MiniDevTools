@@ -15,7 +15,7 @@ window['render_keyboard-viewer'] = function(container, toolMeta) {
   /* ─── State ─── */
   const state = {
     history: [],
-    maxHistory: 50,
+    maxHistory: 10,
     listening: false,
     showKeyCode: true,
   };
