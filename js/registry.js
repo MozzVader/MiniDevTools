@@ -323,6 +323,17 @@ const TOOL_REGISTRY = [
     jsFile: 'js/tools/diff-viewer.js',
     cssFile: 'css/tools/diff-viewer.css',
     render: null
+  },
+  {
+    id: 'keyboard-viewer',
+    name: 'Keyboard Event Viewer',
+    icon: 'fa-solid fa-keyboard',
+    category: 'utils',
+    categoryLabel: 'Utilitarios Dev',
+    description: 'Inspeccionar event.key, event.code y keyCode de cada tecla',
+    jsFile: 'js/tools/keyboard-viewer.js',
+    cssFile: 'css/tools/keyboard-viewer.css',
+    render: null
   }
 ];
 

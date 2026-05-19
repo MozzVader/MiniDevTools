@@ -1,0 +1,291 @@
+/* ═══════════════════════════════════════════════════════════════
+   Keyboard Event Viewer
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.kv-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ─── Focus Area ─── */
+.kv-focus-area {
+  position: relative;
+  border: 2px dashed var(--border, #d1d5db);
+  border-radius: var(--radius-md, 12px);
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  outline: none;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.kv-focus-area:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 3%, transparent);
+}
+
+.kv-focus-area--active {
+  border-style: solid;
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 5%, var(--bg-base-secondary, #f9fafb));
+}
+
+/* ─── Focus Overlay ─── */
+.kv-focus-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+}
+
+.kv-focus-overlay i {
+  font-size: 32px;
+  opacity: 0.4;
+}
+
+.kv-focus-overlay p {
+  font-size: 14px;
+}
+
+/* ─── Big Key Display ─── */
+.kv-big-key {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.kv-big-key__visual {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  height: 60px;
+  padding: 8px 20px;
+  background: var(--bg-base, #fff);
+  border: 2px solid var(--border, #d1d5db);
+  border-bottom: 4px solid var(--border, #d1d5db);
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  transition: all 0.15s ease;
+}
+
+.kv-big-key__visual--single {
+  min-width: 80px;
+  font-size: 32px;
+  text-transform: uppercase;
+}
+
+.kv-big-key__visual--pulse {
+  transform: scale(1.08);
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.kv-big-key__friendly {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ─── Properties Grid ─── */
+.kv-props {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 440px;
+}
+
+.kv-props-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kv-prop-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  transition: background 0.1s ease;
+}
+
+.kv-prop-row:hover {
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
+
+.kv-prop-label {
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.kv-prop-value {
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+  text-align: right;
+  word-break: break-all;
+}
+
+.kv-prop-value:hover {
+  text-decoration: underline;
+}
+
+/* ─── Modifiers ─── */
+.kv-modifiers {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.kv-mod {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  background: var(--bg-base-secondary, #f3f4f6);
+  border: 1px solid var(--border, #e5e7eb);
+  color: var(--text-muted);
+  transition: all 0.1s ease;
+  user-select: none;
+  min-width: 60px;
+}
+
+.kv-mod--active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 35%, transparent);
+  transform: translateY(1px);
+}
+
+/* ─── Toolbar ─── */
+.kv-toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.kv-toolbar-right {
+  margin-left: auto;
+}
+
+.kv-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.kv-checkbox input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+/* ─── History ─── */
+.kv-history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kv-history {
+  max-height: 250px;
+  min-height: 60px;
+  padding: 8px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: var(--radius-md, 8px);
+  background: var(--bg-base-secondary, #f9fafb);
+}
+
+.kv-history-empty {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 20px;
+  opacity: 0.6;
+}
+
+.kv-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  transition: background 0.1s ease;
+}
+
+.kv-history-item:hover {
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
+
+.kv-history-item + .kv-history-item {
+  border-top: 1px solid color-mix(in srgb, var(--border, #e5e7eb) 50%, transparent);
+}
+
+.kv-history-key {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  white-space: nowrap;
+}
+
+.kv-history-detail {
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 600px) {
+  .kv-prop-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 6px 8px;
+  }
+
+  .kv-prop-value {
+    text-align: left;
+  }
+
+  .kv-history-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .kv-mod {
+    min-width: 48px;
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+}
