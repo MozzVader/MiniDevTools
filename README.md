@@ -4,24 +4,23 @@
 
 ![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey?style=flat-square)
 ![Offline](https://img.shields.io/badge/Funciona-Offline-brightgreen?style=flat-square)
-![No Dependencies](https://img.shields.io/badge/Dependencias-0-blue?style=flat-square)
 ![HTML/CSS/JS](https://img.shields.io/badge/Tech-HTML%20%7C%20CSS%20%7C%20JS-orange?style=flat-square)
 
 ---
 
 ## ✨ Características
 
-- **100% offline** — No requiere servidor ni API externa. Carga una vez, funciona siempre.
+- **100% offline** — Carga una vez, funciona siempre. Ideal para cuando no tenés internet.
 - **Lazy loading** — Cada herramienta se carga solo cuando la necesitás.
 - **Tema claro/oscuro** — Cambiá con un click. Tu elección se guarda automáticamente.
-- **Persistencia** — Las preferencias de cada herramienta se guardan en `localStorage`.
+- **Persistencia** — Las preferencias y datos de cada herramienta se guardan en `localStorage`.
 - **Buscador** — Encontrá cualquier herramienta al instante desde el sidebar.
 - **Responsive** — Funciona en desktop, tablet y mobile.
 - **Sin frameworks** — Vanilla JS puro. Sin React, sin Angular, sin bundler.
 
 ---
 
-## 🧰 Herramientas
+## 🧰 Herramientas (29)
 
 ### 🖼️ Imágenes
 | Herramienta | Descripción |
@@ -32,6 +31,7 @@
 | **Marco macOS** | Agregar marco estilo ventana macOS a imágenes |
 | **Favicon Generator** | Generar favicons en todos los tamaños |
 | **Placeholder Generator** | Generar placeholders con texto y colores |
+| **QR Generator** | Generar códigos QR con logo personalizado |
 
 ### 🎨 CSS & Diseño
 | Herramienta | Descripción |
@@ -40,7 +40,8 @@
 | **Border Radius** | Crear bordes redondeados personalizados |
 | **Gradient Generator** | Gradientes CSS con preview y código copiable |
 | **Color Palette** | Generar paletas de colores exportables |
-| **Flexbox Playground** | Visualizador interactivo de flexbox |
+| **Grid Playground** | Sandbox interactivo para CSS Grid con presets |
+| **Flexbox Playground** | Visualizador interactivo de flexbox con presets |
 | **Image Color Picker** | Extraer colores de una imagen |
 
 ### 📝 Texto & Código
@@ -52,15 +53,19 @@
 | **Character Counter** | Contar caracteres, palabras, oraciones |
 | **Text Case Converter** | Convertir entre mayúsculas, camelCase, snake_case... |
 | **Boilerplate Generator** | Templates para HTML, React, Vue, Express y más |
+| **HTML Live Preview** | Escribí HTML y ves el resultado en tiempo real con múltiples viewports |
 
 ### ⚡ Utilitarios Dev
 | Herramienta | Descripción |
 |---|---|
-| **Code Formatter** | Formatear, minificar y validar JSON y HTML |
+| **Code Formatter** | Formatear y minificar JSON, HTML, CSS y JavaScript con auto-detect |
+| **JSON Formatter & Viewer** | Formatear, validar y explorar JSON con tree view interactivo |
 | **Base64 Encode/Decode** | Codificar y decodificar en base64 |
 | **URL Encode/Decode** | Encodear y decodear URLs |
 | **Timestamp Converter** | Convertir entre Unix timestamp y fecha legible |
 | **UUID Generator** | Generar UUIDs v4 |
+| **Diff Viewer** | Comparar textos y resaltar diferencias con word-level diff |
+| **Keyboard Event Viewer** | Inspeccionar event.key, event.code y keyCode de cada tecla |
 
 ---
 
@@ -92,9 +97,6 @@ MiniDevTools/
 ├── css/
 │   ├── global.css              # Variables de tema, layout, componentes
 │   └── tools/                  # CSS por herramienta
-│       ├── code-formatter.css
-│       ├── boilerplate-generator.css
-│       └── mac-frame.css
 ├── js/
 │   ├── registry.js             # Registro centralizado de herramientas
 │   ├── app.js                  # Router + lazy loading
@@ -102,10 +104,6 @@ MiniDevTools/
 │   ├── theme.js                # Theme toggle (claro/oscuro)
 │   ├── storage.js              # ToolStorage (localStorage por herramienta)
 │   └── tools/                  # Una carpeta por herramienta
-│       ├── uuid-generator.js
-│       ├── code-formatter.js
-│       ├── mac-frame.js
-│       └── boilerplate-generator.js
 └── README.md
 ```
 
@@ -113,7 +111,7 @@ MiniDevTools/
 
 ## 🔧 Cómo agregar una herramienta
 
-1. Crear `js/tools/tu-herramienta.js` con una función `render_tu_herramienta(container, toolMeta)`
+1. Crear `js/tools/tu-herramienta.js` con una función `window['render_tu-herramienta'] = function(container, toolMeta) { ... }`
 2. Crear `css/tools/tu-herramienta.css` (opcional)
 3. Registrarla en `TOOL_REGISTRY` en `js/registry.js`
 4. Listo — el sidebar, el buscador y el lazy loading la detectan automáticamente
