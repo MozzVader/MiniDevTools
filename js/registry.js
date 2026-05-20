@@ -245,6 +245,17 @@ const TOOL_REGISTRY = [
     cssFile: 'css/tools/html-preview.css',
     render: null
   },
+  {
+    id: 'excel-to-markdown',
+    name: 'Excel to Markdown',
+    icon: 'fa-solid fa-table',
+    category: 'text',
+    categoryLabel: 'Texto & Código',
+    description: 'Convertir tablas de Excel o CSV a tablas Markdown',
+    jsFile: 'js/tools/excel-to-markdown.js',
+    cssFile: 'css/tools/excel-to-markdown.css',
+    render: null
+  },
 
   // ─── UTILITARIOS DEV ───
   {

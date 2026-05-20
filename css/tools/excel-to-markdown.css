@@ -1,0 +1,195 @@
+/* ═══════════════════════════════════════════════════════════════
+   Excel to Markdown Converter
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Layout ─── */
+.em-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ─── Input Section ─── */
+.em-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.em-input-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.em-upload-label {
+  cursor: pointer;
+}
+
+.em-textarea {
+  width: 100%;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 160px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.em-textarea--dragover {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.em-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0 0;
+}
+
+.em-hint i {
+  color: var(--accent);
+  font-size: 13px;
+}
+
+/* ─── Options ─── */
+.em-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--bg-base-secondary, #f9fafb);
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--border, #e5e7eb);
+}
+
+.em-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.em-checkbox input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.em-checkbox code {
+  font-size: 11px;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  color: var(--accent);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.em-separator {
+  width: 1px;
+  height: 20px;
+  background: var(--border, #d1d5db);
+}
+
+.em-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.em-select {
+  font-size: 12px;
+  padding: 4px 8px !important;
+}
+
+.em-align-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+/* ─── Output Section ─── */
+.em-output-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.em-output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.em-output {
+  min-height: 160px;
+  max-height: 400px;
+  overflow: auto;
+  background: var(--bg-base-secondary, #f9fafb);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: var(--radius-md, 8px);
+  padding: 12px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--text-primary);
+  white-space: pre;
+  tab-size: 2;
+  margin: 0;
+}
+
+.em-output-placeholder {
+  color: var(--text-muted);
+  opacity: 0.5;
+  font-style: italic;
+  font-family: inherit;
+}
+
+/* Markdown highlighting */
+.em-md-header {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.em-md-separator {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+/* ─── Stats ─── */
+.em-stats {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.em-stats span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.em-stats i {
+  color: var(--accent);
+  font-size: 11px;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .em-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .em-align-group {
+    margin-left: 0;
+  }
+}
