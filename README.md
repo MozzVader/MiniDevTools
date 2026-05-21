@@ -1,6 +1,6 @@
 # 🛠️ MiniDevTools
 
-> Tu compendio de mini-herramientas para el día a día. Todo funciona offline, sin dependencias externas.
+> Tu compendio de mini-herramientas para el día a día. Todo funciona offline.
 
 ![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey?style=flat-square)
 ![Offline](https://img.shields.io/badge/Funciona-Offline-brightgreen?style=flat-square)
@@ -20,7 +20,7 @@
 
 ---
 
-## 🧰 Herramientas (29)
+## 🧰 Herramientas (30)
 
 ### 🖼️ Imágenes
 | Herramienta | Descripción |
@@ -54,6 +54,7 @@
 | **Text Case Converter** | Convertir entre mayúsculas, camelCase, snake_case... |
 | **Boilerplate Generator** | Templates para HTML, React, Vue, Express y más |
 | **HTML Live Preview** | Escribí HTML y ves el resultado en tiempo real con múltiples viewports |
+| **Excel to Markdown** | Convertir tablas de Excel o CSV a tablas Markdown |
 
 ### ⚡ Utilitarios Dev
 | Herramienta | Descripción |
