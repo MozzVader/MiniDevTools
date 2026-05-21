@@ -44,8 +44,8 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
 
           <!-- ═══ Input Section ═══ -->
           <div class="em-input-section">
-            <div class="em-input-header">
-              <label class="label">Datos de entrada</label>
+            <div class="em-section-header">
+              <label class="label" style="margin-bottom:0;">Datos de entrada</label>
               <div style="display:flex; gap:6px;">
                 <label class="btn btn--ghost btn--sm em-upload-label" title="Subir CSV o TSV">
                   <i class="fa-solid fa-file-upload"></i> Subir CSV/TSV
@@ -55,12 +55,9 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
                 <button class="btn btn--ghost btn--sm" id="cf-clear">Limpiar</button>
               </div>
             </div>
-            <textarea class="input em-textarea" id="em-input" rows="8"
-              placeholder="Copiá desde Excel/Google Sheets y pegá acá...&#10;&#10;o escribí datos separados por tabuladores/comas.&#10;&#10;Nombre\tEdad\tCiudad&#10;Ana\t30\tBuenos Aires&#10;Juan\t25\tCórdoba"
+            <textarea class="input em-textarea" id="em-input" rows="6"
+              placeholder="Copiá desde Excel/Google Sheets y pegá acá...&#10;&#10;o escribí datos separados por tabuladores/comas."
               spellcheck="false">${escapeHtml(state.input)}</textarea>
-            <div class="em-hint" id="em-hint">
-              <i class="fa-solid fa-lightbulb"></i> Tip: Seleccioná celdas en Excel y <strong>Ctrl+C</strong>, después pegá acá con <strong>Ctrl+V</strong>
-            </div>
 
             <!-- ═══ Options ═══ -->
             <div class="em-options">
@@ -70,11 +67,11 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
               </label>
               <label class="em-checkbox">
                 <input type="checkbox" id="em-outer-pipes" ${state.outerPipes ? 'checked' : ''}>
-                Outer pipes <code>|...|</code>
+                Outer pipes
               </label>
               <label class="em-checkbox">
                 <input type="checkbox" id="em-cell-padding" ${state.cellPadding ? 'checked' : ''}>
-                Cell padding <code>| value |</code>
+                Cell padding
               </label>
               <div class="em-separator"></div>
               <div class="em-align-group">
@@ -87,18 +84,22 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
                 </select>
               </div>
             </div>
+
+            <div class="em-hint">
+              <i class="fa-solid fa-lightbulb"></i> Seleccioná celdas en Excel y <strong>Ctrl+C</strong>, después pegá acá con <strong>Ctrl+V</strong>
+            </div>
           </div>
 
           <!-- ═══ Output Section ═══ -->
           <div class="em-output-section">
-            <div class="em-output-header">
-              <label class="label">Markdown</label>
-              <div style="display:flex; gap:6px;">
-                <button class="btn btn--primary btn--sm" id="em-copy" disabled>
+            <div class="em-section-header">
+              <label class="label" style="margin-bottom:0;">Markdown</label>
+              <div class="em-output-actions">
+                <button class="btn btn--primary btn--sm em-action-btn" id="em-copy" disabled>
                   <i class="fa-regular fa-copy"></i> Copiar
                 </button>
-                <button class="btn btn--secondary btn--sm" id="em-download" disabled>
-                  <i class="fa-solid fa-download"></i> .md
+                <button class="btn btn--primary btn--sm em-action-btn" id="em-download" disabled>
+                  <i class="fa-solid fa-download"></i> Descargar .md
                 </button>
               </div>
             </div>
@@ -221,7 +222,7 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
 
     const pipes = state.outerPipes;
     const pad = state.cellPadding;
-    const sep = pad ? ' | ' : '|';
+    const innerSep = pad ? ' | ' : '|';
 
     /* Determine column count */
     const colCount = Math.max(...rows.map(r => r.length));
@@ -237,7 +238,10 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
 
     for (const row of normalized) {
       const escaped = row.map(c => escapeMarkdownCell(c));
-      const line = pipes ? '|' + sep + escaped.join(sep) + sep + '|' : escaped.join(sep);
+      const joined = escaped.join(innerSep);
+      const line = pipes
+        ? (pad ? '| ' + joined + ' |' : '|' + joined + '|')
+        : joined;
       result += line + '\n';
       currentLine++;
 
@@ -253,8 +257,8 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
 
   function getAlignString(colCount) {
     const pad = state.cellPadding;
-    const sep = pad ? ' | ' : '|';
     const pipes = state.outerPipes;
+    const innerSep = pad ? ' | ' : '|';
 
     let align;
     if (state.align === 'auto') {
@@ -272,10 +276,11 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
       cols.push(align);
     }
 
+    const joined = cols.join(innerSep);
     if (pipes) {
-      return '|' + sep + cols.join(sep) + sep + '|';
+      return pad ? '| ' + joined + ' |' : '|' + joined + '|';
     }
-    return cols.join(sep);
+    return joined;
   }
 
   /* ═══════════════════════════════════════════════════════

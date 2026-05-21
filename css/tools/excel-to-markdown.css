@@ -2,24 +2,26 @@
    Excel to Markdown Converter
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Layout ─── */
+/* ─── Layout: vertical stack ─── */
 .em-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ─── Section headers ─── */
+.em-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 /* ─── Input Section ─── */
 .em-input-section {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-
-.em-input-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 10px;
 }
 
 .em-upload-label {
@@ -32,7 +34,7 @@
   font-size: 12.5px;
   line-height: 1.6;
   resize: vertical;
-  min-height: 160px;
+  min-height: 140px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -41,27 +43,13 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
-.em-hint {
-  font-size: 12px;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 0 0;
-}
-
-.em-hint i {
-  color: var(--accent);
-  font-size: 13px;
-}
-
 /* ─── Options ─── */
 .em-options {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
-  padding: 10px 12px;
+  padding: 10px 14px;
   background: var(--bg-base-secondary, #f9fafb);
   border-radius: var(--radius-md, 8px);
   border: 1px solid var(--border, #e5e7eb);
@@ -75,20 +63,12 @@
   color: var(--text-secondary);
   cursor: pointer;
   user-select: none;
+  white-space: nowrap;
 }
 
 .em-checkbox input[type="checkbox"] {
   cursor: pointer;
   accent-color: var(--accent);
-}
-
-.em-checkbox code {
-  font-size: 11px;
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
-  color: var(--accent);
-  padding: 1px 5px;
-  border-radius: 3px;
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
 .em-separator {
@@ -101,6 +81,7 @@
   font-size: 12px;
   color: var(--text-muted);
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .em-select {
@@ -112,7 +93,23 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-left: auto;
+}
+
+/* ─── Hint ─── */
+.em-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+.em-hint i {
+  color: var(--accent);
+  font-size: 13px;
+  margin-top: 2px;
+  flex-shrink: 0;
 }
 
 /* ─── Output Section ─── */
@@ -122,14 +119,17 @@
   gap: 8px;
 }
 
-.em-output-header {
+.em-output-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 8px;
+}
+
+.em-action-btn {
+  min-width: 0;
 }
 
 .em-output {
-  min-height: 160px;
+  min-height: 100px;
   max-height: 400px;
   overflow: auto;
   background: var(--bg-base-secondary, #f9fafb);
@@ -185,11 +185,22 @@
 
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
-  .em-layout {
-    grid-template-columns: 1fr;
-  }
-
   .em-align-group {
     margin-left: 0;
+  }
+
+  .em-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .em-section-header > div,
+  .em-output-actions {
+    width: 100%;
+  }
+
+  .em-output-actions .em-action-btn {
+    flex: 1;
   }
 }
