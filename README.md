@@ -20,7 +20,7 @@
 
 ---
 
-## 🧰 Herramientas (30)
+## 🧰 Herramientas (31)
 
 ### 🖼️ Imágenes
 | Herramienta | Descripción |
@@ -32,6 +32,7 @@
 | **Favicon Generator** | Generar favicons en todos los tamaños |
 | **Placeholder Generator** | Generar placeholders con texto y colores |
 | **QR Generator** | Generar códigos QR con logo personalizado |
+| **Image to Pixel Art** | Convertir imágenes a pixel art con paletas y ajustes |
 
 ### 🎨 CSS & Diseño
 | Herramienta | Descripción |

@@ -1,0 +1,230 @@
+/* ═══════════════════════════════════════════════════════════════
+   Image to Pixel Art — Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Upload Area ─── */
+.ipa-upload {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: 48px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  user-select: none;
+}
+
+.ipa-upload:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 3%, transparent);
+}
+
+.ipa-upload--dragover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  border-style: solid;
+}
+
+.ipa-upload__icon {
+  font-size: 40px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.ipa-upload__text {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.ipa-upload__hint {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ─── Workspace ─── */
+.ipa-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ─── Toolbar ─── */
+.ipa-toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ─── Controls Grid ─── */
+.ipa-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ipa-control-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ipa-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  min-width: 85px;
+}
+
+.ipa-range {
+  flex: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.ipa-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg-card);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.ipa-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.ipa-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg-card);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
+.ipa-range::-moz-range-track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  border: none;
+}
+
+.ipa-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  min-width: 28px;
+  text-align: right;
+}
+
+.ipa-select {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.ipa-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.ipa-checkbox input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+/* ─── Preview ─── */
+.ipa-preview-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  /* Checkerboard for transparency */
+  background-color: var(--bg-input);
+  background-image:
+    linear-gradient(45deg, color-mix(in srgb, var(--text-muted) 15%, transparent) 25%, transparent 25%),
+    linear-gradient(-45deg, color-mix(in srgb, var(--text-muted) 15%, transparent) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, color-mix(in srgb, var(--text-muted) 15%, transparent) 75%),
+    linear-gradient(-45deg, transparent 75%, color-mix(in srgb, var(--text-muted) 15%, transparent) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+}
+
+#ipa-preview {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+/* ─── Stats ─── */
+.ipa-stats {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 8px 0;
+}
+
+.ipa-stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.ipa-stats span i {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* ─── Actions ─── */
+.ipa-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 600px) {
+  .ipa-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .ipa-upload {
+    padding: 32px 16px;
+  }
+
+  .ipa-preview-wrap {
+    min-height: 120px;
+    padding: 8px;
+  }
+}

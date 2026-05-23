@@ -86,6 +86,17 @@ const TOOL_REGISTRY = [
     cssFile: 'css/tools/qr-generator.css',
     render: null
   },
+  {
+    id: 'image-to-pixelart',
+    name: 'Image to Pixel Art',
+    icon: 'fa-solid fa-border-all',
+    category: 'images',
+    categoryLabel: 'Imágenes',
+    description: 'Convertir imágenes a pixel art con paletas y ajustes',
+    jsFile: 'js/tools/image-to-pixelart.js',
+    cssFile: 'css/tools/image-to-pixelart.css',
+    render: null
+  },
 
   // ─── CSS & DISEÑO ───
   {
