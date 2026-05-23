@@ -4,6 +4,7 @@
    - Upload, drag & drop, or paste image
    - Pixel size slider (1-128)
    - Brightness, Contrast, Saturation sliders
+   - Color levels quantization (2-32 levels per channel)
    - Color palettes (PICO-8, Game Boy, C64, 1-Bit, CGA)
    - Real-time preview with pixelated rendering
    - Grid overlay (download only)
@@ -31,6 +32,7 @@ window['render_image-to-pixelart'] = function(container, toolMeta) {
     brightness: s ? s.brightness : 0,
     contrast:   s ? s.contrast   : 0,
     saturation: s ? s.saturation : 0,
+    colorLevels:s ? (s.colorLevels || 8) : 8,
     palette:    s ? s.palette    : 'none',
     showGrid:   s ? (s.showGrid || false) : false,
   };
@@ -46,6 +48,18 @@ window['render_image-to-pixelart'] = function(container, toolMeta) {
   /* ═══════════════════════════════════════════════════════
      RENDER UI
      ═══════════════════════════════════════════════════════ */
+
+  /* Build palette options with color swatches */
+  function buildPaletteSwatches(palette) {
+    if (!palette) return '';
+    const maxShow = 5;
+    const colors = palette.length <= maxShow ? palette : palette.slice(0, maxShow);
+    const dots = colors.map(c =>
+      `<span class="ipa-pal-dot" style="background:rgb(${c[0]},${c[1]},${c[2]})"></span>`
+    ).join('');
+    const more = palette.length > maxShow ? `<span class="ipa-pal-more">+${palette.length - maxShow}</span>` : '';
+    return `<span class="ipa-pal-swatches">${dots}${more}</span>`;
+  }
 
   const paletteOptions = Object.entries(PALETTES).map(([k, v]) =>
     `<option value="${k}"${state.palette === k ? ' selected' : ''}>${v.name}</option>`
@@ -103,8 +117,14 @@ window['render_image-to-pixelart'] = function(container, toolMeta) {
               <span class="ipa-value" id="ipa-st-val">${state.saturation}</span>
             </div>
             <div class="ipa-control-row">
+              <label class="ipa-label" for="ipa-levels">Niveles</label>
+              <input type="range" id="ipa-levels" class="ipa-range" min="2" max="32" value="${state.colorLevels}">
+              <span class="ipa-value" id="ipa-levels-val">${state.colorLevels}</span>
+            </div>
+            <div class="ipa-control-row">
               <label class="ipa-label" for="ipa-palette">Paleta</label>
               <select class="input ipa-select" id="ipa-palette">${paletteOptions}</select>
+              <span class="ipa-pal-preview" id="ipa-pal-preview"></span>
             </div>
             <div class="ipa-control-row">
               <label class="ipa-checkbox">
@@ -149,11 +169,14 @@ window['render_image-to-pixelart'] = function(container, toolMeta) {
   const brRange = document.getElementById('ipa-br');
   const ctRange = document.getElementById('ipa-ct');
   const stRange = document.getElementById('ipa-st');
+  const levelsRange = document.getElementById('ipa-levels');
   const psVal = document.getElementById('ipa-ps-val');
   const brVal = document.getElementById('ipa-br-val');
   const ctVal = document.getElementById('ipa-ct-val');
   const stVal = document.getElementById('ipa-st-val');
+  const levelsVal = document.getElementById('ipa-levels-val');
   const paletteSelect = document.getElementById('ipa-palette');
+  const palPreview = document.getElementById('ipa-pal-preview');
   const gridCb = document.getElementById('ipa-grid');
 
   const previewWrap = document.getElementById('ipa-preview-wrap');
@@ -318,9 +341,18 @@ window['render_image-to-pixelart'] = function(container, toolMeta) {
       if (pal) {
         const nc = findNearest(r, g, b, pal);
         r = nc[0]; g = nc[1]; b = nc[2];
+      } else {
+        /* Color quantization: reduce levels per channel */
+        const levels = Math.max(2, state.colorLevels);
+        const step = 255 / (levels - 1);
+        r = Math.round(Math.round(r / step) * step);
+        g = Math.round(Math.round(g / step) * step);
+        b = Math.round(Math.round(b / step) * step);
       }
 
-      d[i] = r; d[i + 1] = g; d[i + 2] = b;
+      d[i] = clamp(r, 0, 255);
+      d[i + 1] = clamp(g, 0, 255);
+      d[i + 2] = clamp(b, 0, 255);
     }
 
     procCtx.putImageData(imgData, 0, 0);
@@ -335,7 +367,7 @@ window['render_image-to-pixelart'] = function(container, toolMeta) {
       <span><i class="fa-solid fa-arrow-right"></i></span>
       <span><i class="fa-solid fa-th"></i> ${pixW} x ${pixH}</span>
       <span><i class="fa-solid fa-cube"></i> PS: ${ps}</span>
-      ${pal ? `<span><i class="fa-solid fa-palette"></i> ${palName}</span>` : ''}
+      ${pal ? `<span><i class="fa-solid fa-palette"></i> ${palName}</span>` : `<span><i class="fa-solid fa-layer-group"></i> ${state.colorLevels} niveles</span>`}
     `;
   }
 
@@ -510,12 +542,30 @@ window['render_image-to-pixelart'] = function(container, toolMeta) {
     saveState();
   });
 
-  /* ─ Palette ─ */
-  paletteSelect.addEventListener('change', () => {
-    state.palette = paletteSelect.value;
+  /* ─ Color Levels ─ */
+  levelsRange.addEventListener('input', () => {
+    state.colorLevels = parseInt(levelsRange.value);
+    levelsVal.textContent = state.colorLevels;
     debouncedProcess();
     saveState();
   });
+
+  /* ─ Palette ─ */
+  function updatePalettePreview() {
+    const pal = PALETTES[paletteSelect.value];
+    if (pal && pal.colors) {
+      palPreview.innerHTML = buildPaletteSwatches(pal.colors);
+    } else {
+      palPreview.innerHTML = '';
+    }
+  }
+  paletteSelect.addEventListener('change', () => {
+    state.palette = paletteSelect.value;
+    updatePalettePreview();
+    debouncedProcess();
+    saveState();
+  });
+  updatePalettePreview();
 
   /* ─ Grid ─ */
   gridCb.addEventListener('change', () => {
@@ -526,14 +576,16 @@ window['render_image-to-pixelart'] = function(container, toolMeta) {
   /* ─ Reset ─ */
   resetBtn.addEventListener('click', () => {
     state.pixelSize = 16; state.brightness = 0; state.contrast = 0;
-    state.saturation = 0; state.palette = 'none'; state.showGrid = false;
+    state.saturation = 0; state.colorLevels = 8; state.palette = 'none'; state.showGrid = false;
 
     psRange.value = 16; psVal.textContent = '16';
     brRange.value = 0; brVal.textContent = '0';
     ctRange.value = 0; ctVal.textContent = '0';
     stRange.value = 0; stVal.textContent = '0';
+    levelsRange.value = 8; levelsVal.textContent = '8';
     paletteSelect.value = 'none';
     gridCb.checked = false;
+    updatePalettePreview();
 
     debouncedProcess();
     saveState();

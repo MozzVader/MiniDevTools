@@ -137,6 +137,43 @@
   padding: 6px 10px;
   font-size: 13px;
   cursor: pointer;
+  min-width: 0;
+}
+
+/* ─── Palette Color Swatches ─── */
+.ipa-pal-preview {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: -6px;
+}
+
+.ipa-pal-swatches {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 6px;
+  background: var(--bg-input);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  height: 30px;
+}
+
+.ipa-pal-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.ipa-pal-more {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-left: 2px;
 }
 
 .ipa-checkbox {
