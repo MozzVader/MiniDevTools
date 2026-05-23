@@ -302,11 +302,10 @@ window['render_image-to-pixelart'] = function(container, toolMeta) {
     pixW = Math.max(1, Math.ceil(ow / ps));
     pixH = Math.max(1, Math.ceil(oh / ps));
 
-    /* 1. Draw original scaled down to pixel art size (smooth = averaging) */
+    /* 1. Draw original scaled down to pixel art size (nearest-neighbor = no blending) */
     procCanvas.width = pixW;
     procCanvas.height = pixH;
-    procCtx.imageSmoothingEnabled = true;
-    procCtx.imageSmoothingQuality = 'medium';
+    procCtx.imageSmoothingEnabled = false;
     procCtx.drawImage(originalImage, 0, 0, pixW, pixH);
 
     /* 2. Read pixels */
