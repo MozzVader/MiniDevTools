@@ -118,7 +118,6 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
   const inputArea = document.getElementById('em-input');
   const outputEl = document.getElementById('em-output');
   const statsEl = document.getElementById('em-stats');
-  const hintEl = document.getElementById('em-hint');
   const headerCb = document.getElementById('em-header');
   const outerPipesCb = document.getElementById('em-outer-pipes');
   const cellPaddingCb = document.getElementById('em-cell-padding');

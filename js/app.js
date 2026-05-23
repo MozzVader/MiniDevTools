@@ -217,7 +217,9 @@ const App = (() => {
       }
 
       const script = document.createElement('script');
-      script.src = src;
+      // Cache busting: evitar que el browser sirva una versión stale del JS
+      const separator = src.includes('?') ? '&' : '?';
+      script.src = `${src}${separator}v=${Date.now()}`;
       script.onload = () => {
         // Buscar la función render registrada globalmente
         if (typeof window[`render_${toolId}`] === 'function') {
