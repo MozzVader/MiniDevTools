@@ -27,14 +27,21 @@ window['render_image-to-pixelart'] = function(container, toolMeta) {
   /* ─── State ─── */
   const saved = ToolStorage.load('image-to-pixelart');
   const s = saved ? saved.state : null;
+
+  /* Migration: if saved state lacks colorLevels, discard old state */
+  if (s && !('colorLevels' in s)) {
+    ToolStorage.clear('image-to-pixelart');
+  }
+  const clean = ('colorLevels' in (s || {})) ? s : null;
+
   const state = {
-    pixelSize:  s ? s.pixelSize  : 16,
-    brightness: s ? s.brightness : 0,
-    contrast:   s ? s.contrast   : 0,
-    saturation: s ? s.saturation : 0,
-    colorLevels:s ? (s.colorLevels || 8) : 8,
-    palette:    s ? s.palette    : 'none',
-    showGrid:   s ? (s.showGrid || false) : false,
+    pixelSize:   clean?.pixelSize   ?? 16,
+    brightness:  clean?.brightness  ?? 0,
+    contrast:    clean?.contrast    ?? 0,
+    saturation:  clean?.saturation  ?? 0,
+    colorLevels: clean?.colorLevels ?? 8,
+    palette:     clean?.palette     ?? 'none',
+    showGrid:    clean?.showGrid    ?? false,
   };
 
   let originalImage = null;
