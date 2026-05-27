@@ -56,7 +56,7 @@
 | **Text Case Converter** | Convertir entre mayúsculas, camelCase, snake_case... |
 | **Boilerplate Generator** | Templates para HTML, React, Vue, Express y más |
 | **HTML Live Preview** | Escribí HTML y ves el resultado en tiempo real con múltiples viewports |
-| **Excel to Markdown** | Convertir tablas de Excel o CSV a tablas Markdown |
+| **Table Converter** | Convertir tablas entre Excel/CSV y Markdown en ambas direcciones |
 
 ### ⚡ Utilitarios Dev
 | Herramienta | Descripción |
