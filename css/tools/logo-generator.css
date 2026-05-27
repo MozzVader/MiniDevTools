@@ -1,0 +1,418 @@
+/* ═══════════════════════════════════════════════════════════════
+   Logo Generator — Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Main Layout ─── */
+.lg-layout-grid-main {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ─── Preview Panel ─── */
+.lg-preview-panel {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lg-canvas-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 320px;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  /* Checkerboard */
+  background-color: var(--bg-input);
+  background-image:
+    linear-gradient(45deg, color-mix(in srgb, var(--text-muted) 12%, transparent) 25%, transparent 25%),
+    linear-gradient(-45deg, color-mix(in srgb, var(--text-muted) 12%, transparent) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, color-mix(in srgb, var(--text-muted) 12%, transparent) 75%),
+    linear-gradient(-45deg, transparent 75%, color-mix(in srgb, var(--text-muted) 12%, transparent) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+}
+
+#lg-canvas {
+  display: block;
+  image-rendering: auto;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+}
+
+.lg-export-bar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.lg-export-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 2px;
+}
+
+.lg-png-btn {
+  font-size: 11px !important;
+  padding: 4px 8px !important;
+}
+
+/* ─── Controls Panel ─── */
+.lg-controls-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lg-section {
+  background: color-mix(in srgb, var(--bg-card) 80%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px;
+}
+
+.lg-section-title {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+/* ─── Presets ─── */
+.lg-presets-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.lg-preset-btn {
+  padding: 5px 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lg-preset-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-input));
+}
+
+/* ─── Palette Buttons ─── */
+.lg-palette-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.lg-pal-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lg-pal-btn:hover {
+  border-color: var(--accent);
+}
+
+.lg-pal-btn--active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.lg-pal-dots {
+  display: flex;
+  gap: 2px;
+}
+
+.lg-pal-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+}
+
+.lg-pal-name {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* ─── Color Inputs ─── */
+.lg-colors-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lg-color-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lg-color-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  min-width: 80px;
+}
+
+.lg-color-input {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.lg-color-input::-webkit-color-swatch-wrapper {
+  padding: 2px;
+}
+
+.lg-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
+
+.lg-color-input::-moz-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
+
+.lg-check-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ─── Shape Buttons ─── */
+.lg-shape-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.lg-shape-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 14px;
+}
+
+.lg-shape-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.lg-shape-btn--active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-input));
+  color: var(--accent);
+}
+
+/* ─── Layout Buttons ─── */
+.lg-layout-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.lg-layout-btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.lg-layout-btn i {
+  font-size: 12px;
+}
+
+.lg-layout-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.lg-layout-btn--active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-input));
+  color: var(--accent);
+}
+
+/* ─── Text Controls ─── */
+.lg-text-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.lg-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lg-slider-label {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  min-width: 58px;
+  white-space: nowrap;
+}
+
+/* ─── Icon Controls ─── */
+.lg-icon-controls {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+/* ─── Border Controls ─── */
+.lg-border-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ─── Icon Picker Modal ─── */
+.lg-icon-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lg-icon-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+
+.lg-icon-modal__content {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.lg-icon-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.lg-icon-modal__grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+
+.lg-icon-opt {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 16px;
+}
+
+.lg-icon-opt:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-input));
+}
+
+.lg-icon-opt--active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 18%, var(--bg-input));
+  color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 800px) {
+  .lg-layout-grid-main {
+    grid-template-columns: 1fr;
+  }
+
+  .lg-preview-panel {
+    position: static;
+  }
+
+  .lg-canvas-wrap {
+    min-height: 240px;
+    padding: 12px;
+  }
+
+  .lg-layout-btn {
+    min-width: 60px;
+    font-size: 10px;
+    padding: 5px 6px;
+  }
+}

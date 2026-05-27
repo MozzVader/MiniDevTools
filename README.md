@@ -20,7 +20,7 @@
 
 ---
 
-## 🧰 Herramientas (31)
+## 🧰 Herramientas (33)
 
 ### 🖼️ Imágenes
 | Herramienta | Descripción |
@@ -44,6 +44,7 @@
 | **Grid Playground** | Sandbox interactivo para CSS Grid con presets |
 | **Flexbox Playground** | Visualizador interactivo de flexbox con presets |
 | **Image Color Picker** | Extraer colores de una imagen |
+| **Logo Generator** | Crear logos simples con formas, texto, iconos y paletas |
 
 ### 📝 Texto & Código
 | Herramienta | Descripción |

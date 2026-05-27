@@ -356,6 +356,17 @@ const TOOL_REGISTRY = [
     jsFile: 'js/tools/keyboard-viewer.js',
     cssFile: 'css/tools/keyboard-viewer.css',
     render: null
+  },
+  {
+    id: 'logo-generator',
+    name: 'Logo Generator',
+    icon: 'fa-solid fa-wand-magic-sparkles',
+    category: 'css',
+    categoryLabel: 'CSS & Diseño',
+    description: 'Crear logos simples con formas, texto, iconos y paletas',
+    jsFile: 'js/tools/logo-generator.js',
+    cssFile: 'css/tools/logo-generator.css',
+    render: null
   }
 ];
 
