@@ -125,6 +125,7 @@ window['render_logo-generator'] = function(container, toolMeta) {
     iconSize:     clean?.iconSize      ?? 52,
     iconOffsetY:  clean?.iconOffsetY   ?? 0,
     textOffsetY:  clean?.textOffsetY   ?? 0,
+    customIconSrc: clean?.customIconSrc ?? '',
     layout:       clean?.layout        ?? 'shape-icon',
     wordmark:     clean?.wordmark      ?? '',
     wordmarkSize: clean?.wordmarkSize   ?? 18,
@@ -143,8 +144,7 @@ window['render_logo-generator'] = function(container, toolMeta) {
   };
 
   /* Preview canvas size */
-  const PREVIEW_W = 300;
-  const PREVIEW_H = 360;
+  const PREVIEW_SIZE = 300;
 
   /* Off-screen canvas */
   const offCanvas = document.createElement('canvas');
@@ -201,7 +201,7 @@ window['render_logo-generator'] = function(container, toolMeta) {
           <!-- Preview Panel -->
           <div class="lg-preview-panel">
             <div class="lg-canvas-wrap">
-              <canvas id="lg-canvas" width="${PREVIEW_W}" height="${PREVIEW_H}"></canvas>
+              <canvas id="lg-canvas" width="${PREVIEW_SIZE}" height="${PREVIEW_SIZE}"></canvas>
             </div>
             <div class="lg-export-bar">
               <button class="btn btn--primary btn--sm" id="lg-dl-svg"><i class="fa-solid fa-file-code"></i> SVG</button>
@@ -295,6 +295,10 @@ window['render_logo-generator'] = function(container, toolMeta) {
                   <i class="fa-solid ${selectedIcon ? selectedIcon.cls : 'fa-icons'}"></i>
                   ${selectedIcon ? selectedIcon.name : 'Elegir icono'}
                 </button>
+                <button class="btn btn--ghost btn--sm" id="lg-icon-upload" title="Subir icono propio">
+                  <i class="fa-solid fa-upload"></i>
+                </button>
+                <input type="file" id="lg-icon-file" accept="image/*" style="display:none;">
                 <button class="btn btn--ghost btn--sm" id="lg-icon-clear" title="Quitar icono">
                   <i class="fa-solid fa-xmark"></i>
                 </button>
@@ -543,21 +547,30 @@ window['render_logo-generator'] = function(container, toolMeta) {
      CANVAS RENDERING
      ═══════════════════════════════════════════════════════ */
 
-  function renderToCanvas(c, w, h) {
-    c.clearRect(0, 0, w, h);
+  let customIconImg = null;
 
-    /* Logo center in the top portion, wordmark below */
+  function loadCustomIcon(src) {
+    const img = new Image();
+    img.onload = () => { customIconImg = img; updatePreview(); };
+    img.src = src;
+  }
+  if (state.customIconSrc) loadCustomIcon(state.customIconSrc);
+
+  function renderToCanvas(c, size) {
+    c.clearRect(0, 0, size, size);
+    const w = size, h = size;
+
+    /* When wordmark is present, center the logo slightly higher */
     const hasWordmark = !!state.wordmark;
-    const logoAreaH = hasWordmark ? h * 0.78 : h;
     const cx = w / 2;
-    const cy = logoAreaH / 2;
-    const shapeR = Math.min(w, logoAreaH) * 0.32;
-    const scale = w / PREVIEW_W;
+    const cy = hasWordmark ? h * 0.43 : h / 2;
+    const shapeR = (hasWordmark ? h * 0.30 : h * 0.35);
+    const scale = w / PREVIEW_SIZE;
 
     /* 1. Background */
     const showBg = bgTransp.checked;
     if (showBg) {
-      drawBgShape(c, 0, 0, w, w, state.bgShape);
+      drawBgShape(c, 0, 0, w, state.bgShape);
       if (state.bgGradOn) {
         c.fillStyle = makeGradient(c, w / 2, w / 2, w * 0.5, state.bgColor, state.bgGradC2, state.bgGradAng);
       } else {
@@ -584,8 +597,8 @@ window['render_logo-generator'] = function(container, toolMeta) {
       }
     }
 
-    /* 3. Icon */
-    if (state.icon && (state.layout === 'shape-icon' || state.layout === 'icon-only' || state.layout === 'shape-icon-txt')) {
+    /* 3. Icon (FontAwesome) */
+    if (state.icon && !customIconImg && (state.layout === 'shape-icon' || state.layout === 'icon-only' || state.layout === 'shape-icon-txt')) {
       const ic = ICONS.find(i => i.cls === state.icon);
       if (ic) {
         const scaledIconSize = state.iconSize * scale;
@@ -596,6 +609,13 @@ window['render_logo-generator'] = function(container, toolMeta) {
         const iconY = cy + state.iconOffsetY * scale;
         c.fillText(ic.unicode, cx, iconY);
       }
+    }
+
+    /* 3b. Custom icon (uploaded image) */
+    if (customIconImg && (state.layout === 'shape-icon' || state.layout === 'icon-only' || state.layout === 'shape-icon-txt')) {
+      const iconDrawSize = state.iconSize * scale;
+      const iconY = cy + state.iconOffsetY * scale - iconDrawSize / 2;
+      c.drawImage(customIconImg, cx - iconDrawSize / 2, iconY, iconDrawSize, iconDrawSize);
     }
 
     /* 4. Text inside shape */
@@ -619,12 +639,12 @@ window['render_logo-generator'] = function(container, toolMeta) {
       c.fillText(state.text, cx, textY);
     }
 
-    /* 6. Wordmark below logo */
+    /* 6. Wordmark — inside the square, below the logo */
     if (hasWordmark) {
       const wmSize = state.wordmarkSize * scale;
-      const wmY = logoAreaH + (h - logoAreaH) / 2;
+      const wmY = h * 0.82;
       c.font = `bold ${wmSize}px "${state.wordmarkFont}", sans-serif`;
-      c.fillStyle = state.accentColor;
+      c.fillStyle = showBg ? state.accentColor : state.shapeColor || state.accentColor;
       c.textAlign = 'center';
       c.textBaseline = 'middle';
       c.fillText(state.wordmark, cx, wmY);
@@ -632,7 +652,7 @@ window['render_logo-generator'] = function(container, toolMeta) {
   }
 
   function updatePreview() {
-    renderToCanvas(ctx, PREVIEW_W, PREVIEW_H);
+    renderToCanvas(ctx, PREVIEW_SIZE);
   }
 
   /* ═══════════════════════════════════════════════════════
@@ -680,11 +700,10 @@ window['render_logo-generator'] = function(container, toolMeta) {
   function generateSVG() {
     const size = 512;
     const hasWordmark = !!state.wordmark;
-    const totalH = hasWordmark ? Math.round(size * 1.2) : size;
-    const logoH = hasWordmark ? Math.round(size * 0.78) : size;
-    const cx = size / 2, cy = logoH / 2;
-    const shapeR = size * 0.32;
-    const scale = size / PREVIEW_W;
+    const cx = size / 2;
+    const cy = hasWordmark ? size * 0.43 : size / 2;
+    const shapeR = hasWordmark ? size * 0.30 : size * 0.35;
+    const scale = size / PREVIEW_SIZE;
 
     let defs = [];
     let parts = [];
@@ -741,13 +760,13 @@ window['render_logo-generator'] = function(container, toolMeta) {
 
     /* Wordmark */
     if (hasWordmark) {
-      const wmY = logoH + (totalH - logoH) / 2;
+      const wmY = size * 0.82;
       parts.push(`<text x="${cx}" y="${wmY}" text-anchor="middle" dominant-baseline="central" font-family="'${state.wordmarkFont}',sans-serif" font-weight="bold" font-size="${state.wordmarkSize * scale}" fill="${state.accentColor}">${escapeXml(state.wordmark)}</text>`);
     }
 
     const defsStr = defs.length ? `<defs>\n${defs.map(d => '  ' + d).join('\n')}\n</defs>` : '';
 
-    return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${totalH}" width="${size}" height="${totalH}">\n${defsStr}${parts.map(p => '  ' + p).join('\n')}\n</svg>`;
+    return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">\n${defsStr}${parts.map(p => '  ' + p).join('\n')}\n</svg>`;
   }
 
   /* ═══════════════════════════════════════════════════════
@@ -778,19 +797,17 @@ window['render_logo-generator'] = function(container, toolMeta) {
   }
 
   function exportPNG(size) {
-    const hasWm = !!state.wordmark;
-    const h = hasWm ? Math.round(size * 1.2) : size;
     offCanvas.width = size;
-    offCanvas.height = h;
-    renderToCanvas(offCtx, size, h);
+    offCanvas.height = size;
+    renderToCanvas(offCtx, size);
     offCanvas.toBlob(blob => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `logo-${size}x${h}.png`;
+      a.download = `logo-${size}x${size}.png`;
       a.click();
       URL.revokeObjectURL(url);
-      MiniDevTools.showToast(`PNG ${size}x${h} descargado`);
+      MiniDevTools.showToast(`PNG ${size}x${size} descargado`);
     }, 'image/png');
   }
 
@@ -852,6 +869,8 @@ window['render_logo-generator'] = function(container, toolMeta) {
     state.wordmarkFont = p.wordmarkFont || 'Montserrat';
     state.iconOffsetY = 0;
     state.textOffsetY = 0;
+    state.customIconSrc = '';
+    customIconImg = null;
 
     /* Update UI */
     bgColorInput.value = state.bgColor;
@@ -879,10 +898,14 @@ window['render_logo-generator'] = function(container, toolMeta) {
   }
 
   function updateIconButton() {
-    const ic = ICONS.find(i => i.cls === state.icon);
-    iconPickerBtn.innerHTML = ic
-      ? `<i class="fa-solid ${ic.cls}"></i> ${ic.name}`
-      : `<i class="fa-solid fa-icons"></i> Elegir icono`;
+    if (state.customIconSrc) {
+      iconPickerBtn.innerHTML = `<i class="fa-solid fa-image"></i> Custom`;
+    } else {
+      const ic = ICONS.find(i => i.cls === state.icon);
+      iconPickerBtn.innerHTML = ic
+        ? `<i class="fa-solid ${ic.cls}"></i> ${ic.name}`
+        : `<i class="fa-solid fa-icons"></i> Elegir icono`;
+    }
   }
 
   function updatePaletteBtns() {
@@ -962,6 +985,47 @@ window['render_logo-generator'] = function(container, toolMeta) {
     iconOffsetVal.textContent = state.iconOffsetY;
     updatePreview(); saveState();
   });
+  const iconFileInput = document.getElementById('lg-icon-file');
+  const iconUploadBtn = document.getElementById('lg-icon-upload');
+
+  iconUploadBtn.addEventListener('click', () => { iconFileInput.click(); });
+  iconFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      state.customIconSrc = ev.target.result;
+      state.icon = '';
+      updateIconButton();
+      loadCustomIcon(state.customIconSrc);
+      saveState();
+    };
+    reader.readAsDataURL(file);
+    iconFileInput.value = '';
+  });
+
+  /* Paste custom icon */
+  document.addEventListener('paste', (e) => {
+    if (!container.offsetParent) return;
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        e.preventDefault();
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          state.customIconSrc = ev.target.result;
+          state.icon = '';
+          updateIconButton();
+          loadCustomIcon(state.customIconSrc);
+          saveState();
+        };
+        reader.readAsDataURL(item.getAsFile());
+        return;
+      }
+    }
+  });
+
   iconPickerBtn.addEventListener('click', () => { iconModal.style.display = ''; });
   iconModalBg.addEventListener('click', () => { iconModal.style.display = 'none'; });
   iconModalClose.addEventListener('click', () => { iconModal.style.display = 'none'; });
@@ -979,6 +1043,8 @@ window['render_logo-generator'] = function(container, toolMeta) {
 
   iconClearBtn.addEventListener('click', () => {
     state.icon = '';
+    state.customIconSrc = '';
+    customIconImg = null;
     updateIconButton();
     container.querySelectorAll('.lg-icon-opt').forEach(b => b.classList.remove('lg-icon-opt--active'));
     updatePreview(); saveState();
