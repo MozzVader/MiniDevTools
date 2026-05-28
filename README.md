@@ -83,7 +83,7 @@
 
 No necesitás instalar nada. Abrí el link y listo:
 
-**👉 [minidevtools.netlify.app](https://minidevtools.netlify.app)**
+**👉 [MiniDevTools](https://mozzvader.github.io/MiniDevTools/)**
 
 O si querés correrlo localmente:
 
