@@ -1,18 +1,18 @@
-<p style="text-align: center;"> 
+<p align="center">
   # 🛠️ MiniDevTools 
 </p>
 
-<p style="text-align: center;"> 
+<p align="center">
   > Tu compendio de mini-herramientas para el día a día. Todo funciona offline. 
 </p>
 
-<p style="text-align: center;"> 
+<p align="center">
   ![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey?style=flat-square) 
 </p>
-<p style="text-align: center;">
+<p align="center">
   ![Offline](https://img.shields.io/badge/Funciona-Offline-brightgreen?style=flat-square) 
 </p>
-<p style="text-align: center;"> 
+<p align="center">
   ![HTML/CSS/JS](https://img.shields.io/badge/Tech-HTML%20%7C%20CSS%20%7C%20JS-orange?style=flat-square) 
 </p>
 
