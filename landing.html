@@ -878,14 +878,20 @@
     <h2>Listo para usar <span class="gradient">MiniDevTools</span>?</h2>
     <p>Es gratis, es open source, y funciona sin instalar nada. Hacé click y empezá a usar las herramientas que necesites.</p>
     <div class="cta-actions">
-      <a href="https://minidevtools.netlify.app" target="_blank" rel="noopener noreferrer" class="btn-primary">
-        <i class="fa-solid fa-rocket"></i> Abrir MiniDevTools
-      </a>
-      <a href="https://github.com/MozzVader/MiniDevTools" target="_blank" rel="noopener noreferrer" class="btn-ghost">
-        <i class="fa-brands fa-github"></i> Ver en GitHub
-      </a>
+      <a href="https://mozzdev.pages.dev/" target="_blank" rel="noopener noreferrer" class="btn-primary"><i class="fas fa-globe"></i> Mas informacion</a>
+      <a href="#" id="contact-btn" class="btn-ghost" data-email=""><i class="fas fa-envelope"></i> Contactame</a>
     </div>
   </section>
+
+  <!-- MAILTO OBFUSCATION -->
+  <script>
+    (function() {
+      var e = ['c','o','n','t','a','c','t','o','.','m','o','z','z','.','d','e','v','@','g','m','a','i','l','.','c','o','m'];
+      var addr = e.join('');
+      var btn = document.getElementById('contact-btn');
+      if (btn) { btn.href = 'mailto:' + addr; btn.removeAttribute('data-email'); }
+    })();
+  </script>
 
   <!-- FOOTER -->
   <footer class="footer">
