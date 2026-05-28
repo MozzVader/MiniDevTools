@@ -270,6 +270,17 @@ const TOOL_REGISTRY = [
 
   // ─── UTILITARIOS DEV ───
   {
+    id: 'sql-schema-builder',
+    name: 'SQL Schema Builder',
+    icon: 'fa-solid fa-database',
+    category: 'utils',
+    categoryLabel: 'Utilitarios Dev',
+    description: 'Crear schemas SQL para Supabase/PostgreSQL con GRANTs, RLS y exportar desde Excel',
+    jsFile: 'js/tools/sql-schema-builder.js',
+    cssFile: 'css/tools/sql-schema-builder.css',
+    render: null
+  },
+  {
     id: 'code-formatter',
     name: 'Code Formatter',
     icon: 'fa-solid fa-code',

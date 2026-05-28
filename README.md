@@ -20,7 +20,7 @@
 
 ---
 
-## 🧰 Herramientas (33)
+## 🧰 Herramientas (34)
 
 ### 🖼️ Imágenes
 | Herramienta | Descripción |
@@ -69,6 +69,7 @@
 | **UUID Generator** | Generar UUIDs v4 |
 | **Diff Viewer** | Comparar textos y resaltar diferencias con word-level diff |
 | **Keyboard Event Viewer** | Inspeccionar event.key, event.code y keyCode de cada tecla |
+| **SQL Schema Builder** | Crear schemas SQL para Supabase/PostgreSQL con GRANTs, RLS y exportar desde Excel |
 
 ---
 
