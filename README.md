@@ -1,6 +1,6 @@
-<p align="center">
-  # 🛠️ MiniDevTools 
-</p>
+
+<h1 align="center">🛠️ MiniDevTools </h1>
+
 
 <p align="center">
   > Tu compendio de mini-herramientas para el día a día. Todo funciona offline. 
