@@ -7,13 +7,9 @@
 </p>
 
 <p align="center">
-  ![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey?style=flat-square) 
-</p>
-<p align="center">
-  ![Offline](https://img.shields.io/badge/Funciona-Offline-brightgreen?style=flat-square) 
-</p>
-<p align="center">
-  ![HTML/CSS/JS](https://img.shields.io/badge/Tech-HTML%20%7C%20CSS%20%7C%20JS-orange?style=flat-square) 
+  <img src="https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/Funciona-Offline-brightgreen?style=flat-square" alt="Offline">
+  <img src="https://img.shields.io/badge/Tech-HTML%20%7C%20CSS%20%7C%20JS-orange?style=flat-square" alt="Tech">
 </p>
 
 ---
