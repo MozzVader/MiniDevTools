@@ -411,9 +411,15 @@ window['render_sql-schema-builder'] = function(container, toolMeta) {
         <div class="sb-te-name-row">
           <i class="fa-solid fa-table" style="color:var(--accent);"></i>
           <input class="input sb-te-name" type="text" value="${escapeHtml(table.name)}" id="sb-te-name" placeholder="nombre_tabla">
-          <select class="input sb-te-schema" id="sb-te-schema">
-            <option value="public" ${table.schema === 'public' ? 'selected' : ''}>public</option>
-          </select>
+          <input class="input sb-te-schema" type="text" id="sb-te-schema" list="sb-schema-list" value="${escapeHtml(table.schema)}" placeholder="public">
+          <datalist id="sb-schema-list">
+            <option value="public">
+            <option value="private">
+            <option value="auth">
+            <option value="storage">
+            <option value="graphql_public">
+            <option value="supabase_functions">
+          </datalist>
         </div>
       </div>
 
@@ -442,9 +448,10 @@ window['render_sql-schema-builder'] = function(container, toolMeta) {
       saveState();
     });
 
-    const schemaSelect = document.getElementById('sb-te-schema');
-    schemaSelect.addEventListener('change', () => {
-      table.schema = schemaSelect.value;
+    const schemaInput = document.getElementById('sb-te-schema');
+    schemaInput.addEventListener('input', () => {
+      table.schema = schemaInput.value.replace(/[^a-zA-Z0-9_]/g, '').toLowerCase() || 'public';
+      renderTablesList();
       generateSQL();
       saveState();
     });
@@ -753,10 +760,10 @@ window['render_sql-schema-builder'] = function(container, toolMeta) {
     }
 
     const parts = [];
-    const schema = 'public';
 
     for (const table of state.tables) {
       if (!table.name) continue;
+      const schema = table.schema || 'public';
       const fqtn = `${schema}.${table.name}`;
 
       /* DROP IF EXISTS */
