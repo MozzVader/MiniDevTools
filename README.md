@@ -1,10 +1,10 @@
-# 🛠️ MiniDevTools
+<p style="text-align: center;"># 🛠️ MiniDevTools</p>
 
-> Tu compendio de mini-herramientas para el día a día. Todo funciona offline.
+<p style="text-align: center;">> Tu compendio de mini-herramientas para el día a día. Todo funciona offline.</p>
 
-![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey?style=flat-square)
-![Offline](https://img.shields.io/badge/Funciona-Offline-brightgreen?style=flat-square)
-![HTML/CSS/JS](https://img.shields.io/badge/Tech-HTML%20%7C%20CSS%20%7C%20JS-orange?style=flat-square)
+<p style="text-align: center;">![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey?style=flat-square)</p>
+<p style="text-align: center;">![Offline](https://img.shields.io/badge/Funciona-Offline-brightgreen?style=flat-square)</p>
+<p style="text-align: center;">![HTML/CSS/JS](https://img.shields.io/badge/Tech-HTML%20%7C%20CSS%20%7C%20JS-orange?style=flat-square)</p>
 
 ---
 
