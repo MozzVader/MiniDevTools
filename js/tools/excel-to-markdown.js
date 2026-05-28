@@ -235,6 +235,52 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
     return str.replace(/\|/g, '\\|');
   }
 
+  /* ─── Inline Markdown Parser ─── */
+  function parseInlineMd(text) {
+    const tokens = [];
+    const regex = /(\*\*(.+?)\*\*|\*(.+?)\*|~~(.+?)~~|`(.+?)`|\[(.+?)\]\((.+?)\))/g;
+    let lastIndex = 0, match;
+    while ((match = regex.exec(text)) !== null) {
+      if (match.index > lastIndex) tokens.push({ text: text.substring(lastIndex, match.index) });
+      if (match[2] !== undefined) tokens.push({ text: match[2], bold: true });
+      else if (match[3] !== undefined) tokens.push({ text: match[3], italic: true });
+      else if (match[4] !== undefined) tokens.push({ text: match[4], strike: true });
+      else if (match[5] !== undefined) tokens.push({ text: match[5], code: true });
+      else if (match[6] !== undefined) tokens.push({ text: match[6], link: match[7] });
+      lastIndex = match.index + match[0].length;
+    }
+    if (lastIndex < text.length) tokens.push({ text: text.substring(lastIndex) });
+    return tokens;
+  }
+
+  function mdCellToHtml(str) {
+    return parseInlineMd(str).map(t => {
+      const esc = escapeHtml(t.text);
+      if (t.bold) return '<strong>' + esc + '</strong>';
+      if (t.italic) return '<em>' + esc + '</em>';
+      if (t.strike) return '<del>' + esc + '</del>';
+      if (t.code) return '<code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px;font-size:0.88em;">' + esc + '</code>';
+      if (t.link) return '<a href="' + escapeHtml(t.link) + '" target="_blank" rel="noopener" style="color:var(--accent,#818cf8)">' + esc + '</a>';
+      return esc;
+    }).join('');
+  }
+
+  function stripMdFormatting(str) {
+    return parseInlineMd(str).map(t => t.text).join('');
+  }
+
+  function mdTokensToRuns(tokens) {
+    return tokens.map(t => {
+      const run = { t: t.text };
+      const rPr = {};
+      if (t.bold) rPr.b = 1;
+      if (t.italic) rPr.i = 1;
+      if (t.strike) rPr.strike = 1;
+      if (Object.keys(rPr).length > 0) run.rPr = rPr;
+      return run;
+    });
+  }
+
   /* ═══════════════════════════════════════════════════════
      MODE SWITCHING
      ═══════════════════════════════════════════════════════ */
@@ -608,14 +654,14 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
     let html = '<table class="em-preview-table"><thead><tr>';
     if (parsed.headers) {
       parsed.headers.forEach((h, i) => {
-        html += `<th style="text-align:${parsed.colAligns[i] || 'left'}">${escapeHtml(h)}</th>`;
+        html += '<th style="text-align:' + (parsed.colAligns[i] || 'left') + '">' + mdCellToHtml(h) + '</th>';
       });
     }
     html += '</tr></thead><tbody>';
     parsed.rows.forEach(row => {
       html += '<tr>';
       row.forEach((cell, i) => {
-        html += `<td style="text-align:${parsed.colAligns[i] || 'left'}">${escapeHtml(cell)}</td>`;
+        html += '<td style="text-align:' + (parsed.colAligns[i] || 'left') + '">' + mdCellToHtml(cell) + '</td>';
       });
       html += '</tr>';
     });
@@ -651,19 +697,18 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
 
   function toTSV(rows) {
     return rows.map(r => r.map(c => {
-      /* Escape tabs and newlines in cells */
-      const escaped = c.replace(/\t/g, ' ').replace(/\n/g, ' ').replace(/\r/g, '');
-      return escaped;
+      const clean = stripMdFormatting(c);
+      return clean.replace(/\t/g, ' ').replace(/\n/g, ' ').replace(/\r/g, '');
     }).join('\t')).join('\n');
   }
 
   function toCSV(rows) {
     return rows.map(r => r.map(c => {
-      /* If cell contains comma, quote, or newline, wrap in quotes */
-      if (c.includes(',') || c.includes('"') || c.includes('\n')) {
-        return '"' + c.replace(/"/g, '""') + '"';
+      const clean = stripMdFormatting(c);
+      if (clean.includes(',') || clean.includes('"') || clean.includes('\n')) {
+        return '"' + clean.replace(/"/g, '""') + '"';
       }
-      return c;
+      return clean;
     }).join(',')).join('\n');
   }
 
@@ -677,23 +722,48 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
       return null;
     }
 
-    const ws = XLSX.utils.aoa_to_sheet(rows);
+    const ws = {};
+    const range = { s: { r: 0, c: 0 }, e: { r: rows.length - 1, c: 0 } };
+    const hasHeader = lastParsedHeaders && rows.length > 0;
+
+    for (let r = 0; r < rows.length; r++) {
+      for (let c = 0; c < rows[r].length; c++) {
+        const addr = XLSX.utils.encode_cell({ r, c });
+        const cellText = rows[r][c];
+        const tokens = parseInlineMd(cellText);
+        const isHeaderRow = hasHeader && r === 0;
+
+        /* Check if cell has inline formatting */
+        const hasInlineFmt = tokens.some(t => t.bold || t.italic || t.strike);
+
+        if ((hasInlineFmt || isHeaderRow) && tokens.length > 0) {
+          /* Rich text cell — merge inline tokens + header bold */
+          const runs = mdTokensToRuns(tokens).map(run => {
+            if (isHeaderRow && !run.rPr) run.rPr = {};
+            if (isHeaderRow) run.rPr.b = 1;
+            return run;
+          });
+          ws[addr] = { t: 's', v: stripMdFormatting(cellText), r: runs };
+        } else {
+          ws[addr] = { t: 's', v: stripMdFormatting(cellText) };
+        }
+
+        if (c > range.e.c) range.e.c = c;
+      }
+    }
+
+    ws['!ref'] = XLSX.utils.encode_range(range);
 
     /* Auto-size columns */
-    if (ws['!ref']) {
-      const range = XLSX.utils.decode_range(ws['!ref']);
-      ws['!cols'] = [];
-      for (let c = range.s.c; c <= range.e.c; c++) {
-        let maxLen = 8; // minimum width
-        for (let r = range.s.r; r <= range.e.r; r++) {
-          const addr = XLSX.utils.encode_cell({ r, c });
-          const cell = ws[addr];
-          if (cell && cell.v) {
-            maxLen = Math.max(maxLen, String(cell.v).length);
-          }
-        }
-        ws['!cols'].push({ wch: Math.min(maxLen + 2, 50) });
+    ws['!cols'] = [];
+    for (let c = range.s.c; c <= range.e.c; c++) {
+      let maxLen = 8;
+      for (let r = range.s.r; r <= range.e.r; r++) {
+        const addr = XLSX.utils.encode_cell({ r, c });
+        const cell = ws[addr];
+        if (cell && cell.v) maxLen = Math.max(maxLen, String(cell.v).length);
       }
+      ws['!cols'].push({ wch: Math.min(maxLen + 2, 50) });
     }
 
     const wb = XLSX.utils.book_new();
@@ -751,10 +821,10 @@ window['render_excel-to-markdown'] = function(container, toolMeta) {
     mdInputArea.value = [
       '| Herramienta | Lenguaje | Categoría | Estrellas |',
       '|:------------|:---------|:----------|----------:|',
-      '| MiniDevTools | JavaScript | Dev Tools | 42 |',
-      '| Vite | TypeScript | Build Tool | 65k |',
+      '| **MiniDevTools** | JavaScript | Dev Tools | 42 |',
+      '| Vite | TypeScript | *Build Tool* | 65k |',
       '| ESLint | JavaScript | Linter | 23k |',
-      '| Prettier | JavaScript | Formatter | 47k |',
+      '| Prettier | JavaScript | Formatter | ~~47k~~ 48k |',
       '| Tailwind CSS | CSS | Framework | 78k |',
     ].join('\n');
     updateMdToExcel();
