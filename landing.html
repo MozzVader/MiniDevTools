@@ -640,6 +640,98 @@
       opacity: 0.4;
     }
 
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ─── FAQ ACCORDION ─── */
+    .faq-list {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.25s ease;
+    }
+
+    .faq-item:hover {
+      border-color: var(--border-glass-hover);
+    }
+
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 24px;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      line-height: 1.5;
+    }
+
+    .faq-question i {
+      color: var(--accent);
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .faq-item.open .faq-question i {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), padding 0.35s ease;
+    }
+
+    .faq-answer-inner {
+      padding: 0 24px 20px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .faq-answer-inner a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .faq-answer-inner a:hover { text-decoration: underline; }
+
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+    }
+
     /* ─── MOBILE ─── */
     @media (max-width: 768px) {
       .header { padding: 12px 20px; }
@@ -675,6 +767,7 @@
     <nav class="header-nav">
       <a href="#features">Features</a>
       <a href="#tools">Herramientas</a>
+      <a href="#faq">FAQ</a>
       <a href="https://github.com/MozzVader/MiniDevTools" target="_blank" rel="noopener noreferrer">
         <i class="fa-brands fa-github"></i>
       </a>
@@ -712,7 +805,7 @@
     <div class="section-inner">
 
       <!-- Feature 1: Sidebar -->
-      <div class="feature-row">
+      <div class="feature-row reveal">
         <div class="feature-text">
           <div class="section-label"><i class="fa-solid fa-compass"></i> Navegacion</div>
           <h3>Todo organizado, todo a mano</h3>
@@ -729,7 +822,7 @@
       </div>
 
       <!-- Feature 2: Converters -->
-      <div class="feature-row reverse">
+      <div class="feature-row reverse reveal">
         <div class="feature-text">
           <div class="section-label"><i class="fa-solid fa-arrow-right-arrow-left"></i> Conversores</div>
           <h3>Excel, Markdown, SQL y mas</h3>
@@ -746,7 +839,7 @@
       </div>
 
       <!-- Feature 3: SQL Builder -->
-      <div class="feature-row">
+      <div class="feature-row reveal">
         <div class="feature-text">
           <div class="section-label"><i class="fa-solid fa-database"></i> SQL</div>
           <h3>Schemas listos para Supabase</h3>
@@ -801,7 +894,7 @@
 
       <div class="tools-grid">
 
-        <div class="tool-card-landing">
+        <div class="tool-card-landing reveal">
           <div class="tc-header">
             <div class="tc-icon ic-pink"><i class="fa-solid fa-image"></i></div>
             <div>
@@ -818,7 +911,7 @@
           </div>
         </div>
 
-        <div class="tool-card-landing">
+        <div class="tool-card-landing reveal reveal-delay-1">
           <div class="tc-header">
             <div class="tc-icon ic-indigo"><i class="fa-solid fa-font"></i></div>
             <div>
@@ -835,7 +928,7 @@
           </div>
         </div>
 
-        <div class="tool-card-landing">
+        <div class="tool-card-landing reveal reveal-delay-2">
           <div class="tc-header">
             <div class="tc-icon ic-cyan"><i class="fa-solid fa-palette"></i></div>
             <div>
@@ -852,7 +945,7 @@
           </div>
         </div>
 
-        <div class="tool-card-landing">
+        <div class="tool-card-landing reveal reveal-delay-3">
           <div class="tc-header">
             <div class="tc-icon ic-green"><i class="fa-solid fa-wrench"></i></div>
             <div>
@@ -873,6 +966,76 @@
     </div>
   </section>
 
+  <!-- DIAGONAL -->
+  <div class="diagonal inv"></div>
+
+  <!-- FAQ -->
+  <section class="section section-dark" id="faq">
+    <div class="section-inner" style="text-align:center;">
+      <div class="section-label"><i class="fa-solid fa-circle-question"></i> FAQ</div>
+      <h2 class="section-title">Preguntas frecuentes</h2>
+      <p class="section-desc" style="margin-left:auto;margin-right:auto;">Todo lo que necesitás saber sobre MiniDevTools en un vistazo.</p>
+    </div>
+    <div class="section-inner">
+      <div class="faq-list">
+
+        <div class="faq-item reveal">
+          <button class="faq-question">
+            <span>Funciona offline?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Sí. Cargás la página una vez y todas las herramientas funcionan sin conexión a internet. El código se carga con lazy loading, así que solo se descarga lo que usás. Ideal para cuando estás viajando, en un café con WiFi lento, o simplemente querés algo rápido sin depender de un servidor.</div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-question">
+            <span>Es gratis?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Totalmente gratis y open source. El código está en GitHub bajo licencia <strong>CC BY-NC-ND 4.0</strong>: podés usarlo, copiarlo y compartirlo libremente. Si te sirve y querés apoyar el proyecto, podés pasarte por <a href="https://cafecito.app/mozz_vader" target="_blank" rel="noopener noreferrer">Cafecito</a>.</div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-question">
+            <span>Necesito instalar algo?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">No. Abrís la URL en tu navegador y listo. No necesitás crear una cuenta, no hay dependencias externas, no hay backend. Es vanilla JavaScript puro: sin React, sin Angular, sin bundler. Y si preferís correrlo localmente, clonás el repo y usás cualquier servidor estático.</div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-question">
+            <span>Puedo contribuir?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">El repo es open source en <a href="https://github.com/MozzVader/MiniDevTools" target="_blank" rel="noopener noreferrer">GitHub</a>. Agregar una herramienta es simple: creás un archivo JS con la función <code>render</code>, lo registrás en <code>registry.js</code>, y listo. El sidebar, el buscador y el lazy loading la detectan automáticamente. Si tenés una idea, abrí un issue y lo charlamos.</div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-question">
+            <span>Tiene tema claro y oscuro?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Sí. Podés cambiar entre tema claro y oscuro con un solo click desde el sidebar. Tu elección se guarda automáticamente en <code>localStorage</code>, así que la próxima vez que entres ya está con tu tema preferido sin tener que configurar nada de nuevo.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- DIAGONAL -->
+  <div class="diagonal"></div>
+
   <!-- CTA -->
   <section class="cta-section">
     <h2>Listo para usar <span class="gradient">MiniDevTools</span>?</h2>
@@ -882,6 +1045,37 @@
       <a href="#" id="contact-btn" class="btn-ghost" data-email=""><i class="fas fa-envelope"></i> Contactame</a>
     </div>
   </section>
+
+  <!-- SCROLL REVEAL + FAQ -->
+  <script>
+    (function(){
+      /* Scroll reveal via IntersectionObserver */
+      var reveals = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('active');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        reveals.forEach(function(el) { observer.observe(el); });
+      } else {
+        reveals.forEach(function(el) { el.classList.add('active'); });
+      }
+
+      /* FAQ accordion */
+      document.querySelectorAll('.faq-question').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var item = this.parentElement;
+          var wasOpen = item.classList.contains('open');
+          document.querySelectorAll('.faq-item.open').forEach(function(i) { i.classList.remove('open'); });
+          if (!wasOpen) item.classList.add('open');
+        });
+      });
+    })();
+  </script>
 
   <!-- MAILTO OBFUSCATION -->
   <script>
