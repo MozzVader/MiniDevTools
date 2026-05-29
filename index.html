@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/global.css" id="css-global">
 
   <!-- Favicon (placeholder, se reemplazara) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F6E0;&#xFE0F;</text></svg>">
@@ -140,11 +140,20 @@
     };
   </script>
 
-  <!-- APP SCRIPTS -->
-  <script src="js/storage.js"></script>
-  <script src="js/registry.js"></script>
-  <script src="js/theme.js"></script>
-  <script src="js/sidebar.js"></script>
-  <script src="js/app.js"></script>
+  <!-- APP SCRIPTS (loaded with daily cache busting) -->
+  <script>
+    (function(){
+      var _v = new Date().toISOString().slice(0,10).replace(/-/g,'');
+      var css = document.getElementById('css-global');
+      if (css) css.href = 'css/global.css?_v=' + _v;
+      var files = ['storage','registry','theme','sidebar','app'];
+      for (var i = 0; i < files.length; i++) {
+        var s = document.createElement('script');
+        s.src = 'js/' + files[i] + '.js?_v=' + _v;
+        s.async = false;
+        document.body.appendChild(s);
+      }
+    })();
+  </script>
 </body>
 </html>
