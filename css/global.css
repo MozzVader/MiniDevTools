@@ -1162,3 +1162,103 @@ input[type="checkbox"]:focus-visible {
 [data-tooltip-bottom]:hover::before {
   transform: translateX(-50%) translateY(0);
 }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   FLOATING PILL — External links (bottom-right)
+   ═══════════════════════════════════════════════════════════════ */
+
+.floating-pill {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: 28px;
+  padding: 4px;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  opacity: 0.45;
+  transition: opacity var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base),
+              background var(--transition-slow), border-color var(--transition-slow);
+}
+
+.floating-pill:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.pill-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 20px;
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.pill-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  transform: scale(1.08);
+}
+
+.pill-btn:active {
+  transform: scale(0.95);
+}
+
+/* Override global tooltips for pill buttons: show to the LEFT */
+.pill-btn[data-tooltip]::after {
+  bottom: auto;
+  top: 50%;
+  left: auto;
+  right: calc(100% + 10px);
+  transform: translateY(-50%) translateX(6px);
+}
+
+.pill-btn[data-tooltip]::before {
+  bottom: auto;
+  top: 50%;
+  left: auto;
+  right: calc(100% + 6px);
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-top-color: transparent;
+  border-right-color: var(--tooltip-bg);
+  border-left-color: transparent;
+}
+
+.pill-btn[data-tooltip]:hover::after,
+.pill-btn[data-tooltip]:hover::before {
+  transform: translateY(-50%) translateX(0);
+}
+
+@media (max-width: 768px) {
+  .floating-pill {
+    bottom: 16px;
+    right: 16px;
+  }
+  .pill-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+  /* Hide tooltips on mobile */
+  .pill-btn[data-tooltip]::after,
+  .pill-btn[data-tooltip]::before {
+    display: none;
+  }
+}
